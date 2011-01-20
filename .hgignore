@@ -4,3 +4,4 @@ syntax: glob
 *~
 env/
 static/photos
+db/
