@@ -17,8 +17,8 @@ DATABASE = 'db/ophot.db'
 # Add to or modify each field below here. #
 ###########################################
 
-# Generate a secret key to authenticate sessions with a logged in user.
-# To generate a 24 byte secret key with python, do:
+# Uncomment this and add a secret key to authenticate sessions with a logged in
+# user.  To generate a 24 byte secret key with python, do:
 #
 # >>> import os
 # >>> os.urandom(24)
