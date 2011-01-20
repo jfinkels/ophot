@@ -1,8 +1,27 @@
-This app requires Flask to be installed, among other things.
+This application requires the following libraries to be installed
 
-http://flask.pocoo.org/
+* Flask - http://flask.pocoo.org/
+* Flask-WTF - http://packages.python.org/Flask-WTF/
 
-To run the app, first initialize the database:
+To configure this application, edit the configuration file "config.py". You
+must add at least USERNAME, PASSWORD, and SECRET_KEY for allowing the
+administrator to log in. You probably want to change the NAME, EMAIL, and PHONE
+values as well.
+
+Instead of editing the configuration file directly, you can set the
+OPHOT_SETTINGS environment variable to be the path to a file containing the
+configuration setting which you wish to set. For example, create a text file
+called "myconfig" and add the following:
+
+  USERNAME = "myusername"
+  PASSWORD = "mypassword"
+  SECRET_KEY = '123456789012345678901234'
+
+Then change the OPHOT_SETTINGS environment variable to point to that file:
+
+  export OPHOT_SETTINGS=/path/to/myconfig
+
+Before running the application we also need to initialize the database:
 
   ./reset-db.sh
 
@@ -12,6 +31,6 @@ To run the web server and start serving, run
 
 Remember to disable debug mode when running on a production server.
 
-19 January 2011
+20 January 2011
 Jeffrey Finkelstein
 jeffrey.finkelstein@gmail.com
