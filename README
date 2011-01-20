@@ -1,0 +1,17 @@
+This app requires Flask to be installed, among other things.
+
+http://flask.pocoo.org/
+
+To run the app, first initialize the database:
+
+  ./reset-db.sh
+
+To run the web server and start serving, run
+
+  python ophot.py
+
+Remember to disable debug mode when running on a production server.
+
+19 January 2011
+Jeffrey Finkelstein
+jeffrey.finkelstein@gmail.com

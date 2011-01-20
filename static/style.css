@@ -1,0 +1,158 @@
+* {
+  margin: 0em;
+  padding: 0em;
+}
+
+a:link, a:visited {
+  color: white;
+  text-decoration: none;
+}
+
+a#logout {
+  font-weight: bold;
+  position: absolute;
+  right: 0px;
+}
+
+a:hover {
+  text-shadow: 0px 0px 3px white;
+}
+
+a.close {
+  text-decoration: underline;
+  float: right;
+}
+
+body {
+  color: white;
+  background-color: black;
+  font-family: 'Raleway', sans;
+}
+
+div#container {
+  margin: 0px auto;
+  position: relative;
+  width: 800px;
+}
+
+div#banner {
+  background-color: black;
+  border-top: thin solid #444444;
+  font-size: 16pt;
+  opacity: 0.8;
+  padding: 10px;
+}
+
+div#banner-container {
+  font-weight: bold;
+  position: relative;
+  top: 400px;
+}
+
+div.small-banner {
+  background-color: black;
+  border-bottom-left-radius: 4px;
+  border-top-left-radius: 4px;
+  border-top: thin solid #444444;
+  font-size: 11pt;
+  margin-top: 4px;
+  opacity: 0.8;
+  padding: 10px;
+  float: right;
+}
+
+div#splash {
+  background-image: url(photo.jpg);
+  background-repeat: no-repeat;
+  height: 535px;
+  border-radius: 10px;
+}
+
+footer {
+  color: gray;
+  font-size: small;
+  font-family: sans;
+  margin-top: 1em;
+  text-align: right;
+}
+
+h1 {
+  margin: 20px 0px 20px 0px;
+}
+
+input.credentials {
+  border: none;
+  border-radius: 3px;
+  font-size: 14pt;
+  padding-left: 3px;
+  padding-right: 3px;
+}
+
+p.description {
+  font-weight: bold;
+}
+
+table#login-form {
+  margin: 10px auto 0em auto;
+  font-size: 14pt;
+}
+
+table#login-form td {
+  padding: 3px;
+  text-align: right;
+}
+
+ul.photos {
+  list-style-type: none;
+}
+
+ul.photos li {
+  display: inline;
+}
+
+ul.menu {
+  text-align: right;
+  list-style-type: none;
+}
+
+ul.menu li {
+  display: inline;
+  margin-right: 30px;
+}
+
+ul.menu li:last-child {
+  margin-right: 0px;
+}
+
+.darker {
+  color: gray;
+}
+
+.flash {
+  background: black;
+  border: thin solid gray;
+  border-radius: 4px;
+  color: white;
+  margin-left: -200px;
+  opacity: 0.8;
+  padding: 10px;
+  position: absolute;
+  left: 50%;
+  top: 70px;
+  width: 400px;
+  font-weight: bold;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.selected {
+  text-shadow: 0px 0px 3px white;
+}
+
+.upload-form {
+  font-weight: bold;
+}
+
+.error          { background: #F0D6D6; padding: 0.5em; }

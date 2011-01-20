@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<ul class="photos">
+  {% for filename in photos %}
+  <li><img src="{{ filename }}" /></li>
+  <li><img src="{{ filename }}" /></li>
+  <li><img src="{{ filename }}" /></li>
+  <li><img src="{{ filename }}" /></li>
+  <li><img src="{{ filename }}" /></li>
+  {% else %}
+  <li><em>There are no photos in this category yet.</em></li>
+  {% endfor %}
+</ul>
+{% endblock %}

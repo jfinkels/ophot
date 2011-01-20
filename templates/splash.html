@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block head %}
+  {{ super() }}
+  <!-- splash page javascript -->
+  <script type="text/javascript" src="{{ url_for('static', filename='splash.js') }}"></script>
+{% endblock %}
+{% block content %}
+    <div id="splash" style="background-image: url({{ url_for('static',
+    filename='splash.jpg') }});">
+      <div id="banner-container">
+        <div id="banner">
+          <ul class="menu">
+            <li><a href="#" id="photoslink">photos</a></li>
+            <li><a href="#">purchase</a></li>
+            <li><a href="#">contact</a></li>
+            {% if session.logged_in %}
+            <li><a href="{{ url_for('add_photos') }}">add photos</a></li>
+            {% endif %}
+          </ul>
+        </div>
+        <div class="small-banner" id="photosbanner">
+          <ul class="menu">
+            <li><a href="{{ url_for('show_photos', category='portrait') }}">portrait</a></li>
+            <li><a href="#">landscape</a></li>
+            <li><a href="#">personal</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+{% endblock %}
