@@ -28,7 +28,7 @@
     {% if session.logged_in %}
     <a href="{{ url_for('logout') }}" id="logout">logout</a>
     {% endif %}
-    <h1>Firstname Lastname <span class="darker">photography</span></h1>
+    <h1><a href="{{ url_for('show_splash') }}">Firstname Lastname <span class="darker">photography</span></a></h1>
     {% for message in get_flashed_messages() %}
     <div class="flash">{{ message }}<a href="#" class="close">X</a></div>
     {% endfor %}
