@@ -46,6 +46,8 @@ app = Flask(__name__)
 app.config.from_object('config')
 app.config.from_envvar('OPHOT_SETTINGS', silent=True)
 
+name = app.config['NAME']
+
 class PhotoUploadForm(Form):
     """Class which represents the photo upload form."""
     photos = FileField('Select photos to upload'
@@ -109,12 +111,15 @@ def show_photos(category):
                           ' order by id asc'.format(category))
     # add the / so that the filenames are relative to the root of the app
     photos = ['/' + row[0] for row in cursor.fetchall()]
-    return render_template('show_photos.html', photos=photos)
+    return render_template('show_photos.html', photos=photos,
+                           num_photos=len(photos), name=name)
 
 @app.route('/')
 def show_splash():
     """Shows the splash page as the root."""
-    return render_template('splash.html')
+    return render_template('splash.html', name=name,
+                           email=app.config['EMAIL'],
+                           phone=app.config['PHONE'])
 
 @app.route('/add', methods=['GET', 'POST'])
 def add_photos():
@@ -149,7 +154,7 @@ def add_photos():
                       ', '.join(app.config['ALLOWED_EXTENSIONS'])))
         flash('{0} new photos added.'.format(num_photos_added))
         return redirect(url_for('add_photos'))
-    return render_template('add_photos.html', form=form)
+    return render_template('add_photos.html', form=form, name=name)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -162,7 +167,7 @@ def login():
             session['logged_in'] = True
             flash('You have successfully logged in.')
             return redirect(url_for('show_splash'))
-    return render_template('login.html', error=error)
+    return render_template('login.html', error=error, name=name)
 
 @app.route('/logout')
 def logout():

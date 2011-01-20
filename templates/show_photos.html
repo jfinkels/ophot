@@ -1,12 +1,13 @@
 {% extends "layout.html" %}
 {% block content %}
-
+{% if num_photos == 0 %}
+<p class="description">There are no photos in this category yet.
+  <a href="{{ url_for('add_photos') }}" class="desc-link">Add some.</a></p>
+{% else %}
 <ul class="photos">
   {% for filename in photos %}
   <li><img src="{{ filename }}" /></li>
-  {% else %}
-  <li><em>There are no photos in this category yet. <strong><a href="{{
-  url_for('add_photos') }}">Add some.</a></strong></em></li>
   {% endfor %}
 </ul>
+{% endif %}
 {% endblock %}

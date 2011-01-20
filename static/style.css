@@ -3,6 +3,15 @@
   padding: 0em;
 }
 
+a.desc-link:link {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+a.desc-link:hover {
+  text-shadow: none;
+}
+
 a:link, a:visited {
   color: white;
   text-decoration: none;
@@ -26,7 +35,8 @@ a.close {
 body {
   color: white;
   background-color: black;
-  font-family: 'Raleway', sans;
+  /* font-family: 'Raleway', sans; */
+  font-family: 'Cabin', sans;
 }
 
 div#container {
@@ -49,6 +59,18 @@ div#banner-container {
   top: 400px;
 }
 
+div#contact-info {
+  background-color: black;
+  border-radius: 4px;
+  font-family: 'Cabin', sans;
+  left: 50%;
+  top: 20%;
+  margin-left: -300px;
+  padding: 10px;
+  position: absolute;
+  width: 200px;
+}
+
 div.small-banner {
   background-color: black;
   border-bottom-left-radius: 4px;
@@ -62,10 +84,19 @@ div.small-banner {
 }
 
 div#splash {
-  background-image: url(photo.jpg);
   background-repeat: no-repeat;
   height: 535px;
   border-radius: 10px;
+  position: relative;
+}
+
+div#splash-shadow {
+  background-color: white;
+  border-radius: 10px;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0.65;
 }
 
 footer {
@@ -78,6 +109,7 @@ footer {
 
 h1 {
   margin: 20px 0px 20px 0px;
+  font-family: 'Raleway', sans;
 }
 
 input.credentials {
@@ -111,6 +143,7 @@ ul.photos li {
 }
 
 ul.menu {
+  font-family: 'Raleway', sans;
   text-align: right;
   list-style-type: none;
 }

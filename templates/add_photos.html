@@ -12,5 +12,8 @@ apply a <em>single</em> category to the set.</p>
   {{ render_field(form.category) }}
   <div><input type="submit" value="Submit" /></div>
 </form>
+{% else %}
+<p class="description">Only the administrator may add photos.
+  <a href="{{ url_for('login') }}" class="desc-link">Login.</a></p>
 {% endif %}
 {% endblock %}

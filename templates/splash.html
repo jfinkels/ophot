@@ -7,12 +7,18 @@
 {% block content %}
     <div id="splash" style="background-image: url({{ url_for('static',
     filename='splash.jpg') }});">
+      <div id="splash-shadow"></div>
+      <div id="contact-info">
+        {{ name }}<br />
+        {{ email }}<br />
+        {{ phone }}
+      </div>
       <div id="banner-container">
         <div id="banner">
           <ul class="menu">
-            <li><a href="#" id="photoslink">photos</a></li>
-            <li><a href="#">purchase</a></li>
-            <li><a href="#">contact</a></li>
+            <li><a href="#" class="linkgroup" id="photoslink">photos</a></li>
+            <li><a href="#" class="linkgroup" id="purchase-link">purchase</a></li>
+            <li><a href="#" class="linkgroup" id="contact-link">contact</a></li>
             {% if session.logged_in %}
             <li><a href="{{ url_for('add_photos') }}">add photos</a></li>
             {% endif %}
