@@ -4,12 +4,9 @@
 <ul class="photos">
   {% for filename in photos %}
   <li><img src="{{ filename }}" /></li>
-  <li><img src="{{ filename }}" /></li>
-  <li><img src="{{ filename }}" /></li>
-  <li><img src="{{ filename }}" /></li>
-  <li><img src="{{ filename }}" /></li>
   {% else %}
-  <li><em>There are no photos in this category yet.</em></li>
+  <li><em>There are no photos in this category yet. <strong><a href="{{
+  url_for('add_photos') }}">Add some.</a></strong></em></li>
   {% endfor %}
 </ul>
 {% endblock %}
