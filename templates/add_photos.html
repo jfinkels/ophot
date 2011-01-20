@@ -1,23 +1,16 @@
+{% from "_formhelpers.html" import render_field %}
 {% extends "layout.html" %}
 {% block content %}
 {% if session.logged_in %}
 <p class="description">This page allows you to upload one or more photos and
-apply a <em>single</em> category to them.</p>
+apply a <em>single</em> category to the set.</p>
 
 <form action="{{ url_for('add_photos') }}" method="post"
       enctype="multipart/form-data">
-  <ol class="upload-form">
-    <li>Select one or more photos to upload (JPEG or PNG only):
-    <input type="file" name="photo" multiple="multiple" /></li>
-    <li>Select a category for all of these photos:
-      <select name="category">
-        <option value="portrait" selected="selected">Portrait</option>
-        <option value="landscape">Landscape</option>
-        <option value="personal">Personal</option>
-      </select>
-    </li>
-    <li><input type="submit" value="Submit" /></li>
-  </ol>
+  {{ form.hidden_tag() }}
+  {{ render_field(form.photos, multiple="multiple") }}
+  {{ render_field(form.category) }}
+  <div><input type="submit" value="Submit" /></div>
 </form>
 {% endif %}
 {% endblock %}

@@ -14,12 +14,46 @@ from flask import render_template
 from flask import request
 from flask import session
 from flask import url_for
-from werkzeug import secure_filename
+from flaskext.wtf import Form
+from flaskext.wtf import FileField
+#from flaskext.wtf import Required
+from flaskext.wtf import SelectField
+#from flaskext.wtf import ValidationError
+#from werkzeug import secure_filename
+
+# class FileTypeValidator(object):
+#     def __init__(self, extensions, message=None):
+#         """Creates a validator which checks that a given filename has an
+#         extension in the specified set of extensions.
+
+#         If not, a ValidationError will be raised with the specified message.
+
+#         """
+#         self.extensions = extensions
+#         if not message:
+#             message = 'File type not allowed (must be one of {0})'.format(extensions)
+#         self.message = message
+
+#     def __call__(self, form, field):
+#         """Validates the filename against the set of allowed file type
+#         extensions specified in the constructor of this class.
+
+#         """
+#         raise ValidationError('unimplemented')
 
 # create the application
 app = Flask(__name__)
 app.config.from_object('config')
 app.config.from_envvar('OPHOT_SETTINGS', silent=True)
+
+class PhotoUploadForm(Form):
+    """Class which represents the photo upload form."""
+    photos = FileField('Select photos to upload'
+                       #, validators=[FileTypeValidator(app.config['ALLOWED_EXTENSIONS'])]
+                       )
+    category = SelectField('Category', choices=[('portrait', 'Portrait'),
+                                                ('landscape', 'Landscape'),
+                                                ('personal', 'Personal')])
 
 def init_db():
     """Initialize the database using the schema specified in the configuration.
@@ -34,10 +68,9 @@ def connect_db():
     """Gets a connection to the SQLite database."""
     return sqlite3.connect(app.config['DATABASE'])
 
-# TODO use magic numbers to identify files
+# TODO use mime types or magic numbers to identify files
 def allowed_file(filename):
-    return '.' in filename \
-        and filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 def generate_filename(directory, filename):
     """Generate the path at which to the save a file uploaded by the user.
@@ -76,7 +109,6 @@ def show_photos(category):
                           ' order by id asc'.format(category))
     # add the / so that the filenames are relative to the root of the app
     photos = ['/' + row[0] for row in cursor.fetchall()]
-    print photos
     return render_template('show_photos.html', photos=photos)
 
 @app.route('/')
@@ -86,15 +118,18 @@ def show_splash():
 
 @app.route('/add', methods=['GET', 'POST'])
 def add_photos():
-    if request.method == 'POST':
+    form = PhotoUploadForm(request.form)
+    if request.method == 'POST' and form.validate():
         if not session.get('logged_in'):
             abort(401)
         # Multiple files can be gotten from the files attribute on the request
         # object by calling the getlist() method. Check out the werkzeug
         # documentation for info on the FileStorage class and the
-        # ImmutableMultiDict class.
-        photos = request.files.getlist('photo')
-        numphotos = len(photos)
+        # ImmutableMultiDict class. We would otherwise use the Flask-WTF Form
+        # class to access our files, but Flask-WTF does not allow us to access
+        # multiple files.
+        photos = request.files.getlist('photos')
+        num_photos_added = 0
         for photo in photos:
             if allowed_file(photo.filename):
                 photo_dir = app.config['PHOTO_DIR']
@@ -107,10 +142,14 @@ def add_photos():
                              'values (?, ?)', [filename,
                                                request.form['category']])
                 g.db.commit()
-        flash(str(numphotos) + ' new photos added.')
+                num_photos_added += 1
+            else:
+                flash('{0} is not an acceptable type (must be one of {1}). '
+                      'It was not uploaded.'.format(photo.filename,
+                      ', '.join(app.config['ALLOWED_EXTENSIONS'])))
+        flash('{0} new photos added.'.format(num_photos_added))
         return redirect(url_for('add_photos'))
-    elif request.method == 'GET':
-        return render_template('add_photos.html')
+    return render_template('add_photos.html', form=form)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
