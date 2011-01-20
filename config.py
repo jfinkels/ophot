@@ -13,11 +13,17 @@ SCHEMA = 'schema.sql'
 # The location to store the database for photos.
 DATABASE = 'db/ophot.db'
 
-#############################################
-# Add or modify all information below here. #
-#############################################
+###########################################
+# Add to or modify each field below here. #
+###########################################
 
 # Generate a secret key to authenticate sessions with a logged in user.
+# To generate a 24 byte secret key with python, do:
+#
+# >>> import os
+# >>> os.urandom(24)
+#
+# Then just copy the resulting string here.
 #SECRET_KEY = ''
 
 # Fill in the username and password for the user that will manage photos.
