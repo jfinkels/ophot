@@ -1,5 +1,5 @@
 $(document).ready(function() {
   $("a.close").click(function () {
-    $(this).parent(".flash").hide("fade", 200);
+    $(this).parent().hide("fade", 200);
   });
 });
