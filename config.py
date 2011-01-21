@@ -7,6 +7,10 @@ DEBUG = False
 # This is the location to which uploaded photos will be stored.
 PHOTO_DIR = 'static/photos'
 
+# The height to which uploaded photos will be scaled so that when they are
+# displayed, they will be of uniform height.
+PHOTO_HEIGHT = 440
+
 # This is the database schema.
 SCHEMA = 'schema.sql'
 

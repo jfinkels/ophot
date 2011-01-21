@@ -19,6 +19,9 @@ $(document).ready(function() {
       $("#photos-container").fadeOut();
       $("#banner-container").animate({ top : 400 }, 500);
       $("#splash-shadow").fadeOut();
+      $(".photo-link").each(function() {
+        $(this).removeClass("selected");
+      });
     } else {
       $(this).addClass("selected");
       $(".submenu").show();
@@ -50,7 +53,7 @@ $(document).ready(function() {
     if (!$(this).hasClass("selected")) {
       $("#contact-info").fadeOut();
       $("#contact-link").removeClass("selected");
-      $("#banner-container").animate({ top : 450 }, 500);
+      $("#banner-container").animate({ top : 497 }, 500);
       $("#splash-shadow").fadeIn();
       $(".photo-link").each(function() {
         $(this).removeClass("selected");

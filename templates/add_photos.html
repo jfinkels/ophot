@@ -5,8 +5,13 @@
 <p class="description">This page allows you to upload one or more photos and
 apply a <em>single</em> category to the set.</p>
 
+<p class="description">Note: images will be scaled to {{ height }} pixels in
+height so that they are all of uniform height and look better when displayed
+all in a row. I suggest resizing your image to that height <em>before</em>
+uploading it, so that you control how it looks!</p>
+
 <form action="{{ url_for('add_photos') }}" method="post"
-      enctype="multipart/form-data">
+      enctype="multipart/form-data" id="add-photo-form">
   {{ form.hidden_tag() }}
   {{ render_field(form.photos, multiple="multiple") }}
   {{ render_field(form.category) }}

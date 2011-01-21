@@ -84,7 +84,7 @@ div#photos-container {
   box-shadow: 0px 0px 5px #000000;
   -moz-box-shadow: 0px 0px 5px #000000;
   -webkit-box-shadow: 0px 0px 5px #000000;
-  height: 400px;
+  height: 450px;
   left: 20px;
   padding: 10px 0px 10px 20px;
   position: absolute;
@@ -140,6 +140,10 @@ form {
   font-weight: bold;
 }
 
+form#add-photo-form {
+  margin-top: 10px;
+}
+
 h1 {
   margin: 0px 0px 20px 0px;
   font-family: 'Raleway', sans;
@@ -158,7 +162,7 @@ input.credentials {
 }
 
 p.description {
-  font-weight: bold;
+  margin-top: 10px;
 }
 
 table#login-form {
@@ -169,6 +173,15 @@ table#login-form {
 table#login-form td {
   padding: 3px;
   text-align: right;
+}
+
+tr#the-row td:first-child img {
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+tr#the-row td img {
+  vertical-align: middle;
 }
 
 ul.menu {
@@ -210,13 +223,27 @@ ul.submenu li {
   color: gray;
 }
 
+.error {
+  background: #990000;
+  border: thin solid gray;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  color: white;
+  left: 50%;
+  margin-left: -200px;
+  opacity: 0.9;
+  padding: 10px;
+  position: absolute;
+  top: 0px;
+  width: 400px;
+}
+
 .flash {
   background: black;
   border: thin solid gray;
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
   color: white;
-  font-weight: bold;
   left: 50%;
   margin-left: -200px;
   opacity: 0.9;
@@ -239,5 +266,3 @@ ul.submenu li {
   display:inline;
 }
 */
-
-.error          { background: #F0D6D6; padding: 0.5em; }

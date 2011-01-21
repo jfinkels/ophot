@@ -20,6 +20,7 @@ from flaskext.wtf import FileField
 #from flaskext.wtf import Required
 from flaskext.wtf import SelectField
 #from flaskext.wtf import ValidationError
+import Image
 #from werkzeug import secure_filename
 
 # class FileTypeValidator(object):
@@ -90,6 +91,16 @@ def generate_filename(directory, filename):
         filename = os.path.join(directory, '{0}.{1}'.format(uuid, extension))
     return filename
 
+# def scaled_image(filename, new_height):
+#     """Returns the image at the specified filename scaled to the specified
+#     height, maintaining correct aspect ratio.
+
+#     """
+#     im = Image.open(filename)
+#     new_width = im.size[0] * height / im.size[1]
+#     im.resize((new_width, new_height))
+#     return im
+
 @app.before_request
 def before_request():
     """Stores the database connection in the db attribute of the g object."""
@@ -124,6 +135,12 @@ def show_splash():
 
 @app.route('/add', methods=['GET', 'POST'])
 def add_photos():
+    """View which on GET requests shows a page containing a form with which the
+    user can upload multiple photos with a single category, and on POST
+    requests stores photos on the filesystem and adds their filenames to the
+    database.
+
+    """
     form = PhotoUploadForm(request.form)
     if request.method == 'POST' and form.validate():
         if not session.get('logged_in'):
@@ -143,7 +160,13 @@ def add_photos():
                     os.mkdir(photo_dir)
                 filename = generate_filename(app.config['PHOTO_DIR'],
                                              photo.filename)
+                # TODO writing then reading the same file is slow
                 photo.save(filename)
+                im = Image.open(filename)
+                if im.size[1] > app.config['PHOTO_HEIGHT']:
+                    wdth = im.size[0] * app.config['PHOTO_HEIGHT'] / im.size[1]
+                    im = im.resize((wdth, app.config['PHOTO_HEIGHT']))
+                    im.save(filename)
                 g.db.execute('insert into photos (filename, category) '
                              'values (?, ?)', [filename,
                                                request.form['category']])
@@ -155,7 +178,8 @@ def add_photos():
                       ', '.join(app.config['ALLOWED_EXTENSIONS'])))
         flash('{0} new photos added.'.format(num_photos_added))
         return redirect(url_for('add_photos'))
-    return render_template('add_photos.html', form=form, name=name)
+    return render_template('add_photos.html', form=form, name=name,
+                           height=app.config['PHOTO_HEIGHT'])
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -178,6 +202,10 @@ def logout():
 
 @app.route('/_get_photos')
 def get_photos():
+    """Ajax method which returns a JSON which is a map from array index to
+    filename of a photo on the filesystem.
+
+    """
     category = request.args.get('category')
     print category
     cursor = g.db.execute('select filename from photos where category == "{0}"'
