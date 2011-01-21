@@ -233,8 +233,7 @@ ul.submenu li {
   color: gray;
 }
 
-.error {
-  background: #990000;
+.flash, .error {
   border: thin solid gray;
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
@@ -252,19 +251,10 @@ ul.submenu li {
 
 .flash {
   background: black;
-  border: thin solid gray;
-  border-bottom-left-radius: 4px;
-  border-bottom-right-radius: 4px;
-  -moz-border-radius-bottomleft: 4px;
-  -moz-border-radius-bottomright: 4px;
-  color: white;
-  left: 50%;
-  margin-left: -200px;
-  opacity: 0.9;
-  padding: 10px;
-  position: absolute;
-  top: 0px;
-  width: 400px;
+}
+
+.error {
+  background: #990000;
 }
 
 .hidden {
