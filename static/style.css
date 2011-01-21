@@ -35,8 +35,8 @@ a.close {
 body {
   color: white;
   background-color: black;
-  /* font-family: 'Raleway', sans; */
-  font-family: 'Cabin', sans;
+  /* font-family: 'Raleway', sans-serif; */
+  font-family: 'Cabin', sans-serif;
 }
 
 div#banner {
@@ -62,7 +62,7 @@ div#contact-info {
   box-shadow: 5px 5px 5px #000030;
   -moz-box-shadow: 5px 5px 5px #000030;
   -webkit-box-shadow: 5px 5px 5px #000030;
-  font-family: 'Cabin', sans;
+  font-family: 'Cabin', sans-serif;
   left: 50%;
   top: 20%;
   margin-left: -300px;
@@ -138,7 +138,6 @@ div#splash-shadow {
 footer {
   color: gray;
   font-size: small;
-  font-family: sans;
   margin-top: 1em;
   text-align: right;
 }
@@ -153,7 +152,7 @@ form#add-photo-form {
 
 h1 {
   margin: 0px 0px 20px 0px;
-  font-family: 'Raleway', sans;
+  font-family: 'Raleway', sans-serif;
 }
 
 h1 a:hover {
@@ -195,7 +194,7 @@ tr#the-row td img {
 }
 
 ul.menu {
-  font-family: 'Raleway', sans;
+  font-family: 'Raleway', sans-serif;
   text-align: right;
   list-style-type: none;
 }
