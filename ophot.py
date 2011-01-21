@@ -9,6 +9,7 @@ from flask import abort
 from flask import Flask
 from flask import flash
 from flask import g
+from flask import jsonify
 from flask import redirect
 from flask import render_template
 from flask import request
@@ -175,6 +176,15 @@ def logout():
     flash('You have successfully logged out.')
     return redirect(url_for('show_splash'))
 
+@app.route('/_get_photos')
+def get_photos():
+    category = request.args.get('category')
+    print category
+    cursor = g.db.execute('select filename from photos where category == "{0}"'
+                          ' order by id asc'.format(category))
+    # add the / so that the filenames are relative to the root of the app
+    photos = ['/' + row[0] for row in cursor.fetchall()]
+    return jsonify(photos=photos)
+
 if __name__ == '__main__':
     app.run()
-

@@ -1,27 +1,66 @@
+function displayPhotos(data, textStatus, xhr) {
+  for (var i = 0; i < data.photos.length; i++) {
+    $("#the-row").append("<td><img src=" + data.photos[i] + " /></td>");
+  }
+}
+
 $(document).ready(function() {
-  // hide these elements by default
-  $("#photosbanner").hide();
-  $("#splash-shadow").hide();
   $("#contact-info").hide();
+  $("#photos-banner").hide();
+  $("#photos-container").hide();
+  $("#splash-shadow").hide();
+  $(".submenu").hide();
 
-  // when the photos link is clicked, highlight it and fade in the banner
-  $("#photoslink").click(function (event) {
-    // prevent the browser from going to the top of the page due to "#" href
+  $("#photos-link").click(function(event) {
     event.preventDefault();
-
-    $("#photoslink").toggleClass("selected");
-    /* $("#photosbanner").fadeToggle("fast"); */
-    $("#photosbanner").toggle("slide", { direction : "right" }, 500);
+    if ($(this).hasClass("selected")) {
+      $(this).removeClass("selected");
+      $(".submenu").hide();
+      $("#photos-container").fadeOut();
+      $("#banner-container").animate({ top : 400 }, 500);
+      $("#splash-shadow").fadeOut();
+    } else {
+      $(this).addClass("selected");
+      $(".submenu").show();
+    }
   });
 
-  // when the contact link is clickec, highlight it, shadow the splash photo,
-  // and open the contact information
-  $("#contact-link").click(function (event) {
-    // prevent the browser from going to the top of the page due to "#" href
+  $("#contact-link").click(function(event) {
     event.preventDefault();
+    if ($(this).hasClass("selected")) {
+      $("#splash-shadow").fadeOut();
+      $("#contact-info").fadeOut();
+      $(this).removeClass("selected");
+    } else {
+      $("#photos-link").removeClass("selected")
+      $(".photo-link").each(function() {
+        $(this).removeClass("selected");
+      });
+      $(".submenu").hide();
+      $("#photos-container").fadeOut();
+      $("#banner-container").animate({ top : 400 }, 500);
+      $("#splash-shadow").fadeIn();
+      $("#contact-info").fadeIn();
+      $(this).addClass("selected");
+    }
+  });
 
-    $("#contact-link").toggleClass("selected");
-    $("#splash-shadow").fadeToggle();
-    $("#contact-info").fadeToggle();
+  $(".photo-link").click(function(event) {
+    event.preventDefault();
+    if (!$(this).hasClass("selected")) {
+      $("#contact-info").fadeOut();
+      $("#contact-link").removeClass("selected");
+      $("#banner-container").animate({ top : 450 }, 500);
+      $("#splash-shadow").fadeIn();
+      $(".photo-link").each(function() {
+        $(this).removeClass("selected");
+      });
+      $(this).addClass("selected");
+      $("#photos-container").fadeIn();
+      $("#the-row").empty();
+      var category = $(this).attr("id");
+      $.getJSON(SCRIPT_ROOT + '/_get_photos', {category : category},
+                displayPhotos);
+    }
   });
 });

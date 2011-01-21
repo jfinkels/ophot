@@ -11,10 +11,20 @@
       <div id="contact-info">
         {{ name }}<br />{{ email }}<br />{{ phone }}
       </div>
+      <div id="photos-container">
+        <table><tbody><tr id="the-row"></tr></tbody></table>
+      </div>
       <div id="banner-container">
         <div id="banner">
           <ul class="menu">
-            <li><a href="#" class="linkgroup" id="photoslink">photos</a></li>
+            <li>
+              <a href="#" class="linkgroup" id="photos-link">photos</a>
+              <ul class="submenu">
+                <li><a href="#" class="photo-link" id="portrait">portrait</a></li>
+                <li><a href="#" class="photo-link" id="landscape">landscape</a></li>
+                <li><a href="#" class="photo-link" id="personal">personal</a></li>
+              </ul>
+            </li>
             <li><a href="#" class="linkgroup" id="purchase-link">purchase</a></li>
             <li><a href="#" class="linkgroup" id="contact-link">contact</a></li>
             {% if session.logged_in %}
@@ -22,13 +32,13 @@
             {% endif %}
           </ul>
         </div>
-        <div class="small-banner" id="photosbanner">
+<!--        <div class="small-banner" id="photos-banner">
           <ul class="menu">
-            <li><a href="{{ url_for('show_photos', category='portrait') }}">portrait</a></li>
-            <li><a href="#">landscape</a></li>
-            <li><a href="#">personal</a></li>
+            <li><a href="#" class="photo-link" id="portrait">portrait</a></li>
+            <li><a href="#" class="photo-link" id="landscape">landscape</a></li>
+            <li><a href="#" class="photo-link" id="personal">personal</a></li>
           </ul>
-        </div>
+        </div>-->
       </div>
     </div>
 {% endblock %}

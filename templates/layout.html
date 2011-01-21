@@ -20,19 +20,23 @@
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 
+  <!-- set the script root so ajax requests know what our address is -->
+  <script type="text/javascript">
+    var SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+  </script>
   <script type="text/javascript" src="{{ url_for('static',
   filename='layout.js') }}"></script>
   {% endblock %}
 </head>
 <body>
   <div id="container">
+    {% for message in get_flashed_messages() %}
+    <div class="flash">{{ message }}<a href="#" class="close">X</a></div>
+    {% endfor %}
     {% if session.logged_in %}
     <a href="{{ url_for('logout') }}" id="logout">logout</a>
     {% endif %}
     <h1><a href="{{ url_for('show_splash') }}">{{ name }} <span class="darker">photography</span></a></h1>
-    {% for message in get_flashed_messages() %}
-    <div class="flash">{{ message }}<a href="#" class="close">X</a></div>
-    {% endfor %}
     {% block content %}
     {% endblock %}
     <footer>
