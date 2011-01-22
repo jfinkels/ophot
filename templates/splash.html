@@ -33,7 +33,7 @@
             <li><a href="#" class="nav-link" id="purchase-link">purchase</a></li>
             <li><a href="#" class="nav-link" id="contact-link">contact</a></li>
             {% if session.logged_in %}
-            <li><a href="{{ url_for('add_photos') }}">add photos</a></li>
+            <li><a href="{{ url_for('add_photos') }}" class="nav-link">add photos</a></li>
             {% endif %}
           </ul>
         </div>
