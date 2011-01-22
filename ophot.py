@@ -166,7 +166,6 @@ def add_photos():
                     position = 1
                 else:
                     position = result + 1
-                print 'max position:', position
                 filename = generate_filename(app.config['PHOTO_DIR'],
                                              photo.filename)
                 # TODO writing then reading the same file is slow. To fix this:
