@@ -2,17 +2,17 @@ function displayPhotos(data, textStatus, xhr) {
   // assume the data is an associative array mapping display positions to
   // filenames
   var index = 0;
-  for (var pos in data) {
+  for (var id in data) {
     $("#the-row").append(
         "<td class=\"photo-cell\">\n"
       + "  <div class=\"photo-container\">\n"
       + "    <div class=\"photo-shadow\"></div>\n"
       + "    <a class=\"purchase\" href=\"#\">purchase</a>\n"
-      + "    <div class=\"edit-menu\" id=\"edit-menu-" + index + "\">\n"
+      //+ "    <div class=\"edit-menu\" id=\"edit-menu-" + index + "\">\n"
       //+ "      <span class=\"drag\">drag to move</span>\n"
       + "      <a href=\"#\" class=\"delete\">delete</a>\n"
       + "    </div>\n"
-      + "    <img src=" + data[pos] + " id=\"" + pos + "\"/>\n"
+      + "    <img src=" + data[id] + " id=\"" + id + "\"/>\n"
       + "  </div>\n"
       + "</td>\n");
     // hide these things as soon as they are created
@@ -23,10 +23,18 @@ function displayPhotos(data, textStatus, xhr) {
   }
 
   $(".photo-container").hover(
-    function() { $(this).children(".purchase").show(); },
-    function() { $(this).children(".purchase").hide(); }
+    function() { $(this).children(".purchase").fadeToggle(100); }
   );
 
+  // TODO confirm delete with "are you sure?"
+  /*
+  $(".delete").click(function(event) {
+    event.preventDefault();
+    var id = $(this).parent().siblings("img").attr("id");
+    $.getJSON(SCRIPT_ROOT + '/_delete_photo', { id: id },
+              deletePhoto);
+  });
+  */
   // TODO sortable does not seem to work very well
   // $("#the-row").sortable({ axis: 'x',
   //                          opacity: 0.8,
@@ -34,6 +42,12 @@ function displayPhotos(data, textStatus, xhr) {
   //                          forcePlaceholderSize: true });
   // $("#the-row").disableSelection();
 }
+
+/*
+function deletePhoto(data, textStatus, xhr) {
+  
+}
+*/
 
 $(document).ready(function() {
   $("#contact-info").hide();
