@@ -3,6 +3,11 @@
   {{ super() }}
   <!-- splash page javascript -->
   <script type="text/javascript" src="{{ url_for('static', filename='splash.js') }}"></script>
+  {% if session.logged_in %}
+  <!-- this should only show up if a user is logged in -->
+  <!-- javascript for editing photo positions -->
+  <script type="text/javascript" src="{{ url_for('static', filename='edit-photos.js') }}"></script>
+  {% endif %}
 {% endblock %}
 {% block content %}
     <div id="splash" style="background-image: url({{ url_for('static',

@@ -117,14 +117,14 @@ def after_request(response):
     g.db.close()
     return response
 
-@app.route('/photos/<category>')
-def show_photos(category):
-    cursor = g.db.execute('select filename from photos where category == "{0}"'
-                          ' order by id asc'.format(category))
-    # add the / so that the filenames are relative to the root of the app
-    photos = ['/' + row[0] for row in cursor.fetchall()]
-    return render_template('show_photos.html', photos=photos,
-                           num_photos=len(photos), name=name)
+# @app.route('/photos/<category>')
+# def show_photos(category):
+#     cursor = g.db.execute('select filename from photos where category == "{0}"'
+#                           ' order by id asc'.format(category))
+#     # add the / so that the filenames are relative to the root of the app
+#     photos = ['/' + row[0] for row in cursor.fetchall()]
+#     return render_template('show_photos.html', photos=photos,
+#                            num_photos=len(photos), name=name)
 
 @app.route('/')
 def show_splash():
@@ -158,18 +158,29 @@ def add_photos():
                 photo_dir = app.config['PHOTO_DIR']
                 if not os.path.exists(photo_dir):
                     os.mkdir(photo_dir)
+                category = request.form['category']
+                result = g.db.execute('select max(display_position) from '
+                                      'photos where category == "{0}"'
+                                      .format(category)).fetchone()[0]
+                if result is None:
+                    position = 1
+                else:
+                    position = result + 1
+                print 'max position:', position
                 filename = generate_filename(app.config['PHOTO_DIR'],
                                              photo.filename)
-                # TODO writing then reading the same file is slow
+                # TODO writing then reading the same file is slow. To fix this:
+                # first open a file, then pass the filedescriptor to photo.save
+                # and image.open (specify the type for image.open)
                 photo.save(filename)
                 im = Image.open(filename)
                 if im.size[1] > app.config['PHOTO_HEIGHT']:
                     wdth = im.size[0] * app.config['PHOTO_HEIGHT'] / im.size[1]
                     im = im.resize((wdth, app.config['PHOTO_HEIGHT']))
                     im.save(filename)
-                g.db.execute('insert into photos (filename, category) '
-                             'values (?, ?)', [filename,
-                                               request.form['category']])
+                g.db.execute('insert into photos (filename, category, '
+                             'display_position) values (?, ?, ?)',
+                             [filename, category, position])
                 g.db.commit()
                 num_photos_added += 1
             else:
@@ -207,12 +218,12 @@ def get_photos():
 
     """
     category = request.args.get('category')
-    print category
-    cursor = g.db.execute('select filename from photos where category == "{0}"'
-                          ' order by id asc'.format(category))
+    cursor = g.db.execute('select id, filename from photos '
+                          ' where category == "{0}"'
+                          ' order by display_position asc'.format(category))
     # add the / so that the filenames are relative to the root of the app
-    photos = ['/' + row[0] for row in cursor.fetchall()]
-    return jsonify(photos=photos)
+    photos = dict([(row[0], '/' + row[1]) for row in cursor.fetchall()])
+    return jsonify(photos)
 
 if __name__ == '__main__':
     app.run()
