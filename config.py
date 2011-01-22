@@ -36,5 +36,5 @@ DATABASE = 'db/ophot.db'
 
 # Add your contact information.
 EMAIL = 'example@example.com'
-NAME = 'Examply McExample'
+NAME = 'Claire Stevenson'
 PHONE = '555-5555'

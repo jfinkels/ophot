@@ -1,20 +1,32 @@
 function displayPhotos(data, textStatus, xhr) {
-    alert(data.photos);
-  for (var i = 0; i < data.photos.length; i++) {
+  // assume the data is an associative array mapping display positions to
+  // filenames
+  var index = 0;
+  for (var pos in data) {
     $("#the-row").append(
-        "<td>\n"
+        "<td class=\"photo-cell\">\n"
       + "  <div class=\"photo-container\">\n"
       + "    <div class=\"photo-shadow\"></div>\n"
-      + "    <div class=\"edit-menu\" id=\"edit-menu-" + i + "\">\n"
+      + "    <a class=\"purchase\" href=\"#\">purchase</a>\n"
+      + "    <div class=\"edit-menu\" id=\"edit-menu-" + index + "\">\n"
       //+ "      <span class=\"drag\">drag to move</span>\n"
       + "      <a href=\"#\" class=\"delete\">delete</a>\n"
       + "    </div>\n"
-      + "    <img src=" + data.photos[i] + " id=\"" + data + "\"/>\n"
+      + "    <img src=" + data[pos] + " id=\"" + pos + "\"/>\n"
       + "  </div>\n"
       + "</td>\n");
-    // hide the edit menu as soon as it is created!
-    $("#edit-menu-" + i).hide();
+    // hide these things as soon as they are created
+    $("#edit-menu-" + index).hide();
+    $(".photo-shadow").hide();
+    $(".purchase").hide();
+    index += 1;
   }
+
+  $(".photo-container").hover(
+    function() { $(this).children(".purchase").show(); },
+    function() { $(this).children(".purchase").hide(); }
+  );
+
   // TODO sortable does not seem to work very well
   // $("#the-row").sortable({ axis: 'x',
   //                          opacity: 0.8,
