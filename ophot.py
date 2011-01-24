@@ -234,6 +234,7 @@ def delete_photo(photo_id):
     if not session.get('logged_in'):
         abort(401)
     g.db.execute('delete from photos where id == {0}'.format(photo_id))
+    g.db.commit()
     return jsonify(deleted=True, photo_id=photo_id)
 
 if __name__ == '__main__':
