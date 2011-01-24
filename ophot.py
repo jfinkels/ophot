@@ -237,5 +237,9 @@ def delete_photo(photo_id):
     g.db.commit()
     return jsonify(deleted=True, photo_id=photo_id)
 
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('page_not_found.html', name=name), 404
+
 if __name__ == '__main__':
     app.run()

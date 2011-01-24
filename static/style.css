@@ -254,6 +254,10 @@ p.description {
   margin-top: 10px;
 }
 
+p.description a:hover {
+  text-decoration: underline;
+}
+
 span.drag {
   margin-left: 5px;
 }
