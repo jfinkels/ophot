@@ -1,3 +1,9 @@
+/**
+ * Creates the table cell for each photo requested by the displayPhotos()
+ * function. The unique ID of the photo is photo_id, which is filled into the
+ * "id" attribute of the <img> element, and the path to the file is specified
+ * in filename.
+ */
 function createPhotoCellString(photo_id, filename) {
   return "<td class=\"photo-cell\">\n"
        + "  <div class=\"photo-container\">\n"
@@ -16,6 +22,11 @@ function createPhotoCellString(photo_id, filename) {
        + "</td>\n";
 }
 
+/**
+ * Callback which adds new cells to the <tr> element with id "the-row", each
+ * containing the filename specified in data. The data object contains a map
+ * from the unique ID of the photo to display to the path to that photo.
+ */
 function displayPhotos(data, textStatus, xhr) {
   // assume the data is an associative array mapping display positions to
   // filenames
@@ -29,15 +40,11 @@ function displayPhotos(data, textStatus, xhr) {
   $(".purchase").hide();
   $(".photo-shadow").hide();
   $(".confirm-delete").hide();
-
-  // TODO sortable does not seem to work very well
-  // $("#the-row").sortable({ axis: 'x',
-  //                          opacity: 0.8,
-  //                          placeholder: 'placeholder',
-  //                          forcePlaceholderSize: true });
-  // $("#the-row").disableSelection();
 }
 
+/**
+ * Initializes the state of some elements and establishes some event handlers.
+ */
 $(document).ready(function() {
   $("#contact-info").hide();
   $("#photos-banner").hide();
@@ -49,10 +56,6 @@ $(document).ready(function() {
     $(this).children(".purchase").toggle();
   });
 
-  // TODO do this instead of what i'm doing: http://docs.jquery.com/Frequently_Asked_Questions#How_do_I_determine_the_state_of_a_toggled_element.3F
-  // TODO also use .siblings()
-  // TODO use callbacks to make things animate in sequence instead of simult.
-  // TODO decompose these long functions into smaller reusable ones
   $("#photos-link").click(function(event) {
     event.preventDefault();
     if ($(this).hasClass("selected")) {
@@ -65,10 +68,10 @@ $(document).ready(function() {
         });
       });
     } else {
-      $("#contact-info").fadeOut();
       $("#contact-link").removeClass("selected");
-      $("#splash-shadow").fadeOut();
       $(this).addClass("selected");
+      $("#contact-info").fadeOut();
+      $("#splash-shadow").fadeOut();
       $(".submenu").show();
     }
   });
@@ -76,9 +79,9 @@ $(document).ready(function() {
   $("#contact-link").click(function(event) {
     event.preventDefault();
     if ($(this).hasClass("selected")) {
+      $(this).removeClass("selected");
       $("#splash-shadow").fadeOut();
       $("#contact-info").fadeOut();
-      $(this).removeClass("selected");
     } else {
       $("#photos-link").removeClass("selected")
       $(".photo-link").removeClass("selected");
@@ -107,11 +110,11 @@ $(document).ready(function() {
   $(".photo-link").click(function(event) {
     event.preventDefault();
     if (!$(this).hasClass("selected")) {
-      $("#contact-info").fadeOut();
       $("#contact-link").removeClass("selected");
       $(".photo-link").removeClass("selected");
       $(this).addClass("selected");
 
+      $("#contact-info").fadeOut();
       if ($("#photos-container").is(":hidden")) {
         $("#banner-container").animate(
           { top : 497 },
