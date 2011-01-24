@@ -1,7 +1,27 @@
-This application requires the following libraries to be installed
+Introduction
+------------
+
+This is ophot, a small web application which provides a simple photography
+portfolio website. It allows a manager to log in in order to add or remove
+photos. It allows viewers to purchase prints of photographs.
+
+This README was last updated on 23 January 2011.
+
+Installing
+----------
+
+This application requires the following libraries to be installed:
 
 * Flask - http://flask.pocoo.org/
 * Flask-WTF - http://packages.python.org/Flask-WTF/
+* Python Imaging Library (PIL) - http://www.pythonware.com/products/pil/
+
+Using "easy_install" is probably the easiest way to install these:
+
+  easy_install Flask Flask-WTF PIL
+
+Configuring
+-----------
 
 To configure this application, edit the configuration file "config.py". You
 must add at least USERNAME, PASSWORD, and SECRET_KEY for allowing the
@@ -13,24 +33,31 @@ OPHOT_SETTINGS environment variable to be the path to a file containing the
 configuration setting which you wish to set. For example, create a text file
 called "myconfig" and add the following:
 
-  USERNAME = "myusername"
-  PASSWORD = "mypassword"
+  USERNAME = 'myusername'
+  PASSWORD = 'mypassword'
   SECRET_KEY = '123456789012345678901234'
 
-Then change the OPHOT_SETTINGS environment variable to point to that file:
+(See the config.py file for more information on how to generate a secret key.)
+Next change the OPHOT_SETTINGS environment variable to point to that file:
 
   export OPHOT_SETTINGS=/path/to/myconfig
 
-Before running the application we also need to initialize the database:
+Running
+-------
+
+Before running the application we also need to initialize the database. The
+reset-db.sh script will create the database for you based on the schema in the
+schema.sql file:
 
   ./reset-db.sh
 
-To run the web server and start serving, run
+To run the web server and start serving, run:
 
   python ophot.py
 
 Remember to disable debug mode when running on a production server.
 
-20 January 2011
-Jeffrey Finkelstein
-jeffrey.finkelstein@gmail.com
+Contact
+-------
+
+Jeffrey Finkelstein <jeffrey.finkelstein@gmail.com>
