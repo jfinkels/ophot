@@ -3,14 +3,26 @@
   padding: 0em;
 }
 
+a.cancel {
+  color: gray;
+  margin-right: 2em;
+}
+
+a.cancel:hover, a.confirm:hover {
+  text-decoration: underline;
+}
+
+a.confirm {
+  color: gray;
+  margin-right: 1em;
+}
+
 a.close {
   text-decoration: underline;
   float: right;
 }
 
 a.delete {
-  /*float: right;*/
-  /*margin-right: 5px;*/
   background-color: black;
   border-top-left-radius: 4px;
   -moz-border-radius-topleft: 4px;
@@ -22,10 +34,10 @@ a.delete {
   opacity: 0.4;
   padding: 4px;
   position: absolute;
-
   transition: opacity .1s linear;
   -webkit-transition: opacity .1s linear;
   -moz-transition: opacity .1s linear;
+  z-index: 1;
 }
 
 a.delete:hover {
@@ -40,10 +52,6 @@ a.desc-link:link {
   text-decoration: underline;
 }
 
-/* a.desc-link:hover { */
-/*   text-shadow: none; */
-/* } */
-
 a:link, a:visited {
   color: white;
   text-decoration: none;
@@ -54,10 +62,6 @@ a#logout {
   position: absolute;
   right: 0px;
 }
-
-/* a:hover { */
-/*   text-shadow: 0px 0px 3px white; */
-/* } */
 
 a.nav-link, a.photo-link {
   transition: text-shadow .1s linear;
@@ -86,6 +90,7 @@ a.purchase {
   transition: opacity .1s linear;
   -webkit-transition: opacity .1s linear;
   -moz-transition: opacity .1s linear;
+  z-index: 1;
 }
 
 a.purchase:hover {
@@ -98,8 +103,6 @@ a.purchase:hover {
 body {
   color: white;
   background-color: black;
-  /* font-family: 'Raleway', sans-serif; */
-  /*font-family: 'Cabin', sans-serif;*/
   font-family: sans-serif;
 }
 
@@ -123,10 +126,9 @@ div#contact-info {
   background-color: black;
   border-radius: 4px;
   -moz-border-radius: 4px;
-  box-shadow: 5px 5px 5px #000030;
-  -moz-box-shadow: 5px 5px 5px #000030;
-  -webkit-box-shadow: 5px 5px 5px #000030;
-  /*font-family: 'Cabin', sans-serif;*/
+  box-shadow: 1px 1px 4px #000000;
+  -moz-box-shadow: 1px 1px 4px #000000;
+  -webkit-box-shadow: 1px 1px 4px #000000;
   font-family: sans-serif;
   left: 50%;
   top: 20%;
@@ -142,15 +144,30 @@ div#container {
   position: relative;
   width: 800px;
 }
-/*
-div.edit-menu {
+
+div.confirm-delete {
   background-color: black;
-  opacity: 0.4;
-  bottom: 0px;
+  border-radius: 5px;
+  -moz-border-radius: 10px;
+  color: white;
+  left: 50%;
+  margin-left: -190px;
+  padding: 5px;
   position: absolute;
-  width: 100%;
+  top: 60%;
+  width: 380px;
+  z-index: 3;
 }
-*/
+
+div.confirm-delete p:first-child {
+  text-align: center;
+}
+
+p.choice {
+  margin-top: 10px;
+  text-align: right;
+}
+
 div.photo-container {
   position: relative;
 }
@@ -161,6 +178,7 @@ div.photo-shadow {
   opacity: 0.5;
   width: 100%;
   position: absolute;
+  z-index: 2;
 }
 
 div#photos-container {
@@ -181,27 +199,9 @@ div#photos-container {
 }
 
 div#photos-container table {
-  width: 100%;
   height: 100%;
   border-collapse: collapse;
 }
-
-/* div.small-banner { */
-/*   background-color: black; */
-/*   border-bottom-left-radius: 4px; */
-/*   border-top-left-radius: 4px; */
-/*   -moz-border-radius-topleft: 4px; */
-/*   -moz-border-radius-bottomleft: 4px; */
-/*   border-top: thin solid #444444; */
-/*   box-shadow: 0px 3px 5px #000030; */
-/*   -moz-box-shadow: 0px 3px 5px #000030; */
-/*   -webkit-box-shadow: 0px 3px 5px #000000; */
-/*   font-size: 11pt; */
-/*   margin-top: 4px; */
-/*   opacity: 0.8; */
-/*   padding: 10px; */
-/*   float: right; */
-/* } */
 
 div#splash {
   background-repeat: no-repeat;
@@ -240,10 +240,6 @@ h1 {
   margin: 0px 0px 20px 0px;
   font-family: 'Raleway', sans-serif;
 }
-
-/* h1 a:hover { */
-/*   text-shadow: none; */
-/* } */
 
 input.credentials {
   border: none;

@@ -212,8 +212,8 @@ def logout():
 
 @app.route('/_get_photos')
 def get_photos():
-    """Ajax method which returns a JSON which is a map from array index to
-    filename of a photo on the filesystem.
+    """Ajax method which returns a JSON object which is a map from array index
+    to filename of a photo on the filesystem.
 
     """
     category = request.args.get('category')
@@ -223,6 +223,18 @@ def get_photos():
     # add the / so that the filenames are relative to the root of the app
     photos = dict([(row[0], '/' + row[1]) for row in cursor.fetchall()])
     return jsonify(photos)
+
+@app.route('/delete/<int:photo_id>', methods=['DELETE'])
+def delete_photo(photo_id):
+    """Ajax method which deletes the photo with the specified ID number from
+    the database, and returns a boolean representing whether the action was
+    successful.
+
+    """
+    if not session.get('logged_in'):
+        abort(401)
+    g.db.execute('delete from photos where id == {0}'.format(photo_id))
+    return jsonify(deleted=True, photo_id=photo_id)
 
 if __name__ == '__main__':
     app.run()

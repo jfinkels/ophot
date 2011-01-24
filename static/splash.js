@@ -1,40 +1,35 @@
+function createPhotoCellString(photo_id, filename) {
+  return "<td class=\"photo-cell\">\n"
+       + "  <div class=\"photo-container\">\n"
+       + "    <a class=\"purchase\" href=\"#\">purchase</a>\n"
+       + "    <div class=\"photo-shadow\"></div>\n"
+       + "    <div class=\"confirm-delete\">\n"
+       + "      <p>Are you sure you want to delete this photo?</p>\n"
+       + "      <p class=\"choice\">\n"
+       + "        <a href=\"#\" class=\"cancel\">Cancel</a>\n"
+       + "        <a href=\"#\" class=\"confirm\">Delete</a>\n"
+       + "      </p>\n"
+       + "    </div>\n"
+       + "    <a href=\"#\" class=\"delete\">delete</a>\n"
+       + "    <img src=" + filename + " id=\"" + photo_id + "\"/>\n"
+       + "  </div>\n"
+       + "</td>\n";
+}
+
 function displayPhotos(data, textStatus, xhr) {
   // assume the data is an associative array mapping display positions to
   // filenames
   var index = 0;
   for (var id in data) {
-    $("#the-row").append(
-        "<td class=\"photo-cell\">\n"
-      + "  <div class=\"photo-container\">\n"
-      + "    <div class=\"photo-shadow\"></div>\n"
-      + "    <a class=\"purchase\" href=\"#\">purchase</a>\n"
-      //+ "    <div class=\"edit-menu\" id=\"edit-menu-" + index + "\">\n"
-      //+ "      <span class=\"drag\">drag to move</span>\n"
-      + "      <a href=\"#\" class=\"delete\">delete</a>\n"
-      + "    </div>\n"
-      + "    <img src=" + data[id] + " id=\"" + id + "\"/>\n"
-      + "  </div>\n"
-      + "</td>\n");
-    // hide these things as soon as they are created
-    $("#edit-menu-" + index).hide();
-    $(".photo-shadow").hide();
-    $(".purchase").hide();
-    index += 1;
+    $("#the-row").append(createPhotoCellString(id, data[id]));
   }
 
-  $(".photo-container").hover(
-    function() { $(this).children(".purchase").fadeToggle(100); }
-  );
+  // hide these things as soon as they are created
+  $(".delete").hide();
+  $(".purchase").hide();
+  $(".photo-shadow").hide();
+  $(".confirm-delete").hide();
 
-  // TODO confirm delete with "are you sure?"
-  /*
-  $(".delete").click(function(event) {
-    event.preventDefault();
-    var id = $(this).parent().siblings("img").attr("id");
-    $.getJSON(SCRIPT_ROOT + '/_delete_photo', { id: id },
-              deletePhoto);
-  });
-  */
   // TODO sortable does not seem to work very well
   // $("#the-row").sortable({ axis: 'x',
   //                          opacity: 0.8,
@@ -43,12 +38,6 @@ function displayPhotos(data, textStatus, xhr) {
   // $("#the-row").disableSelection();
 }
 
-/*
-function deletePhoto(data, textStatus, xhr) {
-  
-}
-*/
-
 $(document).ready(function() {
   $("#contact-info").hide();
   $("#photos-banner").hide();
@@ -56,20 +45,29 @@ $(document).ready(function() {
   $("#splash-shadow").hide();
   $(".submenu").hide();
 
+  $(".photo-container").live("hover", function() {
+    $(this).children(".purchase").toggle();
+  });
+
   // TODO do this instead of what i'm doing: http://docs.jquery.com/Frequently_Asked_Questions#How_do_I_determine_the_state_of_a_toggled_element.3F
   // TODO also use .siblings()
+  // TODO use callbacks to make things animate in sequence instead of simult.
+  // TODO decompose these long functions into smaller reusable ones
   $("#photos-link").click(function(event) {
     event.preventDefault();
     if ($(this).hasClass("selected")) {
       $(this).removeClass("selected");
-      $(".submenu").hide();
-      $("#photos-container").fadeOut();
-      $("#banner-container").animate({ top : 400 }, 500);
-      $("#splash-shadow").fadeOut();
-      $(".photo-link").each(function() {
-        $(this).removeClass("selected");
+      $(".photo-link").removeClass("selected");
+      $(".submenu").hide(0, function() {
+        $("#photos-container").fadeOut();
+        $("#splash-shadow").fadeOut(400, function() {
+          $("#banner-container").animate({ top : 400 }, 500);
+        });
       });
     } else {
+      $("#contact-info").fadeOut();
+      $("#contact-link").removeClass("selected");
+      $("#splash-shadow").fadeOut();
       $(this).addClass("selected");
       $(".submenu").show();
     }
@@ -83,15 +81,26 @@ $(document).ready(function() {
       $(this).removeClass("selected");
     } else {
       $("#photos-link").removeClass("selected")
-      $(".photo-link").each(function() {
-        $(this).removeClass("selected");
-      });
-      $(".submenu").hide();
-      $("#photos-container").fadeOut();
-      $("#banner-container").animate({ top : 400 }, 500);
-      $("#splash-shadow").fadeIn();
-      $("#contact-info").fadeIn();
+      $(".photo-link").removeClass("selected");
       $(this).addClass("selected");
+
+      $(".submenu").hide();
+      $("#splash-shadow").fadeIn();
+
+      if ($("#photos-container").is(":visible")) {
+        $("#photos-container").fadeOut(400, function() {
+          $("#banner-container").animate(
+            { top : 400 }, 
+            {
+              duration: 500,
+              complete: function() {
+                $("#contact-info").fadeIn();
+              }
+            });
+        });
+      } else {
+        $("#contact-info").fadeIn();        
+      }
     }
   });
 
@@ -100,13 +109,21 @@ $(document).ready(function() {
     if (!$(this).hasClass("selected")) {
       $("#contact-info").fadeOut();
       $("#contact-link").removeClass("selected");
-      $("#banner-container").animate({ top : 497 }, 500);
-      $("#splash-shadow").fadeIn();
-      $(".photo-link").each(function() {
-        $(this).removeClass("selected");
-      });
+      $(".photo-link").removeClass("selected");
       $(this).addClass("selected");
-      $("#photos-container").fadeIn();
+
+      if ($("#photos-container").is(":hidden")) {
+        $("#banner-container").animate(
+          { top : 497 },
+          {
+            duration: 500,
+            complete: function() {
+              $("#splash-shadow").fadeIn();
+              $("#photos-container").fadeIn();
+            }
+          });
+      }
+
       $("#the-row").empty();
       var category = $(this).attr("id");
       $.getJSON(SCRIPT_ROOT + '/_get_photos', {category : category},
