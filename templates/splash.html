@@ -5,7 +5,7 @@
   <script type="text/javascript" src="{{ url_for('static', filename='splash.js') }}"></script>
   {% if session.logged_in %}
   <!-- this should only show up if a user is logged in -->
-  <!-- javascript for editing photo positions -->
+  <!-- javascript for editing photos -->
   <script type="text/javascript" src="{{ url_for('static', filename='edit-photos.js') }}"></script>
   {% endif %}
 {% endblock %}
@@ -25,9 +25,9 @@
             <li>
               <a href="#" class="nav-link" id="photos-link">photos</a>
               <ul class="submenu">
-                <li><a href="#" class="photo-link" id="portrait">portrait</a></li>
-                <li><a href="#" class="photo-link" id="landscape">landscape</a></li>
-                <li><a href="#" class="photo-link" id="personal">personal</a></li>
+                {% for (id, cname) in categories %}
+                <li><a href="#" class="photo-link" id="{{ id }}">{{ cname }}</a></li>
+                {% endfor %}
               </ul>
             </li>
             <li><a href="#" class="nav-link" id="purchase-link">purchase</a></li>
@@ -37,13 +37,6 @@
             {% endif %}
           </ul>
         </div>
-<!--        <div class="small-banner" id="photos-banner">
-          <ul class="menu">
-            <li><a href="#" class="photo-link" id="portrait">portrait</a></li>
-            <li><a href="#" class="photo-link" id="landscape">landscape</a></li>
-            <li><a href="#" class="photo-link" id="personal">personal</a></li>
-          </ul>
-        </div>-->
       </div>
     </div>
 {% endblock %}

@@ -1,23 +1,66 @@
 /**
- * Creates the table cell for each photo requested by the displayPhotos()
- * function. The unique ID of the photo is photo_id, which is filled into the
- * "id" attribute of the <img> element, and the path to the file is specified
- * in filename.
+ * This object can store global variables so that we can transfer data between
+ * different AJAX callbacks.
  */
-function createPhotoCellString(photo_id, filename) {
+// TODO is there a way to do this without globals?
+var globalVariables = {};
+
+/**
+ * Stores the categories received from the server on the globalVariables
+ * object.
+ */
+function storeCategories(data, textStatus, xhr) {
+  globalVariables.categories = new Array();
+  var i = 0;
+  for (var j in data) {
+    globalVariables.categories[i] = data[j];
+    i++;
+  }
+}
+
+/**
+ * Creates the table cell for each photo requested by the displayPhotos()
+ * function. The unique ID of the photo is *photoid*, which is filled into the
+ * "id" attribute of the <img> element, and the path to the file containing the
+ * photo is specified in *filename*. *categories* is an array containing the
+ * names of the categories to which a photo can be assigned.
+ */
+function createPhotoCellString(photoid, filename, categories) {
+  /*  var options = "";
+
+  for (var i in categories) {
+    options += "          <option value=\"" + categories[i] + "\"></option>\n";
+  }*/
+  // TODO move the logged in specific things out to edit-photo.js
   return "<td class=\"photo-cell\">\n"
        + "  <div class=\"photo-container\">\n"
        + "    <a class=\"purchase\" href=\"#\">purchase</a>\n"
        + "    <div class=\"photo-shadow\"></div>\n"
-       + "    <div class=\"confirm-delete\">\n"
+       + "    <div class=\"delete-dialog\">\n"
        + "      <p>Are you sure you want to delete this photo?</p>\n"
        + "      <p class=\"choice\">\n"
        + "        <a href=\"#\" class=\"cancel\">Cancel</a>\n"
-       + "        <a href=\"#\" class=\"confirm\">Delete</a>\n"
+       + "        <a href=\"#\" class=\"confirm-delete\">Delete</a>\n"
        + "      </p>\n"
        + "    </div>\n"
-       + "    <a href=\"#\" class=\"delete\">delete</a>\n"
-       + "    <img src=" + filename + " id=\"" + photo_id + "\"/>\n"
+       + "    <div class=\"cat-chooser\">\n"
+       + "      <p>Change category to:</p>\n"
+       + "      <ul class=\"category-list\"><li></li></ul>\n"
+       + "      <p class=\"choice\">\n"
+       + "        <a href=\"#\" class=\"cancel\">Cancel</a>\n"
+       + "        <a href=\"#\" class=\"confirm-cat-change\">Save</a>\n"
+       + "      </p>\n"
+       + "    </div>\n"
+       + "    <ul class=\"edit-menu\">\n"
+       + "      <li>\n"
+       + "        <a href=\"#\" class=\"change-cat\">change category</a>\n"
+      /*+ "        <select name=\"new-category\" class=\"new-category\">\n"
+       + options
+       + "        </select>\n"*/
+       + "      </li>\n"
+       + "      <li><a href=\"#\" class=\"delete\">delete</a></li>\n"
+       + "    </ul>\n"
+       + "    <img src=" + filename + " id=\"" + photoid + "\"/>\n"
        + "  </div>\n"
        + "</td>\n";
 }
@@ -28,18 +71,25 @@ function createPhotoCellString(photo_id, filename) {
  * from the unique ID of the photo to display to the path to that photo.
  */
 function displayPhotos(data, textStatus, xhr) {
+
+  // get the known categories and store them in the global variable
+  // TODO this really only needs to happen once
+  $.getJSON(SCRIPT_ROOT + '/_get_categories', storeCategories);
+
   // assume the data is an associative array mapping display positions to
   // filenames
   var index = 0;
   for (var id in data) {
-    $("#the-row").append(createPhotoCellString(id, data[id]));
+    $("#the-row").append(createPhotoCellString(id, data[id],
+                                               globalVariables.categories));
   }
 
   // hide these things as soon as they are created
-  $(".delete").hide();
+  $(".edit-menu").hide();
+  $(".cat-chooser").hide();
   $(".purchase").hide();
   $(".photo-shadow").hide();
-  $(".confirm-delete").hide();
+  $(".delete-dialog").hide();
 }
 
 /**
@@ -128,8 +178,8 @@ $(document).ready(function() {
       }
 
       $("#the-row").empty();
-      var category = $(this).attr("id");
-      $.getJSON(SCRIPT_ROOT + '/_get_photos', {category : category},
+      var categoryid = $(this).attr("id");
+      $.getJSON(SCRIPT_ROOT + '/_get_photos', {categoryid : categoryid},
                 displayPhotos);
     }
   });

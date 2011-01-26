@@ -8,11 +8,22 @@ a.cancel {
   margin-right: 2em;
 }
 
-a.cancel:hover, a.confirm:hover {
+a.category-option {
+  padding: 3px;
+  border-radius: 4px;
+  -moz-border-radius: 4px;
+}
+
+a.category-option:hover {
+  background-color: #000060;
+}
+
+a.cancel:hover, a.confirm-delete:hover, a.confirm-cat-change:hover,
+a.change-cat:hover, a.delete:hover {
   text-decoration: underline;
 }
 
-a.confirm {
+a.confirm-delete, a.confirm-cat-change {
   color: gray;
   margin-right: 1em;
 }
@@ -20,31 +31,6 @@ a.confirm {
 a.close {
   text-decoration: underline;
   float: right;
-}
-
-a.delete {
-  background-color: black;
-  border-top-left-radius: 4px;
-  -moz-border-radius-topleft: 4px;
-  box-shadow: 0px 0px 5px black;
-  -moz-box-shadow: 0px 0px 5px black;
-  -webkit-box-shadow: 0px 0px 5px black;
-  bottom: 0px;
-  right: 0px;
-  opacity: 0.4;
-  padding: 4px;
-  position: absolute;
-  transition: opacity .1s linear;
-  -webkit-transition: opacity .1s linear;
-  -moz-transition: opacity .1s linear;
-  z-index: 1;
-}
-
-a.delete:hover {
-  opacity: 1;
-  transition: opacity .1s linear;
-  -webkit-transition: opacity .1s linear;
-  -moz-transition: opacity .1s linear;
 }
 
 a.desc-link:link {
@@ -79,7 +65,7 @@ a.nav-link:hover, a.photo-link:hover {
 a.purchase {
   background-color: black;
   border-bottom-right-radius: 4px;
-  -mox-border-radius-bottomright: 4px;
+  -moz-border-radius-bottomright: 4px;
   box-shadow: 0px 0px 5px black;
   -webkit-box-shadow: 0px 0px 5px black;
   opacity: 0.4;
@@ -98,6 +84,10 @@ a.purchase:hover {
   transition: opacity .1s linear;
   -webkit-transition: opacity .1s linear;
   -moz-transition: opacity .1s linear;
+}
+
+a.selected-cat {
+  background-color: #000080;
 }
 
 body {
@@ -120,6 +110,14 @@ div#banner-container {
   font-weight: bold;
   position: relative;
   top: 400px;
+}
+
+div.cat-chooser {
+  text-align: center;
+}
+
+div.cat-chooser p {
+  margin-bottom: 5px;
 }
 
 div#contact-info {
@@ -145,7 +143,7 @@ div#container {
   width: 800px;
 }
 
-div.confirm-delete {
+div.delete-dialog, div.cat-chooser {
   background-color: black;
   border-radius: 5px;
   -moz-border-radius: 10px;
@@ -159,7 +157,8 @@ div.confirm-delete {
   z-index: 3;
 }
 
-div.confirm-delete p:first-child {
+div.delete-dialog p:first-child,
+div.cat-chooser p:first-child {
   text-align: center;
 }
 
@@ -289,6 +288,57 @@ tr#the-row td:first-child img {
 
 tr#the-row td img {
   vertical-align: middle;
+}
+
+ul.category-list {
+  list-style-type: none;
+  display: inline;
+}
+
+ul.category-list li {
+  display: inline;
+  margin-left: 2em;
+}
+
+ul.category-list li:first-child {
+  margin-left: 0em;
+}
+
+ul.edit-menu {
+  background-color: black;
+  border-top-left-radius: 4px;
+  -moz-border-radius-topleft: 4px;
+  box-shadow: 0px 0px 5px black;
+  -moz-box-shadow: 0px 0px 5px black;
+  -webkit-box-shadow: 0px 0px 5px black;
+  bottom: 0px;
+  opacity: 0.4;
+  padding: 4px;
+  position: absolute;
+  list-style-type: none;
+  text-align: right;
+  transition: opacity .1s linear;
+  -webkit-transition: opacity .1s linear;
+  -moz-transition: opacity .1s linear;
+  right: 0px;
+  z-index: 1;
+}
+
+ul.edit-menu:hover {
+  opacity: 1;
+  transition: opacity .1s linear;
+  -webkit-transition: opacity .1s linear;
+  -moz-transition: opacity .1s linear;
+}
+
+ul.edit-menu li {
+  display: inline;
+  margin-right: 10px;
+/*  position: relative;*/
+}
+
+ul.edit-menu li:last-child {
+  margin-right: 0px;
 }
 
 ul.menu {

@@ -50,14 +50,28 @@ app.config.from_envvar('OPHOT_SETTINGS', silent=True)
 
 name = app.config['NAME']
 
-class PhotoUploadForm(Form):
-    """Class which represents the photo upload form."""
-    photos = FileField('Select photos to upload'
-                       #, validators=[FileTypeValidator(app.config['ALLOWED_EXTENSIONS'])]
-                       )
-    category = SelectField('Category', choices=[('portrait', 'Portrait'),
-                                                ('landscape', 'Landscape'),
-                                                ('personal', 'Personal')])
+def _get_categories():
+    """Helper method which returns a map from category ID to category name,
+    sorted in alphabetical (lexicographical) order by category name.
+
+    """
+    cursor = g.db.execute('select categoryid, categoryname from category'
+                          ' order by categoryname asc')
+    return dict([(row[0], row[1]) for row in cursor.fetchall()])
+
+def _get_last_display_position(categoryid):
+    # sometimes returns None
+    return g.db.execute('select max(photodisplayposition) from photo where'
+                        ' photocategory == "{0}"'
+                        .format(categoryid)).fetchone()[0]
+
+
+def update_categories(form):
+    """Updates the choices in the category SelectField of the specified form
+    with the categories selected from the database.
+    
+    """
+    form.category.choices = _get_categories().items()
 
 def init_db():
     """Initialize the database using the schema specified in the configuration.
@@ -129,9 +143,9 @@ def after_request(response):
 @app.route('/')
 def show_splash():
     """Shows the splash page as the root."""
-    return render_template('splash.html', name=name,
-                           email=app.config['EMAIL'],
-                           phone=app.config['PHONE'])
+    categories = _get_categories().iteritems()
+    return render_template('splash.html', name=name, email=app.config['EMAIL'],
+                           phone=app.config['PHONE'], categories=categories)
 
 @app.route('/add', methods=['GET', 'POST'])
 def add_photos():
@@ -141,6 +155,18 @@ def add_photos():
     database.
 
     """
+
+    # HACK we need to create this class anew each time we need it because the
+    # category class variable depends on the categories read from the database,
+    # which may change over time
+    class PhotoUploadForm(Form):
+        """Class which represents the photo upload form."""
+
+        # TODO add this validator when it works with multiple files:
+        # FileTypeValidator(app.config['ALLOWED_EXTENSIONS'])
+        photos = FileField('Select photos to upload')
+        category = SelectField('Category', coerce=int,
+                               choices=_get_categories().items())
     form = PhotoUploadForm(request.form)
     if request.method == 'POST' and form.validate():
         if not session.get('logged_in'):
@@ -158,11 +184,9 @@ def add_photos():
                 photo_dir = app.config['PHOTO_DIR']
                 if not os.path.exists(photo_dir):
                     os.mkdir(photo_dir)
-                category = request.form['category']
-                result = g.db.execute('select max(display_position) from '
-                                      'photos where category == "{0}"'
-                                      .format(category)).fetchone()[0]
-                if result is None:
+                categoryid = request.form['category']
+                result = _get_last_display_position(categoryid)
+                if _get_last_display_position(categoryid) is None:
                     position = 1
                 else:
                     position = result + 1
@@ -177,9 +201,9 @@ def add_photos():
                     wdth = im.size[0] * app.config['PHOTO_HEIGHT'] / im.size[1]
                     im = im.resize((wdth, app.config['PHOTO_HEIGHT']))
                     im.save(filename)
-                g.db.execute('insert into photos (filename, category, '
-                             'display_position) values (?, ?, ?)',
-                             [filename, category, position])
+                g.db.execute('insert into photo (photofilename, photocategory,'
+                             ' photodisplayposition) values (?, ?, ?)',
+                             [filename, categoryid, position])
                 g.db.commit()
                 num_photos_added += 1
             else:
@@ -191,6 +215,7 @@ def add_photos():
     return render_template('add_photos.html', form=form, name=name,
                            height=app.config['PHOTO_HEIGHT'])
 
+# TODO use Flask-CSRF?
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
@@ -212,20 +237,66 @@ def logout():
 
 @app.route('/_get_photos')
 def get_photos():
-    """Ajax method which returns a JSON object which is a map from array index
-    to filename of a photo on the filesystem.
+    """Ajax method which returns a JSON object which is a map from photoid to
+    filenames of photos in the category specified in the request argument
+    *categoryid*.
 
     """
-    category = request.args.get('category')
-    cursor = g.db.execute('select id, filename from photos '
-                          ' where category == "{0}"'
-                          ' order by display_position asc'.format(category))
+    category = request.args.get('categoryid')
+    cursor = g.db.execute('select photoid, photofilename from photo'
+                          ' where photocategory == "{0}"'
+                          ' order by photodisplayposition asc'
+                          .format(category))
     # add the / so that the filenames are relative to the root of the app
     photos = dict([(row[0], '/' + row[1]) for row in cursor.fetchall()])
     return jsonify(photos)
 
-@app.route('/delete/<int:photo_id>', methods=['DELETE'])
-def delete_photo(photo_id):
+# @app.route('/_get_category')
+# def get_category():
+#     """Ajax method which returns the category of a photo.
+    
+#     Request arguments are *photoid*, an integer which is the ID of the photo
+#     whose category will be returned.
+#     """
+#     pass
+
+@app.route('/_change_category')
+def change_category():
+    """Ajax method which changes the category of a photo.
+
+    Request arguments are *photoid*, an integer which is the ID of the photo to
+    change, and *categoryid*, an integer which is the ID of the category to
+    which the photo will be moved.
+
+    Returns a JSON object mapping *changed* to a boolean representing whether
+    the category was successfully changed, *photoid* to the ID of the photo,
+    and *categoryid* to the ID of the category.
+
+    If the photo is being changed to the same category, this method will change
+    its display order position to be last.
+    """
+    if not session.get('logged_in'):
+        abort(401)
+    categoryid = request.args.get('categoryid')
+    photoid = request.args.get('photoid')
+    position = _get_last_display_position(categoryid)
+    if position is None:
+        position = 1
+    g.db.execute('update photo set photocategory={0},photodisplayposition={1}'
+                 ' where photoid={2}'.format(categoryid, position, photoid))
+    g.db.commit()
+    return jsonify(changed=True, photoid=photoid, categoryid=categoryid)
+
+@app.route('/_get_categories')
+def get_categories():
+    """Ajax method which returns a JSON object storing an array of categories
+    in alphabetical (lexicographical) order.
+
+    """
+    return jsonify(_get_categories().iteritems())
+
+@app.route('/delete/<int:photoid>', methods=['DELETE'])
+def delete_photo(photoid):
     """Ajax method which deletes the photo with the specified ID number from
     the database, and returns a boolean representing whether the action was
     successful.
@@ -233,9 +304,9 @@ def delete_photo(photo_id):
     """
     if not session.get('logged_in'):
         abort(401)
-    g.db.execute('delete from photos where id == {0}'.format(photo_id))
+    g.db.execute('delete from photo where photoid == {0}'.format(photoid))
     g.db.commit()
-    return jsonify(deleted=True, photo_id=photo_id)
+    return jsonify(deleted=True, photoid=photoid)
 
 @app.errorhandler(404)
 def page_not_found(error):
