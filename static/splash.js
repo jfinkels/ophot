@@ -101,6 +101,7 @@ $(document).ready(function() {
   $("#photos-container").hide();
   $("#splash-shadow").hide();
   $(".submenu").hide();
+  $("#change-splash-photo").hide();
 
   $(".photo-container").live("hover", function() {
     $(this).children(".purchase").toggle();

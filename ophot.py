@@ -15,13 +15,17 @@ from flask import render_template
 from flask import request
 from flask import session
 from flask import url_for
-from flaskext.wtf import Form
+from flaskext.uploads import UploadSet
+from flaskext.uploads import IMAGES
 from flaskext.wtf import FileField
+from flaskext.wtf import Form
 #from flaskext.wtf import Required
 from flaskext.wtf import SelectField
 #from flaskext.wtf import ValidationError
+#from flaskext.wtf.file import file_allowed
+#from flaskext.wtf.file import file_required
 import Image
-#from werkzeug import secure_filename
+from werkzeug import secure_filename
 
 # class FileTypeValidator(object):
 #     def __init__(self, extensions, message=None):
@@ -49,6 +53,18 @@ app.config.from_object('config')
 app.config.from_envvar('OPHOT_SETTINGS', silent=True)
 
 name = app.config['NAME']
+
+splash_photos = UploadSet('images', IMAGES)
+
+class ChangeSplashPhotoForm(Form):
+    """Class which represents the form with which the user can change the
+    splash photo.
+
+    """
+    photo = FileField('Select new splash photo')#,
+    #                  validators=[file_required(),
+    #                              file_allowed(splash_photos, 'Images only.')])
+    
 
 def _get_categories():
     """Helper method which returns a map from category ID to category name,
@@ -145,7 +161,34 @@ def show_splash():
     """Shows the splash page as the root."""
     categories = _get_categories().iteritems()
     return render_template('splash.html', name=name, email=app.config['EMAIL'],
-                           phone=app.config['PHONE'], categories=categories)
+                           phone=app.config['PHONE'], categories=categories,
+                           filename=app.config['SPLASH_PHOTO_FILENAME'],
+                           photo_padding=app.config['PHOTO_PADDING'])
+
+@app.route('/change_splash_photo', methods=['GET', 'POST'])
+def change_splash_photo():
+    """View which on GET requests shows a page containing a form with which the
+    user can upload a photo to be the background on the splash page, and on
+    POST requests stores the new photo.
+
+    """
+    form = ChangeSplashPhotoForm(request.form)
+    if form.validate_on_submit():
+        if not session.get('logged_in'):
+            abort(401)
+        filename = app.config['SPLASH_PHOTO_FILENAME']
+        # TODO same as below; opening and closing a file twice is bad
+        request.files['photo'].save(filename)
+        im = Image.open(filename)
+        if im.size[0] > app.config['SPLASH_PHOTO_WIDTH'] \
+                or im.size[1] > app.config['SPLASH_PHOTO_HEIGHT']:
+            im.resize((app.config['SPLASH_PHOTO_WIDTH'],
+                       app.config['SPLASH_PHOTO_HEIGHT']))
+        flash('New splash photo uploaded.')
+        return redirect(url_for('show_splash'))
+    return render_template('change_splash_photo.html', form=form, name=name,
+                           height=app.config['SPLASH_PHOTO_HEIGHT'],
+                           width=app.config['SPLASH_PHOTO_WIDTH'])        
 
 @app.route('/add', methods=['GET', 'POST'])
 def add_photos():
@@ -211,7 +254,7 @@ def add_photos():
                       'It was not uploaded.'.format(photo.filename,
                       ', '.join(app.config['ALLOWED_EXTENSIONS'])))
         flash('{0} new photos added.'.format(num_photos_added))
-        return redirect(url_for('add_photos'))
+        #return redirect(url_for('add_photos'))
     return render_template('add_photos.html', form=form, name=name,
                            height=app.config['PHOTO_HEIGHT'])
 

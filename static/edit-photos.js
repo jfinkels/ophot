@@ -27,6 +27,10 @@ $(document).ready(function() {
     $(this).children(".edit-menu").toggle();
   });
 
+  $("#splash").hover(function() {
+    $(this).children("#change-splash-photo").toggle();
+  });
+
   // this event is similar to the hover action for the purchase link specified
   // in the CSS, but we put it in here since we need to change a property on a
   // different element

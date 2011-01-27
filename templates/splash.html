@@ -1,6 +1,13 @@
 {% extends "layout.html" %}
 {% block head %}
   {{ super() }}
+  <!-- some extra styles for displaying photos -->
+  <style type="text/css">
+    td.photo-cell {
+      padding-left: {{ photo_padding }}px;
+    }
+  </style>
+  
   <!-- splash page javascript -->
   <script type="text/javascript" src="{{ url_for('static', filename='splash.js') }}"></script>
   {% if session.logged_in %}
@@ -10,8 +17,12 @@
   {% endif %}
 {% endblock %}
 {% block content %}
-    <div id="splash" style="background-image: url({{ url_for('static',
-    filename='splash.jpg') }});">
+    <div id="splash" style="background-image: url({{ filename }});">
+      {% if session.logged_in %}
+      <a href="{{ url_for('change_splash_photo') }}" id="change-splash-photo">
+        change splash photo
+      </a>
+      {% endif %}
       <div id="splash-shadow"></div>
       <div id="contact-info">
         {{ name }}<br />{{ email }}<br />{{ phone }}

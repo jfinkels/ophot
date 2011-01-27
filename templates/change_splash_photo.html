@@ -1,0 +1,24 @@
+{% from "_formhelpers.html" import render_field %}
+{% extends "layout.html" %}
+{% block content %}
+{% if session.logged_in %}
+<p class="description">This page allows you to upload a photo to set as the
+background on the splash page.</p>
+
+<p class="description">Note: images will be scaled to {{ width }} by {{ height
+}} pixels. I suggest resizing your image to those dimensions <em>before</em>
+uploading it, so that you control how it looks!</p>
+
+<form action="{{ url_for('change_splash_photo') }}" method="post"
+      enctype="multipart/form-data" id="photo-upload-form">
+  {{ form.hidden_tag() }}
+  {{ render_field(form.photo) }}
+  <div><input type="submit" value="Submit" /></div>
+</form>
+{% else %}
+<p class="description">
+  Only the administrator may change the photo on the splash page. <a href="{{
+  url_for('login') }}" class="desc-link">Login.</a>
+</p>
+{% endif %}
+{% endblock %}
