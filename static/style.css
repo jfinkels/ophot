@@ -204,6 +204,7 @@ div#photos-container table {
 
 div#splash {
   background-repeat: no-repeat;
+  background-position: center center;
   height: 535px;
   border-radius: 10px;
   -moz-border-radius: 10px;
