@@ -7,9 +7,25 @@
       padding-left: {{ photo_padding }}px;
     }
   </style>
+
+  <!-- jscrollpane style (must be included before the javascript) -->
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='jquery.jscrollpane.css') }}" />
   
   <!-- splash page javascript -->
   <script type="text/javascript" src="{{ url_for('static', filename='splash.js') }}"></script>
+  
+  <!-- javascript libraries required for jscrollpane to work -->
+
+  <!-- mousewheel intent plugin which prevents the user from unintentionally
+  getting caught in the scroll pane -->
+  <script type="text/javascript" src="{{ url_for('static', filename='mwheelIntent.js') }}"></script>
+
+  <!-- the mousewheel plugin -->
+  <script type="text/javascript" src="{{ url_for('static', filename='jquery.mousewheel.js') }}"></script>
+
+  <!-- the jScrollPane script -->
+  <script type="text/javascript" src="{{ url_for('static', filename='jquery.jscrollpane.min.js') }}"></script>
+
   {% if session.logged_in %}
   <!-- this should only show up if a user is logged in -->
   <!-- javascript for editing photos -->
@@ -27,6 +43,9 @@
       <div id="contact-info">
         {{ name }}<br />{{ email }}<br />{{ phone }}
       </div>
+      <div id="bio" class="scroll-pane">
+        {{ bio|safe }}
+      </div>
       <div id="photos-container">
         <table><tbody><tr id="the-row"><td></td></tr></tbody></table>
       </div>
@@ -42,9 +61,10 @@
               </ul>
             </li>
             <li><a href="#" class="nav-link" id="purchase-link">purchase</a></li>
+            <li><a href="#" class="nav-link" id="bio-link">bio</a></li>
             <li><a href="#" class="nav-link" id="contact-link">contact</a></li>
             {% if session.logged_in %}
-            <li><a href="{{ url_for('add_photos') }}" class="nav-link">add photos</a></li>
+            <li><a href="{{ url_for('add_photos') }}" class="nav-link">add&nbsp;photos</a></li>
             {% endif %}
           </ul>
         </div>

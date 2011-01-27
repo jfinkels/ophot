@@ -55,3 +55,19 @@ DATABASE = 'db/ophot.db'
 EMAIL = 'example@example.com'
 NAME = 'Example Exampleson'
 PHONE = '555-5555'
+
+# The biography to display in the bio box. This string can contain HTML (for
+# example, paragraph elements).
+BIO = """
+<p>{0} was born the son/daughter of a poor farmer in Kentucky.</p>
+
+<p>Things have never been better for {0}. Now he/she is a successful
+photographer.</p>
+
+<p>Long live {0}.</p>
+
+<p>What follows is a very long paragraph to test that scrolling works:</p>
+
+<p>{1}</p>
+
+<p>That was lovely.</p>""".format(NAME, 'long '*1000)

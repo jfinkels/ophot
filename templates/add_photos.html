@@ -1,5 +1,11 @@
 {% from "_formhelpers.html" import render_field %}
 {% extends "layout.html" %}
+{% block head %}
+{{ super() }}
+  <!-- javascript needed for adding a new category -->
+  <script type="text/javascript" src="{{ url_for('static', filename='add-photos.js') }}"></script>
+
+{% endblock %}
 {% block content %}
 {% if session.logged_in %}
 <p class="description">This page allows you to upload one or more photos and
@@ -15,6 +21,10 @@ uploading it, so that you control how it looks!</p>
   {{ form.hidden_tag() }}
   {{ render_field(form.photos, multiple="multiple") }}
   {{ render_field(form.category) }}
+  <p id="new-category">
+    <label for="new-cat-name">New category name:</label>
+    <input name="new-cat-name" id="new-cat-name" type="text" />
+  </p>
   <div><input type="submit" value="Submit" /></div>
 </form>
 {% else %}

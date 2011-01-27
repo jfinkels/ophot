@@ -22,8 +22,8 @@ from flaskext.wtf import Form
 #from flaskext.wtf import Required
 from flaskext.wtf import SelectField
 #from flaskext.wtf import ValidationError
-#from flaskext.wtf.file import file_allowed
-#from flaskext.wtf.file import file_required
+from flaskext.wtf.file import file_allowed
+from flaskext.wtf.file import file_required
 import Image
 from werkzeug import secure_filename
 
@@ -66,6 +66,18 @@ class ChangeSplashPhotoForm(Form):
     #                              file_allowed(splash_photos, 'Images only.')])
     
 
+def _add_new_category(name):
+    """Creates a new category in the database with the specified *name* and
+    returns its ID number.
+
+    """
+    g.db.execute('insert into category (categoryname) values (?)', [name])
+    g.db.commit()
+    print 'adding new category', name
+    # get the ID of the category that we just inserted
+    return g.db.execute('select categoryid from category where'
+                        ' categoryname == "{0}"'.format(name)).fetchone()[0]
+
 def _get_categories():
     """Helper method which returns a map from category ID to category name,
     sorted in alphabetical (lexicographical) order by category name.
@@ -75,19 +87,22 @@ def _get_categories():
                           ' order by categoryname asc')
     return dict([(row[0], row[1]) for row in cursor.fetchall()])
 
+def _get_categories_plus_new():
+    """Helper method for the PhotoUploadForm which returns a list of pairs,
+    each containing the category ID on the left and the category name on the
+    right. The final element of this list is the pair (-1, 'new category...'),
+    which is a sentinel value notifying the server that the user wishes to
+    create a new category and apply these photos to it.
+
+    Pre-condition: none of the existing categories have an ID of -1.
+    """
+    return _get_categories().items() + [(-1, 'new category...')]
+
 def _get_last_display_position(categoryid):
     # sometimes returns None
     return g.db.execute('select max(photodisplayposition) from photo where'
                         ' photocategory == "{0}"'
                         .format(categoryid)).fetchone()[0]
-
-
-def update_categories(form):
-    """Updates the choices in the category SelectField of the specified form
-    with the categories selected from the database.
-    
-    """
-    form.category.choices = _get_categories().items()
 
 def init_db():
     """Initialize the database using the schema specified in the configuration.
@@ -147,15 +162,6 @@ def after_request(response):
     g.db.close()
     return response
 
-# @app.route('/photos/<category>')
-# def show_photos(category):
-#     cursor = g.db.execute('select filename from photos where category == "{0}"'
-#                           ' order by id asc'.format(category))
-#     # add the / so that the filenames are relative to the root of the app
-#     photos = ['/' + row[0] for row in cursor.fetchall()]
-#     return render_template('show_photos.html', photos=photos,
-#                            num_photos=len(photos), name=name)
-
 @app.route('/')
 def show_splash():
     """Shows the splash page as the root."""
@@ -163,7 +169,8 @@ def show_splash():
     return render_template('splash.html', name=name, email=app.config['EMAIL'],
                            phone=app.config['PHONE'], categories=categories,
                            filename=app.config['SPLASH_PHOTO_FILENAME'],
-                           photo_padding=app.config['PHOTO_PADDING'])
+                           photo_padding=app.config['PHOTO_PADDING'],
+                           bio=app.config['BIO'])
 
 @app.route('/change_splash_photo', methods=['GET', 'POST'])
 def change_splash_photo():
@@ -202,15 +209,20 @@ def add_photos():
     # HACK we need to create this class anew each time we need it because the
     # category class variable depends on the categories read from the database,
     # which may change over time
+    # TODO use the "accept" and "required" attributes on the file input field
+    # in HTML
     class PhotoUploadForm(Form):
         """Class which represents the photo upload form."""
 
         # TODO add this validator when it works with multiple files:
         # FileTypeValidator(app.config['ALLOWED_EXTENSIONS'])
-        photos = FileField('Select photos to upload')
+        photos = FileField('Select photos to upload',
+                           validators=[file_required('Must select a file.')])
+        # TODO coerce isn't working
         category = SelectField('Category', coerce=int,
-                               choices=_get_categories().items())
+                               choices=_get_categories_plus_new())
     form = PhotoUploadForm(request.form)
+    # TODO use form.validate_on_request()?
     if request.method == 'POST' and form.validate():
         if not session.get('logged_in'):
             abort(401)
@@ -227,7 +239,16 @@ def add_photos():
                 photo_dir = app.config['PHOTO_DIR']
                 if not os.path.exists(photo_dir):
                     os.mkdir(photo_dir)
-                categoryid = request.form['category']
+                # TODO the type coercion is not working for some reason
+                categoryid = int(request.form['category'])
+                if categoryid == -1:
+                    new_category_name = request.form['new-cat-name']
+                    if new_category_name in _get_categories().values():
+                        # TODO this should be an error message
+                        flash('Cannot add new category "{0}" because it'
+                              ' already exists.')
+                        return redirect(url_for('add_photos'))
+                    categoryid = _add_new_category(new_category_name)
                 result = _get_last_display_position(categoryid)
                 if _get_last_display_position(categoryid) is None:
                     position = 1
@@ -250,6 +271,7 @@ def add_photos():
                 g.db.commit()
                 num_photos_added += 1
             else:
+                # TODO this should be an error message
                 flash('{0} is not an acceptable type (must be one of {1}). '
                       'It was not uploaded.'.format(photo.filename,
                       ', '.join(app.config['ALLOWED_EXTENSIONS'])))
@@ -309,7 +331,9 @@ def change_category():
 
     Request arguments are *photoid*, an integer which is the ID of the photo to
     change, and *categoryid*, an integer which is the ID of the category to
-    which the photo will be moved.
+    which the photo will be moved. If *categoryid* is equal to -1, this method
+    will check for the *categoryname* request argument, create the category
+    with that name, and move the photo with the specified ID to that category.
 
     Returns a JSON object mapping *changed* to a boolean representing whether
     the category was successfully changed, *photoid* to the ID of the photo,
@@ -321,6 +345,13 @@ def change_category():
     if not session.get('logged_in'):
         abort(401)
     categoryid = request.args.get('categoryid')
+    print categoryid
+    if int(categoryid) == -1:
+        categoryname = request.args.get('categoryname')
+        if categoryname is None or len(categoryname) == 0:
+            return jsonify(changed=False, photoid=photoid,
+                           categoryid=categoryid, reason='No name received.')
+        categoryid = _add_new_category(categoryname)
     photoid = request.args.get('photoid')
     position = _get_last_display_position(categoryid)
     if position is None:

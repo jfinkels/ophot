@@ -96,7 +96,15 @@ function displayPhotos(data, textStatus, xhr) {
  * Initializes the state of some elements and establishes some event handlers.
  */
 $(document).ready(function() {
+  // allow scrolling in the bio window. NOTE: this must occur before hiding!
+  $('.scroll-pane').jScrollPane();
+  // need to do this here because jscrollpane does some black magic on the
+  // style of my elements
+  $('.scroll-pane').css('padding-bottom', '10px');
+  $('.scroll-pane').css('padding-top', '10px');
+
   $("#contact-info").hide();
+  $("#bio").hide();
   $("#photos-banner").hide();
   $("#photos-container").hide();
   $("#splash-shadow").hide();
@@ -119,11 +127,47 @@ $(document).ready(function() {
         });
       });
     } else {
+      // TODO add :visible to selectors
+      $("#bio-link").removeClass("selected");
       $("#contact-link").removeClass("selected");
       $(this).addClass("selected");
       $("#contact-info").fadeOut();
       $("#splash-shadow").fadeOut();
+      $("#bio").fadeOut();
       $(".submenu").show();
+    }
+  });
+
+  $("#bio-link").click(function(event) {
+    event.preventDefault();
+    if ($(this).hasClass("selected")) {
+      $(this).removeClass("selected");
+      $("#splash-shadow").fadeOut();
+      $("#bio").fadeOut();
+    } else {
+      $("#photos-link").removeClass("selected");
+      $(".photo-link").removeClass("selected");
+      $("#contact-link").removeClass("selected");
+      $(this).addClass("selected");
+
+      $(".submenu").hide();
+      $("#contact-info").fadeOut();
+      $("#splash-shadow").fadeIn();
+
+      if ($("#photos-container").is(":visible")) {
+        $("#photos-container").fadeOut(400, function() {
+          $("#banner-container").animate(
+            { top : 400 },
+            {
+              duration: 500,
+              complete: function() {
+                $("#bio").fadeIn();
+              }
+            });
+        });
+      } else {
+        $("#bio").fadeIn();        
+      }
     }
   });
 
@@ -134,11 +178,13 @@ $(document).ready(function() {
       $("#splash-shadow").fadeOut();
       $("#contact-info").fadeOut();
     } else {
-      $("#photos-link").removeClass("selected")
+      $("#photos-link").removeClass("selected");
       $(".photo-link").removeClass("selected");
+      $("#bio-link").removeClass("selected");
       $(this).addClass("selected");
 
       $(".submenu").hide();
+      $("#bio").fadeOut();
       $("#splash-shadow").fadeIn();
 
       if ($("#photos-container").is(":visible")) {

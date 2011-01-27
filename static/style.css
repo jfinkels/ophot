@@ -137,6 +137,32 @@ div#banner-container {
   top: 400px;
 }
 
+div#bio {
+  background-color: black;
+  border-radius: 4px;
+  -moz-border-radius: 4px;
+  box-shadow: 1px 1px 4px #000000;
+  -moz-box-shadow: 1px 1px 4px #000000;
+  -webkit-box-shadow: 1px 1px 4px #000000;
+  left: 50%;
+  top: 30px;
+  margin-left: -300px;
+  padding-left: 10px;
+  padding-right: 10px;
+  position: absolute;
+  width: 600px;
+  height: 300px;
+  overflow: auto;
+}
+
+div#bio p {
+  margin-top: 1em;
+}
+
+div#bio p:first-child {
+  margin-top: 0em;
+}
+
 div.cat-chooser {
   text-align: center;
 }
@@ -152,7 +178,6 @@ div#contact-info {
   box-shadow: 1px 1px 4px #000000;
   -moz-box-shadow: 1px 1px 4px #000000;
   -webkit-box-shadow: 1px 1px 4px #000000;
-  font-family: sans-serif;
   left: 50%;
   top: 20%;
   margin-left: -300px;
@@ -268,8 +293,17 @@ h1 {
 
 input.credentials {
   border: none;
-  border-radius: 3px;
-  -moz-border-radius: 3px;
+  /*border-radius: 3px;
+  -moz-border-radius: 3px;*/
+  font-size: 14pt;
+  padding-left: 3px;
+  padding-right: 3px;
+}
+
+input#new-cat-name {
+  border: none;
+  /*border-radius: 2px;
+  -moz-border-radius: 2px;*/
   font-size: 14pt;
   padding-left: 3px;
   padding-right: 3px;
@@ -319,6 +353,7 @@ tr#the-row td img {
 ul.category-list {
   list-style-type: none;
   display: inline;
+  max-width: 380px;
 }
 
 ul.category-list li {

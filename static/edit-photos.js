@@ -94,7 +94,30 @@ $(document).ready(function() {
             list.children().last().children("a").addClass("selected-cat");
           }
         }
+        list.append("<li><a href=\"#\" id=\"new\" class=\"category-option\">"
+                    + "new&nbsp;category</a></li>");
       });
+  });
+
+  $("a#new").live("click", function(event) {
+    event.preventDefault();
+    $(this).parent().replaceWith("<input type=\"text\""
+                                 + "name=\"new-category-name\""
+                                 + "id=\"new-category-name\""
+                                 + "maxlength=\"20\""
+                                 + "placeholder=\"new category\" />");
+    $("input#new-category-name").focus();
+  });
+
+  $("input#new-category-name").live("keyup", function(event) {
+    // thirteen is the keycode for the enter key
+    if (event.keyCode == 13) {
+      var word = $(this).val();
+      // turn this input box into the word
+      $(this).replaceWith("<li><a href=\"#\" class=\"category-option\""
+                          + "id=\"-1\">" + word + "</a></li>");
+      $("a#-1").addClass("selected-cat");
+    }
   });
 
   $(".confirm-cat-change").live("click", function(event) {
@@ -115,12 +138,23 @@ $(document).ready(function() {
       $(this).parents(".photo-container").children(".photo-shadow").fadeOut();
       $(this).parents(".photo-container").children(".cat-chooser").fadeOut();
     } else {
-        var photoid =
-          $(this).parents(".photo-container").children("img").attr("id");
-        $.getJSON(SCRIPT_ROOT + '/_change_category',
-          { photoid: photoid, categoryid: categoryid },
-          changeCategory
-        );
+      var photoid =
+        $(this).parents(".photo-container").children("img").attr("id");
+
+      // TODO check if input text box still exists. if it does, get that as the
+      // name, check that it is non-empty, and set -1 as the category ID
+
+      var name = null;
+      if (categoryid == -1) {
+        name = $("a#-1").html();
+      }
+
+      $.getJSON(SCRIPT_ROOT + '/_change_category',
+                { photoid: photoid,
+                  categoryid: categoryid,
+                  categoryname: name },
+                changeCategory
+               );
     }
   });
 });
