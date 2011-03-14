@@ -20,40 +20,15 @@ from flaskext.uploads import UploadSet
 from flaskext.uploads import IMAGES
 from flaskext.wtf import FileField
 from flaskext.wtf import Form
-#from flaskext.wtf import FormField
-#from flaskext.wtf import HiddenField
 from flaskext.wtf import SelectField
 from flaskext.wtf import TextField
 from flaskext.wtf import TextAreaField
-from flaskext.wtf.html5 import EmailField
 from flaskext.wtf.html5 import IntegerField
-from flaskext.wtf.file import file_allowed
+#from flaskext.wtf.file import file_allowed
 from flaskext.wtf.file import file_required
 import Image
-from werkzeug import secure_filename
-#from wtforms.widgets import Input
-#from wtforms.validators import Email
 from wtforms.validators import NumberRange
 
-# class FileTypeValidator(object):
-#     def __init__(self, extensions, message=None):
-#         """Creates a validator which checks that a given filename has an
-#         extension in the specified set of extensions.
-
-#         If not, a ValidationError will be raised with the specified message.
-
-#         """
-#         self.extensions = extensions
-#         if not message:
-#             message = 'File type not allowed (must be one of {0})'.format(extensions)
-#         self.message = message
-
-#     def __call__(self, form, field):
-#         """Validates the filename against the set of allowed file type
-#         extensions specified in the constructor of this class.
-
-#         """
-#         raise ValidationError('unimplemented')
 
 class SettingsForm(Form):
     """Class which represents the settings form."""
@@ -67,9 +42,8 @@ class ChangeSplashPhotoForm(Form):
     splash photo.
 
     """
-    photo = FileField('Select new splash photo', validators=[file_required()])#,
-    #                  validators=[file_required(),
-    #                              file_allowed(splash_photos, 'Images only.')])
+    # also want to add "file_allowed(splash_photos, 'Images only.')" here
+    photo = FileField('Select new splash photo', validators=[file_required()])
     
 
 splash_photos = UploadSet('images', IMAGES)
@@ -84,7 +58,6 @@ realname = app.config['NAME']
 
 # site-wide configuration which is not necessary for running the app
 site_config = ConfigObj(app.config['SETTINGS_FILE'])
-
 if 'BIO' not in site_config:
     site_config['BIO'] = ''
 if 'CONTACT' not in site_config:
