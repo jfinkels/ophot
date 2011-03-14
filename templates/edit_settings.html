@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+{% block head %}
+{{ super() }}
+  <!-- javascript for editing settings -->
+  <script type="text/javascript" src="{{ url_for('static', filename='settings.js') }}" ></script>
+{% endblock %}
+{% block content %}
+{% if session.logged_in %}
+    <p class="desc">This page allows you to change some of the general
+      configuration for the site.</p>
+    <div id="settings-container">
+      <table id="settings-table">
+        <tbody>
+          <tr>
+            <td>{{ form.spacing.label }}</td>
+            <td>
+              {{ form.spacing_changed(value=False) }}
+              {{ form.spacing(min=0, id="spacing") }}
+            </td>
+          </tr>
+          <tr>
+            <td>Categories</td>
+            <td>
+              <table id="categories">
+                <tbody>
+                {% for (id, cname) in categories %}
+                <tr>
+                  <td class="cat-name" id="{{ id }}">{{ cname|safe }}</td>
+                  <td class="cat-options">
+                    <a href="#" class="rename-cat" id="{{ id }}">rename</a>
+                    <a href="#" class="delete-cat" id="{{ id }}">delete</a>
+                  </td>
+                </tr>
+                {% endfor %}
+                <tr id="new-cat-row">
+                  <td colspan="2" class="cat-name">
+                    <a href="#" id="new-cat">new category...</a>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>{{ form.contact.label }}</td>
+            <td>
+              {{ form.contact_changed(value=False) }}
+              {{ form.contact }}
+              <input class="save" disabled="true" type="button"
+                     id="save-contact" value="saved" />
+            </td>
+          </tr>
+          <tr>
+            <td>{{ form.bio.label }}</td>
+            <td>
+              {{ form.bio_changed(value=False) }}
+              {{ form.bio }}
+              <input class="save" disabled="true" type="button"
+                     id="save-bio" value="saved" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+{% else %}
+    <p class="description">Only the administrator may change settings.
+      <a href="{{ url_for('login') }}" class="desc-link">Login.</a>
+    </p>
+{% endif %}
+{% endblock %}

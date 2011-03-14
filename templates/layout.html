@@ -2,7 +2,7 @@
 <html>
 <head>
   {% block head %}
-  <title>{{ name }} photography</title>
+  <title>{{ realname }} photography</title>
   <meta charset="UTF-8" />
 
   <!-- favicon -->
@@ -34,14 +34,17 @@
     <div class="flash">{{ message }}<a href="#" class="close">X</a></div>
     {% endfor %}
     {% if session.logged_in %}
-    <a href="{{ url_for('logout') }}" id="logout">logout</a>
+    <ul id="admin-links">
+      <li><a href="{{ url_for('edit_settings') }}" id="settings" class="admin-link">settings</a></li>
+      <li><a href="{{ url_for('logout') }}" id="logout" class="admin-link">logout</a></li>
+    </ul>
     {% endif %}
-    <h1><a href="{{ url_for('show_splash') }}">{{ name }} <span class="darker">photography</span></a></h1>
+    <h1><a href="{{ url_for('show_splash') }}">{{ realname }} <span class="darker">photography</span></a></h1>
     {% block content %}
     {% endblock %}
     <footer>
       {% block footer %}
-      All photos copyright 2011 {{ name }}.
+      All photos copyright 2011 {{ realname }}.
       {% endblock %}
     </footer>
   </div>

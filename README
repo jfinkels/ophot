@@ -12,14 +12,15 @@ Installing
 
 This application requires the following libraries to be installed:
 
+* ConfigObj - http://www.voidspace.org.uk/python/configobj.html
 * Flask - http://flask.pocoo.org/
 * Flask-Uploads - http://packages.python.org/Flask-Uploads/
 * Flask-WTF - http://packages.python.org/Flask-WTF/
 * Python Imaging Library (PIL) - http://www.pythonware.com/products/pil/
 
-Using "pip" "easy_install" is probably the easiest way to install these:
+Using "pip" or "easy_install" is probably the easiest way to install these:
 
-  pip install Flask Flask-Uploads Flask-WTF PIL
+  pip install Flask Flask-Uploads Flask-WTF PIL configobj
 
 Configuring
 -----------

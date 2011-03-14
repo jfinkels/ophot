@@ -41,7 +41,7 @@
       {% endif %}
       <div id="splash-shadow"></div>
       <div id="contact-info">
-        {{ name }}<br />{{ email }}<br />{{ phone }}
+        {{ contact|safe }}
       </div>
       <div id="bio" class="scroll-pane">
         {{ bio|safe }}

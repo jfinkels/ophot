@@ -4,3 +4,5 @@
 * scrolling menu bar
 * combine redundant CSS declarations
 * jquery 1.5
+* fix validation messages so that they don't display as generic unstyled lists
+* split up ophot.py into main route functions and ajax functions
