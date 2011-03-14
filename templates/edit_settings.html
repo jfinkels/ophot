@@ -13,10 +13,7 @@
         <tbody>
           <tr>
             <td>{{ form.spacing.label }}</td>
-            <td>
-              {{ form.spacing_changed(value=False) }}
-              {{ form.spacing(min=0, id="spacing") }}
-            </td>
+            <td>{{ form.spacing(min=0, id="spacing") }}</td>
           </tr>
           <tr>
             <td>Categories</td>
@@ -45,7 +42,6 @@
           <tr>
             <td>{{ form.contact.label }}</td>
             <td>
-              {{ form.contact_changed(value=False) }}
               {{ form.contact }}
               <input class="save" disabled="true" type="button"
                      id="save-contact" value="saved" />
@@ -54,7 +50,6 @@
           <tr>
             <td>{{ form.bio.label }}</td>
             <td>
-              {{ form.bio_changed(value=False) }}
               {{ form.bio }}
               <input class="save" disabled="true" type="button"
                      id="save-bio" value="saved" />

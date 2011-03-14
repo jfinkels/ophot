@@ -21,7 +21,7 @@ from flaskext.uploads import IMAGES
 from flaskext.wtf import FileField
 from flaskext.wtf import Form
 #from flaskext.wtf import FormField
-from flaskext.wtf import HiddenField
+#from flaskext.wtf import HiddenField
 from flaskext.wtf import SelectField
 from flaskext.wtf import TextField
 from flaskext.wtf import TextAreaField
@@ -60,10 +60,6 @@ class SettingsForm(Form):
     spacing = IntegerField('Space between photos (in pixels)', validators=[NumberRange(min=0, message='Must be a positive number.')])
     bio = TextAreaField('Bio')
     contact = TextAreaField('Contact info')
-
-    spacing_changed = HiddenField()
-    bio_changed = HiddenField()
-    contact_changed = HiddenField()
 
 
 class ChangeSplashPhotoForm(Form):
