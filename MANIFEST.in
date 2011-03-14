@@ -1,0 +1,2 @@
+recursive-include ophot/templates *
+recursive-include ophot/static *
