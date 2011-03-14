@@ -4,7 +4,8 @@ ALLOWED_EXTENSIONS = set(('png', 'jpg', 'jpeg'))
 # Never run a production server with DEBUG mode enabled.
 DEBUG = False
 
-# This is the location to which uploaded photos will be stored.
+# This is the location to which uploaded photos will be stored (relative to the
+# directory containing the application).
 PHOTO_DIR = 'static/photos/'
 
 # This is the path to the splash photo. If the user changes the splash photo
@@ -28,15 +29,17 @@ PHOTO_HEIGHT = 440
 # displaying photos in a row.
 DEFAULT_PHOTO_SPACING = 10
 
-# This is the database schema.
-SCHEMA = 'schema.sql'
+# This is the location (relative to the directory from which the server is run)
+# of the database schema.
+SCHEMA = 'ophot/schema.sql'
 
-# The location to store the database for photos.
-DATABASE = 'db/ophot.db'
+# The location (relative to the directory from which the server is run) to
+# store the database for photos.
+DATABASE = 'ophot/db/ophot.db'
 
 # The location of the file which stores the general, site-wide configuration
 # settings (like spacing between photos, biography and contact info).
-SETTINGS_FILE = 'db/settings'
+SETTINGS_FILE = 'ophot/db/settings'
 
 ###########################################
 # Add to or modify each field below here. #
