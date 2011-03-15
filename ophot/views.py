@@ -1,13 +1,59 @@
+# imports from built-in modules
+import os.path
+from uuid import uuid4 as random_uuid
+
 # imports from third-party modules
+from flask import abort
+from flask import flash
+from flask import g
+from flask import redirect
 from flask import render_template
+from flask import request
+from flask import session
+from flask import url_for
+import Image
 
 # imports from this application
 from ophot import _get_categories
+from ophot import _get_last_display_position
 from ophot import app
 from ophot import site_config
+from ophot.forms import ChangeSplashPhotoForm
+from ophot.forms import SettingsForm
 
 # the first and last name of the photographer
 realname = app.config['NAME']
+
+# TODO use mime types or magic numbers to identify files
+def _allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+
+def _add_new_category(categoryname):
+    """Creates a new category in the database with the specified *categoryname*
+    and returns its ID number.
+
+    """
+    g.db.execute('insert into category (categoryname) values (?)',
+                 [categoryname])
+    g.db.commit()
+    # get the ID of the category that we just inserted
+    return g.db.execute('select categoryid from category where'
+                        ' categoryname == "{0}"'.format(categoryname)).fetchone()[0]
+
+def _generate_filename(directory, filename):
+    """Generate the path at which to the save a file uploaded by the user.
+
+    For now, this just generates a random UUID (version 4), then appends the
+    same extension found from the input filename.
+    
+    """
+    extension = filename.rsplit('.', 1)[1]
+    uuid = random_uuid().hex # the string containing just the hex characters
+    filename = os.path.join(directory, '{0}.{1}'.format(uuid, extension))
+    while os.path.exists(filename):
+        uuid = random_uuid().hex
+        filename = os.path.join(directory, '{0}.{1}'.format(uuid, extension))
+    return filename
 
 def _get_categories_plus_new():
     """Helper method for the PhotoUploadForm which returns a list of pairs,
@@ -117,7 +163,7 @@ def add_photos():
         photos = request.files.getlist('photos')
         num_photos_added = 0
         for photo in photos:
-            if allowed_file(photo.filename):
+            if _allowed_file(photo.filename):
                 photo_dir = app.config['PHOTO_DIR']
                 if not os.path.exists(photo_dir):
                     os.mkdir(photo_dir)
@@ -136,8 +182,8 @@ def add_photos():
                     position = 1
                 else:
                     position = result + 1
-                filename = generate_filename(app.config['PHOTO_DIR'],
-                                             photo.filename)
+                filename = _generate_filename(app.config['PHOTO_DIR'],
+                                              photo.filename)
                 # TODO writing then reading the same file is slow. To fix this:
                 # first open a file, then pass the filedescriptor to photo.save
                 # and image.open (specify the type for image.open)
