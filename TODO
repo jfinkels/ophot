@@ -1,4 +1,3 @@
 * complete unit tests
 * combine redundant CSS declarations
-* jquery 1.5
 * fix validation messages so that they don't display as generic unstyled lists
