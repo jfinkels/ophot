@@ -55,7 +55,7 @@ schema.sql file:
 
 To run the web server and start serving, run:
 
-  python ophot.py
+  python runserver.py
 
 Remember to disable debug mode when running on a production server.
 
