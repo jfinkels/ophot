@@ -116,7 +116,7 @@ def change_splash_photo():
         # HACK must add ophot/ prefix because app is run from top level dir.
         # TODO allow PNG files
         filename = os.path.join('ophot', app.config['SPLASH_PHOTO_FILENAME'])
-        with open(filename, 'r+b') as photo_fd:
+        with open(filename, 'w+b') as photo_fd:
             request.files['photo'].save(photo_fd)
             photo_fd.seek(0)
             im = Image.open(photo_fd)
