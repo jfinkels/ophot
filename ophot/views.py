@@ -11,6 +11,10 @@ from flask import render_template
 from flask import request
 from flask import session
 from flask import url_for
+from flaskext.wtf import Form
+from flaskext.wtf import FileField
+from flaskext.wtf import SelectField
+from flaskext.wtf.file import file_required
 import Image
 
 # imports from this application
@@ -109,17 +113,20 @@ def change_splash_photo():
     if form.validate_on_submit():
         if not session.get('logged_in'):
             abort(401)
-        filename = app.config['SPLASH_PHOTO_FILENAME']
-        # TODO same as below; opening and closing a file twice is bad
-        request.files['photo'].save(filename)
-        im = Image.open(filename)
-        if im.size[0] > int(app.config['SPLASH_PHOTO_WIDTH']) \
-                or im.size[1] > int(app.config['SPLASH_PHOTO_HEIGHT']):
-            im = im.resize((int(app.config['SPLASH_PHOTO_WIDTH']),
-                            int(app.config['SPLASH_PHOTO_HEIGHT'])),
-                           Image.ANTIALIAS)
-            im.save(filename)
-        flash('New splash photo uploaded.')
+        # HACK must add ophot/ prefix because app is run from top level dir.
+        # TODO allow PNG files
+        filename = os.path.join('ophot', app.config['SPLASH_PHOTO_FILENAME'])
+        with open(filename, 'r+b') as photo_fd:
+            request.files['photo'].save(photo_fd)
+            photo_fd.seek(0)
+            im = Image.open(photo_fd)
+            if im.size[0] > int(app.config['SPLASH_PHOTO_WIDTH']) \
+                    or im.size[1] > int(app.config['SPLASH_PHOTO_HEIGHT']):
+                im = im.resize((int(app.config['SPLASH_PHOTO_WIDTH']),
+                                int(app.config['SPLASH_PHOTO_HEIGHT'])),
+                               Image.ANTIALIAS)
+                im.save(photo_fd, im.format)
+            flash('New splash photo uploaded.')
         return redirect(url_for('show_splash'))
     return render_template('change_splash_photo.html', form=form,
                            realname=realname,
@@ -164,7 +171,8 @@ def add_photos():
         num_photos_added = 0
         for photo in photos:
             if _allowed_file(photo.filename):
-                photo_dir = app.config['PHOTO_DIR']
+                # HACK see below
+                photo_dir = os.path.join('ophot', app.config['PHOTO_DIR'])
                 if not os.path.exists(photo_dir):
                     os.mkdir(photo_dir)
                 # TODO the type coercion is not working for some reason
@@ -184,15 +192,17 @@ def add_photos():
                     position = result + 1
                 filename = _generate_filename(app.config['PHOTO_DIR'],
                                               photo.filename)
-                # TODO writing then reading the same file is slow. To fix this:
-                # first open a file, then pass the filedescriptor to photo.save
-                # and image.open (specify the type for image.open)
-                photo.save(filename)
-                im = Image.open(filename)
-                if im.size[1] > app.config['PHOTO_HEIGHT']:
-                    wdth = im.size[0] * app.config['PHOTO_HEIGHT'] / im.size[1]
-                    im = im.resize((wdth, app.config['PHOTO_HEIGHT']))
-                    im.save(filename)
+                # HACK server is started in top level directory, so we must
+                # specify that the static files directory is under the "ophot"
+                # directory, which contains this python package / flask app
+                with open(os.path.join('ophot', filename), 'w+b') as photo_fd:
+                    photo.save(photo_fd)
+                    photo_fd.seek(0)
+                    im = Image.open(photo_fd)
+                    if im.size[1] > app.config['PHOTO_HEIGHT']:
+                        wdth = im.size[0] * app.config['PHOTO_HEIGHT'] / im.size[1]
+                        im = im.resize((wdth, app.config['PHOTO_HEIGHT']))
+                        im.save(photo_fd, im.format)
                 g.db.execute('insert into photo (photofilename, photocategory,'
                              ' photodisplayposition) values (?, ?, ?)',
                              [filename, categoryid, position])
