@@ -27,8 +27,7 @@ Configuring
 
 To configure this application, edit the configuration file "config.py". You
 must add at least USERNAME, PASSWORD, and SECRET_KEY for allowing the
-administrator to log in. You probably want to change the NAME, EMAIL, and PHONE
-values as well.
+administrator to log in. You probably want to change the NAME value as well.
 
 Instead of editing the configuration file directly, you can set the
 OPHOT_SETTINGS environment variable to be the path to a file containing the
