@@ -255,3 +255,6 @@ def logout():
 def page_not_found(error):
     return render_template('page_not_found.html', realname=realname), 404
 
+@app.errorhandler(403)
+def forbidden(error):
+    return render_template('forbidden.html', realname=realname), 403
