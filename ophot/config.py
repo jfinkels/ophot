@@ -41,9 +41,24 @@ DATABASE = 'ophot/db/ophot.db'
 # settings (like spacing between photos, biography and contact info).
 SETTINGS_FILE = 'ophot/db/settings'
 
+# The location of the file to which warnings and errors will be logged.
+LOGFILE = 'ophot/db/ophot.log'
+
+# A list of recipients to whom emails will be sent when the application
+# encounters an error.
+ERROR_MAIL_RECIPIENTS = ['webmaster@example.com']
+
+# The subject line for messages sent to the ERROR_MAIL_RECIPIENTS when the
+# application encounters an error.
+ERROR_MAIL_SUBJECT = 'Ophot failure'
+
 ###########################################
 # Add to or modify each field below here. #
 ###########################################
+
+# Change this to the domain on which this application runs. For now, this is
+# just used for generating email addresses.
+DOMAIN_NAME = "example.com"
 
 # Uncomment this and add a secret key to authenticate sessions with a logged in
 # user.  To generate a 24 byte secret key with python, do:

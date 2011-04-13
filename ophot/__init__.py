@@ -21,6 +21,41 @@ if 'CONTACT' not in site_config:
 if 'SPACING' not in site_config:
     site_config['SPACING'] = app.config['DEFAULT_PHOTO_SPACING']
 
+# add some loggers for errors and warnings
+if not app.debug:
+    from logging import ERROR
+    from logging import WARNING
+    from logging import FileHandler
+    from logging import Formatter
+    from logging.handlers import SMTPHandler
+    mail_handler = SMTPHandler('127.0.0.1',
+                               'server-error@{0}'.format(app.config['DOMAIN_NAME']),
+                               app.config['ERROR_MAIL_RECIPIENTS'],
+                               app.config['ERROR_MAIL_SUBJECT'])
+    mail_handler.setFormatter(Formatter('''
+Message type:       %(levelname)s
+Location:           %(pathname)s:%(lineno)d
+Module:             %(module)s
+Function:           %(funcName)s
+Time:               %(asctime)s
+
+Message:
+
+%(message)s
+'''))
+    # email us if something goes really wrong
+    mail_handler.setLevel(ERROR)
+    app.logger.addHandler(mail_handler)
+    # write to a file on warnings
+    file_handler = FileHandler(app.config['LOGFILE'])
+    file_handler.setFormatter(Formatter(
+            '%(asctime)s %(levelname)s: %(message)s '
+            '[in %(pathname)s:%(lineno)d]'
+            ))
+    file_handler.setLevel(WARNING)
+    app.logger.addHandler(file_handler)
+
+
 def _get_categories():
     """Helper method which returns a map from category ID to category name,
     sorted in alphabetical (lexicographical) order by category name.
