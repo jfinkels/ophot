@@ -113,21 +113,19 @@ def change_splash_photo():
     if form.validate_on_submit():
         if not session.get('logged_in'):
             abort(401)
-        # HACK must add ophot/ prefix because app is run from top level dir.
-        # TODO allow PNG files
+        # HACK see comment in add_photos
         filename = os.path.join('ophot', app.config['SPLASH_PHOTO_FILENAME'])
-        with open(filename, 'w+b') as photo_fd:
-            request.files['photo'].save(photo_fd)
-            photo_fd.seek(0)
-            im = Image.open(photo_fd)
-            format = im.format
-            if im.size[0] > int(app.config['SPLASH_PHOTO_WIDTH']) \
-                    or im.size[1] > int(app.config['SPLASH_PHOTO_HEIGHT']):
-                im = im.resize((int(app.config['SPLASH_PHOTO_WIDTH']),
-                                int(app.config['SPLASH_PHOTO_HEIGHT'])),
-                               Image.ANTIALIAS)
-                im.save(photo_fd, format)
-            flash('New splash photo uploaded.')
+        # TODO see comment in add_photos
+        request.files['photo'].save(filename)
+        im = Image.open(filename)
+        format = im.format
+        if im.size[0] > int(app.config['SPLASH_PHOTO_WIDTH']) \
+                or im.size[1] > int(app.config['SPLASH_PHOTO_HEIGHT']):
+            im = im.resize((int(app.config['SPLASH_PHOTO_WIDTH']),
+                            int(app.config['SPLASH_PHOTO_HEIGHT'])),
+                           Image.ANTIALIAS)
+            im.save(filename, format)
+        flash('New splash photo uploaded.')
         return redirect(url_for('show_splash'))
     return render_template('change_splash_photo.html', form=form,
                            realname=realname,
@@ -193,18 +191,20 @@ def add_photos():
                     position = result + 1
                 filename = _generate_filename(app.config['PHOTO_DIR'],
                                               photo.filename)
-                # HACK server is started in top level directory, so we must
-                # specify that the static files directory is under the "ophot"
-                # directory, which contains this python package / flask app
-                with open(os.path.join('ophot', filename), 'w+b') as photo_fd:
-                    photo.save(photo_fd)
-                    photo_fd.seek(0)
-                    im = Image.open(photo_fd)
-                    format = im.format
-                    if im.size[1] > app.config['PHOTO_HEIGHT']:
-                        wdth = im.size[0] * app.config['PHOTO_HEIGHT'] / im.size[1]
-                        im = im.resize((wdth, app.config['PHOTO_HEIGHT']))
-                        im.save(photo_fd, format)
+                # HACK long_filename is needed for using python to operate on
+                # files in the filesystem. the shorter filename is needed for
+                # the webpage to correctly link to image sources
+                long_filename = os.path.join('ophot', filename)
+                # TODO inefficient to read and write the file so many times,
+                # but using the file descriptor instead does not seem to save
+                # the changes we make on the "im.save()" call below
+                photo.save(long_filename)
+                im = Image.open(long_filename)
+                format = im.format
+                if im.size[1] > app.config['PHOTO_HEIGHT']:
+                    wdth = im.size[0] * app.config['PHOTO_HEIGHT'] / im.size[1]
+                    im = im.resize((wdth, app.config['PHOTO_HEIGHT']))
+                    im.save(long_filename, format)
                 g.db.execute('insert into photo (photofilename, photocategory,'
                              ' photodisplayposition) values (?, ?, ?)',
                              [filename, categoryid, position])
