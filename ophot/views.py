@@ -120,12 +120,13 @@ def change_splash_photo():
             request.files['photo'].save(photo_fd)
             photo_fd.seek(0)
             im = Image.open(photo_fd)
+            format = im.format
             if im.size[0] > int(app.config['SPLASH_PHOTO_WIDTH']) \
                     or im.size[1] > int(app.config['SPLASH_PHOTO_HEIGHT']):
                 im = im.resize((int(app.config['SPLASH_PHOTO_WIDTH']),
                                 int(app.config['SPLASH_PHOTO_HEIGHT'])),
                                Image.ANTIALIAS)
-                im.save(photo_fd, im.format)
+                im.save(photo_fd, format)
             flash('New splash photo uploaded.')
         return redirect(url_for('show_splash'))
     return render_template('change_splash_photo.html', form=form,
@@ -199,10 +200,11 @@ def add_photos():
                     photo.save(photo_fd)
                     photo_fd.seek(0)
                     im = Image.open(photo_fd)
+                    format = im.format
                     if im.size[1] > app.config['PHOTO_HEIGHT']:
                         wdth = im.size[0] * app.config['PHOTO_HEIGHT'] / im.size[1]
                         im = im.resize((wdth, app.config['PHOTO_HEIGHT']))
-                        im.save(photo_fd, im.format)
+                        im.save(photo_fd, format)
                 g.db.execute('insert into photo (photofilename, photocategory,'
                              ' photodisplayposition) values (?, ?, ?)',
                              [filename, categoryid, position])
