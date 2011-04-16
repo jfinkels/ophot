@@ -1,3 +1,4 @@
 * complete unit tests
 * combine redundant CSS declarations
 * fix validation messages so that they don't display as generic unstyled lists
+* allow PNG files
