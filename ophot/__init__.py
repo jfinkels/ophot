@@ -8,7 +8,7 @@ from flask import Flask
 from flask import g
 
 # create the application and get app configuration from config.py, or a file
-app = Flask(__name__)
+app = Flask('ophot')
 app.config.from_object('ophot.config')
 app.config.from_envvar('OPHOT_SETTINGS', silent=True)
 
