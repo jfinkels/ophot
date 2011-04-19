@@ -150,3 +150,22 @@ def delete_photo(photoid):
     g.db.execute('delete from photo where photoid == {0}'.format(photoid))
     g.db.commit()
     return jsonify(deleted=True, photoid=photoid)
+
+@app.route('/delete_category/<int:categoryid>', methods=['DELETE'])
+def delete_category(categoryid):
+    """Ajax method which deletes the category with the specified ID number from
+    the database, and returns a boolean representing whether the action was
+    successful.
+
+    All photos with that category will no longer be accessible.
+
+    """
+    # TODO what should we do with photos orphaned by this deletion? perhaps
+    # create a page for managing photo thumbnails by dragging and dropping them
+    # onto categories...
+    if not session.get('logged_in'):
+        abort(401)
+    g.db.execute('delete from category where categoryid == {0}'
+                 .format(categoryid))
+    g.db.commit()
+    return jsonify(deleted=True, categoryid=categoryid)

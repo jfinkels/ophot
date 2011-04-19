@@ -1,3 +1,15 @@
+function deleteCategory(data, textStatus, xhr) {
+  if (data["deleted"]) {
+    var row = $("a.delete-cat#" + data["categoryid"]).parents("tr");
+    row.fadeOut(400, function() {
+      $(this).remove();
+    });
+  } else {
+    // TODO do something
+    alert("could not delete category with id " + data["categoryid"]);
+  }
+}
+
 function renamedCategory(data, textStatus, xhr) {
   // intentionally unimplemented
 }
@@ -11,6 +23,9 @@ function updatedPersonalInfo(data, textStatus, xhr) {
 }
 
 $(document).ready(function() {
+  $(".delete-dialog").hide();
+  $("#settings-shadow").hide();
+
   $("#spacing").change(function() {
     var spacing = $(this).val();
     $.getJSON(SCRIPT_ROOT + '/_change_spacing', {spacing: spacing},
@@ -42,6 +57,35 @@ $(document).ready(function() {
     $.getJSON(SCRIPT_ROOT + '/_change_category_name',
               {categoryid: categoryId, categoryname: categoryName},
               renamedCategory);
+  });
+
+  $(".delete-cat").live("click", function(event) {
+    event.preventDefault();
+    $(this).addClass("selected");
+    $(".delete-dialog").fadeIn();
+    var newHeight = $("#settings-container").height();
+    $("#settings-shadow").height(newHeight);
+    $("#settings-shadow").fadeIn();
+  });
+
+  $(".cancel").click(function(event) {
+    event.preventDefault();
+    $(".delete-dialog").fadeOut();
+    $("#settings-shadow").fadeOut();
+    $(".delete-cat.selected").removeClass("selected");
+  });
+
+  $(".confirm-delete").click(function(event) {
+    event.preventDefault();
+    $(".delete-dialog").fadeOut();
+    $("#settings-shadow").fadeOut();
+    var id = $(".delete-cat.selected").attr("id");
+    $(".selected").removeClass("selected");
+    $.ajax({
+      type: 'DELETE',
+      url: SCRIPT_ROOT + '/delete_category/' + id,
+      success: deleteCategory
+    });
   });
 
   $("textarea#contact").keypress(function() {
