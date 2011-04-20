@@ -5,10 +5,12 @@ This is ophot, a small web application which provides a simple photography
 portfolio website. It allows a manager to log in in order to add or remove
 photos. It allows viewers to purchase prints of photographs.
 
-This README was last updated on 26 January 2011.
+This README was last updated on 20 April 2011.
 
 Installing
 ----------
+
+This application requires Python 2.7 (http://www.python.org/).
 
 This application requires the following libraries to be installed:
 
@@ -57,6 +59,9 @@ To run the web server and start serving, run:
   python runserver.py
 
 Remember to disable debug mode when running on a production server.
+
+One can also deploy this application as a WSGI application, using, for example,
+mod_wsgi for Apache.
 
 Contact
 -------
