@@ -169,7 +169,7 @@ div.cat-chooser p {
   margin-bottom: 5px;
 }
 
-div#contact-info {
+div#contact-info, div#purchase-info {
   background-color: black;
   border-radius: 4px;
   -moz-border-radius: 4px;
@@ -181,7 +181,14 @@ div#contact-info {
   margin-left: -300px;
   padding: 10px;
   position: absolute;
+}
+
+div#contact-info {
   width: 200px;
+}
+
+div#purchase-info {
+  width: 350px;
 }
 
 div#container {
@@ -191,7 +198,7 @@ div#container {
   width: 800px;
 }
 
-div.delete-dialog, div.cat-chooser {
+div.delete-dialog, div.cat-chooser, div.purchase-information {
   background-color: black;
   border-radius: 5px;
   -moz-border-radius: 10px;

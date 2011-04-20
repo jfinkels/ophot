@@ -36,6 +36,13 @@ function createPhotoCellString(photoid, filename, categories) {
        + "  <div class=\"photo-container\">\n"
        + "    <a class=\"purchase\" href=\"#\">purchase</a>\n"
        + "    <div class=\"photo-shadow\"></div>\n"
+       + "    <div class=\"purchase-information\">\n"
+       + "      <a class=\"close\">X</a>\n"
+       + "      <p>\n"
+       + "        For pricing or to order prints email\n"
+       + "        mike@mikefinkphotography.com\n"
+       + "      </p>\n"
+       + "    </div>\n"
        + "    <div class=\"delete-dialog\">\n"
        + "      <p>Are you sure you want to delete this photo?</p>\n"
        + "      <p class=\"choice\">\n"
@@ -90,6 +97,7 @@ function displayPhotos(data, textStatus, xhr) {
   $(".purchase").hide();
   $(".photo-shadow").hide();
   $(".delete-dialog").hide();
+  $(".purchase-information").hide();
 }
 
 /**
@@ -104,12 +112,25 @@ $(document).ready(function() {
   $('.scroll-pane').css('padding-top', '10px');
 
   $("#contact-info").hide();
+  $("#purchase-info").hide();
   $("#bio").hide();
   $("#photos-banner").hide();
   $("#photos-container").hide();
   $("#splash-shadow").hide();
   $(".submenu").hide();
   $("#change-splash-photo").hide();
+
+  $(".purchase").live("click", function(event) {
+    event.preventDefault();
+    $(this).siblings(".photo-shadow").fadeIn();
+    $(this).siblings(".purchase-information").fadeIn();
+  });
+
+  $("a.close").live("click", function(event) {
+    event.preventDefault();
+    $(this).parent().fadeOut();
+    $(this).parent().siblings(".photo-shadow").fadeOut();
+  });
 
   $(".photo-container").live("hover", function() {
     $(this).children(".purchase").toggle();
@@ -130,8 +151,10 @@ $(document).ready(function() {
       // TODO add :visible to selectors
       $("#bio-link").removeClass("selected");
       $("#contact-link").removeClass("selected");
+      $("#purchase-link").removeClass("selected");
       $(this).addClass("selected");
       $("#contact-info").fadeOut();
+      $("#purchase-info").fadeOut();
       $("#splash-shadow").fadeOut();
       $("#bio").fadeOut();
       $(".submenu").show();
@@ -148,10 +171,12 @@ $(document).ready(function() {
       $("#photos-link").removeClass("selected");
       $(".photo-link").removeClass("selected");
       $("#contact-link").removeClass("selected");
+      $("#purchase-link").removeClass("selected");
       $(this).addClass("selected");
 
       $(".submenu").hide();
       $("#contact-info").fadeOut();
+      $("#purchase-info").fadeOut();
       $("#splash-shadow").fadeIn();
 
       if ($("#photos-container").is(":visible")) {
@@ -181,10 +206,12 @@ $(document).ready(function() {
       $("#photos-link").removeClass("selected");
       $(".photo-link").removeClass("selected");
       $("#bio-link").removeClass("selected");
+      $("#purchase-link").removeClass("selected");
       $(this).addClass("selected");
 
       $(".submenu").hide();
       $("#bio").fadeOut();
+      $("#purchase-info").fadeOut();
       $("#splash-shadow").fadeIn();
 
       if ($("#photos-container").is(":visible")) {
@@ -204,14 +231,52 @@ $(document).ready(function() {
     }
   });
 
+  $("#purchase-link").click(function(event) {
+    event.preventDefault();
+    if ($(this).hasClass("selected")) {
+      $(this).removeClass("selected");
+      $("#splash-shadow").fadeOut();
+      $("#purchase-info").fadeOut();
+    } else {
+      $("#photos-link").removeClass("selected");
+      $(".photo-link").removeClass("selected");
+      $("#contact-link").removeClass("selected");
+      $("#bio-link").removeClass("selected");
+      $(this).addClass("selected");
+
+      $(".submenu").hide();
+      $("#contact-info").fadeOut();
+      $("#bio").fadeOut();
+      $("#splash-shadow").fadeIn();
+
+      if ($("#photos-container").is(":visible")) {
+        $("#photos-container").fadeOut(400, function() {
+          $("#banner-container").animate(
+            { top : 400 },
+            {
+              duration: 500,
+              complete: function() {
+                $("#purchase-info").fadeIn();
+              }
+            });
+        });
+      } else {
+        $("#purchase-info").fadeIn();
+      }
+    }
+  });
+
   $(".photo-link").click(function(event) {
     event.preventDefault();
     if (!$(this).hasClass("selected")) {
       $("#contact-link").removeClass("selected");
+      $("#purchase-link").removeClass("selected");
       $(".photo-link").removeClass("selected");
       $(this).addClass("selected");
 
       $("#contact-info").fadeOut();
+      $("#purchase-info").fadeOut();
+      $("#bio").fadeOut();
       if ($("#photos-container").is(":hidden")) {
         $("#banner-container").animate(
           { top : 497 },
