@@ -32,6 +32,22 @@ $(document).ready(function() {
               spacingChanged);
   });
 
+  $("a#new-cat").click(function(event) {
+    event.preventDefault();
+    $(this).replaceWith('<input type="text" id="new-cat" '
+                        + 'placeholder="new category...">');
+  });
+
+  $("input#new-cat").live("keyup", function(event) {
+    // 13 is the keycode for the enter key
+    if (event.keyCode == 13) {
+      var categoryName = $(this).val();
+      $.getJSON(SCRIPT_ROOT + '/_add_category', {categoryname: categoryName},
+                addedCategory);
+      // TODO create new row, replace this with new category... link
+    }
+  });
+
   $(".rename-cat").live("click", function(event) {
     event.preventDefault();
     var nameCell = $(this).parent().siblings(".cat-name");
