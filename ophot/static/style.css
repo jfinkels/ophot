@@ -192,9 +192,10 @@ div#purchase-info {
 }
 
 div#container {
-  margin: 0px auto;
+  left: 50%;
+  margin-left: -400px;
   padding-top: 20px;
-  position: relative;
+  position: fixed;
   width: 800px;
 }
 
