@@ -1,4 +1,5 @@
 # imports from built-in modules
+from collections import OrderedDict
 from contextlib import closing
 import sqlite3
 
@@ -75,7 +76,7 @@ def _get_categories():
     """
     cursor = g.db.execute('select categoryid, categoryname from category'
                           ' order by categoryname asc')
-    return dict([(row[0], row[1]) for row in cursor.fetchall()])
+    return OrderedDict([(row[0], row[1]) for row in cursor.fetchall()])
 
 def _get_last_display_position(categoryid):
     """Helper method which returns the index in the display sequence of the

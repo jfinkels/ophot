@@ -1,3 +1,6 @@
+# imports from built-in modules
+from collections import OrderedDict
+
 # imports from third-party modules
 from flask import abort
 from flask import g
@@ -25,7 +28,7 @@ def get_photos():
                           ' order by photodisplayposition asc'
                           .format(category))
     # add the / so that the filenames are relative to the root of the app
-    photos = dict([(row[0], '/' + row[1]) for row in cursor.fetchall()])
+    photos = OrderedDict([(row[0], '/' + row[1]) for row in cursor.fetchall()])
     return jsonify(photos)
 
 @app.route('/_add_category', methods=['GET'])
