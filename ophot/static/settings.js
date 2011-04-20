@@ -19,6 +19,7 @@ function addedCategory(data, textStatus, xhr) {
     // iterate over each category in order to place it in alphabetical order
     // TODO alphabetical list insert code could be used from
     // http://stackoverflow.com/questions/2886739/using-jquery-to-dynamically-insert-into-list-alphabetically
+    // TODO this currently doesn't work if there are no rows
     $("tr.category-row").last().after(generateCategoryRow(name, id));
   } else {
     // TODO do something
