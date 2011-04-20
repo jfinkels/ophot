@@ -56,6 +56,18 @@ Message:
     app.logger.addHandler(file_handler)
 
 
+def _add_new_category(categoryname):
+    """Creates a new category in the database with the specified *categoryname*
+    and returns its ID number.
+
+    """
+    g.db.execute('insert into category (categoryname) values (?)',
+                 [categoryname])
+    g.db.commit()
+    # get the ID of the category that we just inserted
+    return g.db.execute('select categoryid from category where'
+                        ' categoryname == "{0}"'.format(categoryname)).fetchone()[0]
+
 def _get_categories():
     """Helper method which returns a map from category ID to category name,
     sorted in alphabetical (lexicographical) order by category name.

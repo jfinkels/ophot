@@ -6,6 +6,7 @@ from flask import request
 from flask import session
 
 # imports from this application
+from ophot import _add_new_category
 from ophot import _get_categories
 from ophot import _get_last_display_position
 from ophot import app
@@ -26,6 +27,21 @@ def get_photos():
     # add the / so that the filenames are relative to the root of the app
     photos = dict([(row[0], '/' + row[1]) for row in cursor.fetchall()])
     return jsonify(photos)
+
+@app.route('/_add_category', methods=['GET'])
+def add_category():
+    """Ajax method which adds a new category to the database.
+
+    Request argument is *categoryname*, a string which is the name of the
+    category to add.
+
+    """
+    if not session.get('logged_in'):
+        abort(401)
+    categoryname = request.args.get('categoryname')
+    categoryid = _add_new_category(categoryname)
+    return jsonify(added=True, categoryid=categoryid,
+                   categoryname=categoryname)
 
 @app.route('/_change_category', methods=['GET'])
 def change_category():

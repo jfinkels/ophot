@@ -18,6 +18,7 @@ from flaskext.wtf.file import file_required
 import Image
 
 # imports from this application
+from ophot import _add_new_category
 from ophot import _get_categories
 from ophot import _get_last_display_position
 from ophot import app
@@ -31,18 +32,6 @@ realname = app.config['NAME']
 # TODO use mime types or magic numbers to identify files
 def _allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
-
-def _add_new_category(categoryname):
-    """Creates a new category in the database with the specified *categoryname*
-    and returns its ID number.
-
-    """
-    g.db.execute('insert into category (categoryname) values (?)',
-                 [categoryname])
-    g.db.commit()
-    # get the ID of the category that we just inserted
-    return g.db.execute('select categoryid from category where'
-                        ' categoryname == "{0}"'.format(categoryname)).fetchone()[0]
 
 def _generate_filename(directory, filename):
     """Generate the path at which to the save a file uploaded by the user.
