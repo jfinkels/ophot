@@ -2,3 +2,5 @@
 * combine redundant CSS declarations
 * fix validation messages so that they don't display as generic unstyled lists
 * allow PNG files
+* refactor "if not session.logged_in" code into a method
+* change _get_categories() to return an ordered dict so that in the "edit_settings" page, the categories show up in alphabetical order
