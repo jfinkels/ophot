@@ -1,6 +1,35 @@
+function generateCategoryRow(name, id) {
+  return '<tr class="category-row">\n'
+    + '<td class="cat-name" id="' + id + '">' + name + '</td>\n'
+    + '<td class="cat-options">\n'
+    + '<a href="#" class="rename-cat" id="' + id + '">rename</a>\n'
+    + '<a href="#" class="delete-cat" id="' + id + '">delete</a>\n'
+    + '</td>\n'
+    + '</tr>\n';
+}
+
+function addedCategory(data, textStatus, xhr) {
+  if (data["added"]) {
+    var name = data["categoryname"];
+    var id = data["categoryid"];
+
+    // replace the text input box with the "new category..." link again
+    $("input#new-cat").replaceWith('<a href="#" id="new-cat">new category&hellip;</a>');
+
+    // iterate over each category in order to place it in alphabetical order
+    // TODO alphabetical list insert code could be used from
+    // http://stackoverflow.com/questions/2886739/using-jquery-to-dynamically-insert-into-list-alphabetically
+    $("tr.category-row").last().after(generateCategoryRow(name, id));
+  } else {
+    // TODO do something
+    alert("could not add category with name " + data["categoryname"]);
+  }
+}
+
 function deleteCategory(data, textStatus, xhr) {
   if (data["deleted"]) {
-    var row = $("a.delete-cat#" + data["categoryid"]).parents("tr");
+    var id = data["categoryid"];
+    var row = $("a.delete-cat[id=" + id + "]").parents("tr.category-row");
     row.fadeOut(400, function() {
       $(this).remove();
     });
@@ -35,16 +64,15 @@ $(document).ready(function() {
   $("a#new-cat").click(function(event) {
     event.preventDefault();
     $(this).replaceWith('<input type="text" id="new-cat" '
-                        + 'placeholder="new category...">');
+                        + 'placeholder="new category&hellip;">');
   });
 
   $("input#new-cat").live("keyup", function(event) {
     // 13 is the keycode for the enter key
-    if (event.keyCode == 13) {
+    if (event.keyCode == 13 && $(this).val() != "") {
       var categoryName = $(this).val();
       $.getJSON(SCRIPT_ROOT + '/_add_category', {categoryname: categoryName},
                 addedCategory);
-      // TODO create new row, replace this with new category... link
     }
   });
 

@@ -29,7 +29,7 @@
               <table id="categories">
                 <tbody>
                 {% for (id, cname) in categories %}
-                <tr>
+                <tr class="category-row">
                   <td class="cat-name" id="{{ id }}">{{ cname|safe }}</td>
                   <td class="cat-options">
                     <a href="#" class="rename-cat" id="{{ id }}">rename</a>
@@ -39,7 +39,7 @@
                 {% endfor %}
                 <tr id="new-cat-row">
                   <td colspan="2" class="cat-name">
-                    <a href="#" id="new-cat">new category...</a>
+                    <a href="#" id="new-cat">new category&hellip;</a>
                   </td>
                 </tr>
                 </tbody>
