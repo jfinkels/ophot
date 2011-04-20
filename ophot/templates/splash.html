@@ -32,6 +32,11 @@
   <script type="text/javascript" src="{{ url_for('static', filename='edit-photos.js') }}"></script>
   {% endif %}
 {% endblock %}
+{% block photos %}
+  <div id="photos-container">
+    <table><tbody><tr id="the-row"><td></td></tr></tbody></table>
+  </div>
+{% endblock %}
 {% block content %}
     <div id="splash" style="background-image: url({{ filename }});">
       {% if session.logged_in %}
@@ -48,9 +53,6 @@
       </div>
       <div id="purchase-info">
         for pricing or to order prints, email mike@mikefinkphotography.com
-      </div>
-      <div id="photos-container">
-        <table><tbody><tr id="the-row"><td></td></tr></tbody></table>
       </div>
       <div id="banner-container">
         <div id="banner">

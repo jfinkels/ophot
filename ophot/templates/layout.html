@@ -29,6 +29,8 @@
   {% endblock %}
 </head>
 <body>
+  {# this block will only be implemented by the splash.html template #}
+  {% block photos %}{% endblock %}
   <div id="container">
     {% for message in get_flashed_messages() %}
     <div class="flash">{{ message }}<a href="#" class="close">X</a></div>
