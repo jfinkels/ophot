@@ -8,6 +8,12 @@ from configobj import ConfigObj
 from flask import Flask
 from flask import g
 
+# imports from this application
+from ophot.queries import Q_ADD_CATEGORY
+from ophot.queries import Q_GET_CATEGORY
+from ophot.queries import Q_GET_CATEGORIES
+from ophot.queries import Q_GET_LAST_DISP_POS
+
 # create the application and get app configuration from config.py, or a file
 app = Flask('ophot')
 app.config.from_object('ophot.config')
@@ -29,8 +35,8 @@ if not app.debug:
     from logging import FileHandler
     from logging import Formatter
     from logging.handlers import SMTPHandler
-    mail_handler = SMTPHandler('127.0.0.1',
-                               'server-error@{0}'.format(app.config['DOMAIN_NAME']),
+    sender_address = 'server-error@{0}'.format(app.config['DOMAIN_NAME'])
+    mail_handler = SMTPHandler('127.0.0.1', sender_address,
                                app.config['ERROR_MAIL_RECIPIENTS'],
                                app.config['ERROR_MAIL_SUBJECT'])
     mail_handler.setFormatter(Formatter('''
@@ -50,9 +56,8 @@ Message:
     # write to a file on warnings
     file_handler = FileHandler(app.config['LOGFILE'])
     file_handler.setFormatter(Formatter(
-            '%(asctime)s %(levelname)s: %(message)s '
-            '[in %(pathname)s:%(lineno)d]'
-            ))
+            '%(asctime)s %(levelname)s: %(message)s'
+            ' [in %(pathname)s:%(lineno)d]'))
     file_handler.setLevel(WARNING)
     app.logger.addHandler(file_handler)
 
@@ -62,21 +67,20 @@ def _add_new_category(categoryname):
     and returns its ID number.
 
     """
-    g.db.execute('insert into category (categoryname) values (?)',
-                 [categoryname])
+    g.db.execute(Q_ADD_CATEGORY, [categoryname])
     g.db.commit()
     # get the ID of the category that we just inserted
-    return g.db.execute('select categoryid from category where'
-                        ' categoryname == "{0}"'.format(categoryname)).fetchone()[0]
+    return g.db.execute(Q_GET_CATEGORY.format(categoryname)).fetchone()[0]
+
 
 def _get_categories():
     """Helper method which returns a map from category ID to category name,
     sorted in alphabetical (lexicographical) order by category name.
 
     """
-    cursor = g.db.execute('select categoryid, categoryname from category'
-                          ' order by categoryname asc')
+    cursor = g.db.execute(Q_GET_CATEGORIES)
     return OrderedDict([(row[0], row[1]) for row in cursor.fetchall()])
+
 
 def _get_last_display_position(categoryid):
     """Helper method which returns the index in the display sequence of the
@@ -86,9 +90,8 @@ def _get_last_display_position(categoryid):
 
     """
     # sometimes returns None
-    return g.db.execute('select max(photodisplayposition) from photo where'
-                        ' photocategory == "{0}"'
-                        .format(categoryid)).fetchone()[0]
+    return g.db.execute(Q_GET_LAST_DISP_POS.format(categoryid)).fetchone()[0]
+
 
 def init_db():
     """Initialize the database using the schema specified in the configuration.
@@ -99,14 +102,17 @@ def init_db():
             db.cursor().executescript(f.read())
         db.commit()
 
+
 def connect_db():
     """Gets a connection to the SQLite database."""
     return sqlite3.connect(app.config['DATABASE'])
+
 
 @app.before_request
 def before_request():
     """Stores the database connection in the db attribute of the g object."""
     g.db = connect_db()
+
 
 @app.after_request
 def after_request(response):

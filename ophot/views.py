@@ -29,24 +29,28 @@ from ophot.forms import SettingsForm
 # the first and last name of the photographer
 realname = app.config['NAME']
 
+
 # TODO use mime types or magic numbers to identify files
 def _allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() \
+        in app.config['ALLOWED_EXTENSIONS']
+
 
 def _generate_filename(directory, filename):
     """Generate the path at which to the save a file uploaded by the user.
 
     For now, this just generates a random UUID (version 4), then appends the
     same extension found from the input filename.
-    
+
     """
     extension = filename.rsplit('.', 1)[1]
-    uuid = random_uuid().hex # the string containing just the hex characters
+    uuid = random_uuid().hex  # the string containing just the hex characters
     filename = os.path.join(directory, '{0}.{1}'.format(uuid, extension))
     while os.path.exists(filename):
         uuid = random_uuid().hex
         filename = os.path.join(directory, '{0}.{1}'.format(uuid, extension))
     return filename
+
 
 def _get_categories_plus_new():
     """Helper method for the PhotoUploadForm which returns a list of pairs,
@@ -59,17 +63,7 @@ def _get_categories_plus_new():
     """
     return _get_categories().items() + [(-1, 'new category...')]
 
-# def _get_categories_plus_new_escaped():
-#     """Helper method for the PhotoUploadForm which returns a list of pairs,
-#     each containing the category ID on the left and the category name on the
-#     right. The final element of this list is the pair (-1,
-#     'new&nbsp;category...'), which is a sentinel value notifying the server
-#     that the user wishes to create a new category and apply these photos to it.
 
-#     Pre-condition: none of the existing categories have an ID of -1.
-#     """
-#     return _get_categories().items() + [(-1, 'new&nbsp;category...')]
-    
 def _to_html_paragraphs(string):
     """Splits the input string on newlines, then wraps HTML <p> tags around
     each non-empty line.
@@ -77,6 +71,7 @@ def _to_html_paragraphs(string):
     """
     return ''.join('<p>{0}</p>'.format(line) for line in string.splitlines()
                    if line)
+
 
 @app.route('/')
 def show_splash():
@@ -90,6 +85,7 @@ def show_splash():
                            photo_padding=site_config['SPACING'],
                            bio=bio,
                            contact=contact)
+
 
 @app.route('/change_splash_photo', methods=['GET', 'POST'])
 def change_splash_photo():
@@ -120,6 +116,7 @@ def change_splash_photo():
                            realname=realname,
                            height=app.config['SPLASH_PHOTO_HEIGHT'],
                            width=app.config['SPLASH_PHOTO_WIDTH'])
+
 
 @app.route('/add', methods=['GET', 'POST'])
 def add_photos():
@@ -209,6 +206,7 @@ def add_photos():
     return render_template('add_photos.html', form=form, realname=realname,
                            height=app.config['PHOTO_HEIGHT'])
 
+
 @app.route('/settings', methods=['GET'])
 def edit_settings():
     # create this class so that the form can automatically fill in its values
@@ -221,6 +219,7 @@ def edit_settings():
     form = SettingsForm(obj=Settings())
     return render_template('edit_settings.html', realname=realname, form=form,
                            categories=_get_categories().iteritems())
+
 
 # TODO use Flask-CSRF?
 @app.route('/login', methods=['GET', 'POST'])
@@ -236,15 +235,18 @@ def login():
             return redirect(url_for('show_splash'))
     return render_template('login.html', error=error, realname=realname)
 
+
 @app.route('/logout')
 def logout():
     session.pop('logged_in', None)
     flash('You have successfully logged out.')
     return redirect(url_for('show_splash'))
 
+
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template('page_not_found.html', realname=realname), 404
+
 
 @app.errorhandler(403)
 def forbidden(error):

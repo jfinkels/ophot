@@ -14,6 +14,12 @@ from ophot import _get_categories
 from ophot import _get_last_display_position
 from ophot import app
 from ophot import site_config
+from ophot.queries import Q_CHANGE_CATEGORY
+from ophot.queries import Q_CHANGE_CATEGORY_NAME
+from ophot.queries import Q_DELETE_CATEGORY
+from ophot.queries import Q_DELETE_PHOTO
+from ophot.queries import Q_GET_PHOTOS
+
 
 @app.route('/_get_photos', methods=['GET'])
 def get_photos():
@@ -23,13 +29,11 @@ def get_photos():
 
     """
     category = request.args.get('categoryid')
-    cursor = g.db.execute('select photoid, photofilename from photo'
-                          ' where photocategory == "{0}"'
-                          ' order by photodisplayposition asc'
-                          .format(category))
+    cursor = g.db.execute(Q_GET_PHOTOS.format(category))
     # add the / so that the filenames are relative to the root of the app
     photos = OrderedDict([(row[0], '/' + row[1]) for row in cursor.fetchall()])
     return jsonify(photos)
+
 
 @app.route('/_add_category', methods=['GET'])
 def add_category():
@@ -45,6 +49,7 @@ def add_category():
     categoryid = _add_new_category(categoryname)
     return jsonify(added=True, categoryid=categoryid,
                    categoryname=categoryname)
+
 
 @app.route('/_change_category', methods=['GET'])
 def change_category():
@@ -76,10 +81,10 @@ def change_category():
     position = _get_last_display_position(categoryid)
     if position is None:
         position = 1
-    g.db.execute('update photo set photocategory={0},photodisplayposition={1}'
-                 ' where photoid={2}'.format(categoryid, position, photoid))
+    g.db.execute(Q_CHANGE_CATEGORY.format(categoryid, position, photoid))
     g.db.commit()
     return jsonify(changed=True, photoid=photoid, categoryid=categoryid)
+
 
 @app.route('/_get_categories', methods=['GET'])
 def get_categories():
@@ -108,11 +113,11 @@ def change_category_name():
         abort(401)
     categoryid = request.args.get('categoryid')
     categoryname = request.args.get('categoryname')
-    g.db.execute('update category set categoryname="{0}" where categoryid={1}'
-                 .format(categoryname, categoryid))
+    g.db.execute(Q_CHANGE_CATEGORY_NAME.format(categoryname, categoryid))
 
     g.db.commit()
     return jsonify(changed=True)
+
 
 @app.route('/_update_personal', methods=['GET'])
 def update_personal():
@@ -137,6 +142,7 @@ def update_personal():
         pass
     return jsonify(changed=True)
 
+
 # TODO POST method doesn't seem to be working
 @app.route('/_change_spacing', methods=['GET'])
 def change_spacing():
@@ -157,6 +163,7 @@ def change_spacing():
     site_config.write()
     return jsonify(changed=True)
 
+
 @app.route('/delete/<int:photoid>', methods=['DELETE'])
 def delete_photo(photoid):
     """Ajax method which deletes the photo with the specified ID number from
@@ -166,9 +173,10 @@ def delete_photo(photoid):
     """
     if not session.get('logged_in'):
         abort(401)
-    g.db.execute('delete from photo where photoid == {0}'.format(photoid))
+    g.db.execute(Q_DELETE_PHOTO.format(photoid))
     g.db.commit()
     return jsonify(deleted=True, photoid=photoid)
+
 
 @app.route('/delete_category/<int:categoryid>', methods=['DELETE'])
 def delete_category(categoryid):
@@ -184,7 +192,6 @@ def delete_category(categoryid):
     # onto categories...
     if not session.get('logged_in'):
         abort(401)
-    g.db.execute('delete from category where categoryid == {0}'
-                 .format(categoryid))
+    g.db.execute(Q_DELETE_CATEGORY.format(categoryid))
     g.db.commit()
     return jsonify(deleted=True, categoryid=categoryid)
