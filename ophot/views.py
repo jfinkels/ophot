@@ -3,7 +3,6 @@ import os.path
 from uuid import uuid4 as random_uuid
 
 # imports from third-party modules
-from flask import abort
 from flask import flash
 from flask import g
 from flask import redirect
@@ -22,6 +21,7 @@ from ophot import _add_new_category
 from ophot import _get_categories
 from ophot import _get_last_display_position
 from ophot import app
+from ophot import require_logged_in
 from ophot import site_config
 from ophot.forms import ChangeSplashPhotoForm
 from ophot.forms import SettingsForm
@@ -96,8 +96,7 @@ def change_splash_photo():
     """
     form = ChangeSplashPhotoForm()
     if form.validate_on_submit():
-        if not session.get('logged_in'):
-            abort(401)
+        require_logged_in()
         # HACK see comment in add_photos
         filename = os.path.join('ophot', app.config['SPLASH_PHOTO_FILENAME'])
         # TODO see comment in add_photos
@@ -144,8 +143,7 @@ def add_photos():
                                choices=_get_categories_plus_new())
     form = PhotoUploadForm()
     if form.validate_on_submit():
-        if not session.get('logged_in'):
-            abort(401)
+        require_logged_in()
         # Multiple files can be gotten from the files attribute on the request
         # object by calling the getlist() method. Check out the werkzeug
         # documentation for info on the FileStorage class and the

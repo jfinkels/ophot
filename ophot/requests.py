@@ -2,17 +2,16 @@
 from collections import OrderedDict
 
 # imports from third-party modules
-from flask import abort
 from flask import g
 from flask import jsonify
 from flask import request
-from flask import session
 
 # imports from this application
 from ophot import _add_new_category
 from ophot import _get_categories
 from ophot import _get_last_display_position
 from ophot import app
+from ophot import require_logged_in
 from ophot import site_config
 from ophot.queries import Q_CHANGE_CATEGORY
 from ophot.queries import Q_CHANGE_CATEGORY_NAME
@@ -43,8 +42,7 @@ def add_category():
     category to add.
 
     """
-    if not session.get('logged_in'):
-        abort(401)
+    require_logged_in()
     categoryname = request.args.get('categoryname')
     categoryid = _add_new_category(categoryname)
     return jsonify(added=True, categoryid=categoryid,
@@ -68,8 +66,7 @@ def change_category():
     If the photo is being changed to the same category, this method will change
     its display order position to be last.
     """
-    if not session.get('logged_in'):
-        abort(401)
+    require_logged_in()
     categoryid = request.args.get('categoryid')
     if int(categoryid) == -1:
         categoryname = request.args.get('categoryname')
@@ -108,9 +105,7 @@ def change_category_name():
     the category was successfully changed, *categoryid* to the ID of the
     category, and *categoryname* to the new name of the category.
     """
-    # TODO move these two lines into a function
-    if not session.get('logged_in'):
-        abort(401)
+    require_logged_in()
     categoryid = request.args.get('categoryid')
     categoryname = request.args.get('categoryname')
     g.db.execute(Q_CHANGE_CATEGORY_NAME.format(categoryname, categoryid))
@@ -130,8 +125,7 @@ def update_personal():
     the info was successfully changed.
 
     """
-    if not session.get('logged_in'):
-        abort(401)
+    require_logged_in()
     name = request.args.get('name').upper()
     value = request.args.get('value')
     if name == 'BIO' or name == 'CONTACT':
@@ -156,8 +150,7 @@ def change_spacing():
     the spacing was successfully changed.
 
     """
-    if not session.get('logged_in'):
-        abort(401)
+    require_logged_in()
     # TODO use a validator for configobj
     site_config['SPACING'] = int(request.args.get('spacing'))
     site_config.write()
@@ -171,8 +164,7 @@ def delete_photo(photoid):
     successful.
 
     """
-    if not session.get('logged_in'):
-        abort(401)
+    require_logged_in()
     g.db.execute(Q_DELETE_PHOTO.format(photoid))
     g.db.commit()
     return jsonify(deleted=True, photoid=photoid)
@@ -190,8 +182,7 @@ def delete_category(categoryid):
     # TODO what should we do with photos orphaned by this deletion? perhaps
     # create a page for managing photo thumbnails by dragging and dropping them
     # onto categories...
-    if not session.get('logged_in'):
-        abort(401)
+    require_logged_in()
     g.db.execute(Q_DELETE_CATEGORY.format(categoryid))
     g.db.commit()
     return jsonify(deleted=True, categoryid=categoryid)

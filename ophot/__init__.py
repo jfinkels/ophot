@@ -5,8 +5,10 @@ import sqlite3
 
 # imports from third party modules
 from configobj import ConfigObj
+from flask import abort
 from flask import Flask
 from flask import g
+from flask import session
 
 # imports from this application
 from ophot.queries import Q_ADD_CATEGORY
@@ -124,6 +126,15 @@ def after_request(response):
     """
     g.db.close()
     return response
+
+
+def require_logged_in():
+    """Aborts with HTTP error 401 Unauthorized if the user is not logged in on
+    this session.
+
+    """
+    if not session.get('logged_in'):
+        abort(401)
 
 import ophot.requests
 import ophot.views
