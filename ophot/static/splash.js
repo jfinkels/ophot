@@ -36,6 +36,8 @@ function createPhotoCellString(photoid, filename, categories) {
        + "  <div class=\"photo-container\">\n"
        + "    <a class=\"purchase\" href=\"#\">purchase</a>\n"
        + "    <div class=\"photo-shadow\"></div>\n"
+       + "    <div class=\"move-left\"><a href=\"#\">&larr;</a></div>\n"
+       + "    <div class=\"move-right\"><a href=\"#\">&rarr;</a></div>\n"
        + "    <div class=\"purchase-information\">\n"
        + "      <a class=\"close\">X</a>\n"
        + "      <p>\n"
@@ -83,11 +85,12 @@ function displayPhotos(data, textStatus, xhr) {
   // TODO this really only needs to happen once
   $.getJSON(SCRIPT_ROOT + '/_get_categories', storeCategories);
 
-  // assume the data is an associative array mapping display positions to
-  // filenames
-  var index = 0;
-  for (var id in data) {
-    $("#the-row").append(createPhotoCellString(id, data[id],
+  // assume the data is in the format described in the documentation for the
+  // _get_photos route
+  var photos = data['values'];
+  for (var i = 0; i < photos.length; ++i) {
+    $("#the-row").append(createPhotoCellString(photos[i].photoid,
+                                               photos[i].filename,
                                                globalVariables.categories));
   }
 
@@ -98,6 +101,8 @@ function displayPhotos(data, textStatus, xhr) {
   $(".photo-shadow").hide();
   $(".delete-dialog").hide();
   $(".purchase-information").hide();
+  $(".move-right").hide();
+  $(".move-left").hide();
 }
 
 /**

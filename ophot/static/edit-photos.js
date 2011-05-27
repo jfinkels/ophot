@@ -22,9 +22,24 @@ function changeCategory(data, textStatus, xhr) {
   }
 }
 
+function movedRight(data, textStatus, xhr) {
+  if (data["moved"]) {
+    // TODO do something
+  } else {
+    // TODO do something
+    alert("could not move right");
+  }
+}
+
 $(document).ready(function() {
   $(".photo-container").live("hover", function() {
     $(this).children(".edit-menu").toggle();
+    // don't show the left arrow on the first photo and the right arrow on the
+    // last photo
+    $(this).children(".move-right, .move-left")
+      .not("td.photo-cell:first-child div.move-left")
+      .not("td.photo-cell:last-child div.move-right")
+      .toggle();
   });
 
   $("#splash").hover(function() {
@@ -156,5 +171,14 @@ $(document).ready(function() {
                 changeCategory
                );
     }
+  });
+
+  $(".move-right").live("click", function(event) {
+    event.preventDefault();
+    var photoid = $(this).siblings("img").attr("id");
+    $.getJSON(SCRIPT_ROOT + '/_move_photo_right',
+              { photoid: photoid },
+              movedRight
+             );
   });
 });
