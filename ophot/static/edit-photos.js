@@ -24,11 +24,26 @@ function changeCategory(data, textStatus, xhr) {
 
 function movedRight(data, textStatus, xhr) {
   if (data["moved"]) {
-    var cell = $('img[id~="' + data["photoid"] + '"]').parents(".photo-cell");
+    var img = $('img[id~="' + data["photoid"] + '"]');
+    var cell = img.parents(".photo-cell");
     var next = cell.next();
     var parentRow = cell.parent();
+
+    // show the left arrow if this was the first photo
+    if (cell.is(":first-child")) {
+      img.siblings(".move-left").show();
+    }
+    
+    // detach the cell and reinsert it after the one on its right
     cell.detach();
     next.after(cell);
+
+    // hide the right arrow if this is the last photo
+    if (cell.is(":last-child")) {
+      img.siblings(".move-right").hide();
+      // HACK if we don't do this, the toggling gets all out of whack
+      next.children(".move-left, .move-right").show();
+    }
   } else {
     // TODO do something
     alert("could not move right");
@@ -37,11 +52,27 @@ function movedRight(data, textStatus, xhr) {
 
 function movedLeft(data, textStatus, xhr) {
   if (data["moved"]) {
-    var cell = $('img[id~="' + data["photoid"] + '"]').parents(".photo-cell");
+    //var cell = $('img[id~="' + data["photoid"] + '"]').parents(".photo-cell");
+    var img = $('img[id~="' + data["photoid"] + '"]');
+    var cell = img.parents(".photo-cell");
     var prev = cell.prev();
     var parentRow = cell.parent();
+
+    // show the right arrow if this was the last photo
+    if (cell.is(":last-child")) {
+      img.siblings(".move-right").show();
+    }
+    
+    // detach the cell and reinsert it before the one on its left
     cell.detach();
     prev.before(cell);
+
+    // hide the left arrow if this is the first photo
+    if (cell.is(":first-child")) {
+      img.siblings(".move-left").hide();
+      // HACK if we don't do this, the toggling gets all out of whack
+      prev.children(".move-left, .move-right").show();
+    }
   } else {
     // TODO do something
     alert("could not move left");
@@ -53,10 +84,19 @@ $(document).ready(function() {
     $(this).children(".edit-menu").toggle();
     // don't show the left arrow on the first photo and the right arrow on the
     // last photo
-    $(this).children(".move-right, .move-left")
+    var toToggle = $(this).children(".move-right, .move-left")
       .not("td.photo-cell:first-child div.move-left")
-      .not("td.photo-cell:last-child div.move-right")
-      .toggle();
+      .not("td.photo-cell:last-child div.move-right");
+
+    toToggle.toggle();
+    // HACK should use .toggle() here, but it causes a problem with the
+    // left-most and right-most photo, which should hide its left and right
+    // arrow, respectively when moving into that position
+    // if (toToggle.is(":visible")) {
+    //   toToggle.hide();
+    // } else {
+    //   toToggle.show();
+    // }
   });
 
   $("#splash").hover(function() {
