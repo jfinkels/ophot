@@ -1,3 +1,5 @@
+"""Provides routes for ajax requests to the server."""
+
 # imports from third-party modules
 from flask import g
 from flask import jsonify
@@ -15,6 +17,7 @@ from ophot.queries import Q_CHANGE_CATEGORY
 from ophot.queries import Q_CHANGE_CATEGORY_NAME
 from ophot.queries import Q_DELETE_CATEGORY
 from ophot.queries import Q_DELETE_PHOTO
+from ophot.queries import Q_GET_PHOTO_POS
 from ophot.queries import Q_GET_PHOTOS
 
 
@@ -146,14 +149,10 @@ def swap_display_positions():
     """
     photoid1 = request.args.get('photoid1')
     photoid2 = request.args.get('photoid2')
-    pos1 = _select_single('select photodisplayposition from photo where'
-                          ' photoid == {0}'.format(photoid1))
-    pos2 = _select_single('select photodisplayposition from photo where'
-                          ' photoid == {0}'.format(photoid2))
-    g.db.execute('update photo set photodisplayposition={0}'
-                 ' where photoid == {1}'.format(pos2, photoid1))
-    g.db.execute('update photo set photodisplayposition={0}'
-                 ' where photoid == {1}'.format(pos1, photoid2))
+    pos1 = _select_single(Q_GET_PHOTO_POS.format(photoid1))
+    pos2 = _select_single(Q_GET_PHOTO_POS.format(photoid2))
+    g.db.execute(Q_CHANGE_DISPLAY_POS.format(pos2, photoid1))
+    g.db.execute(Q_CHANGE_DISPLAY_POS.format(pos1, photoid2))
     g.db.commit()
     return jsonify(moved=True, photoid1=photoid1, displayposition1=pos2,
                    photoid2=photoid2, displayposition2=pos1)
