@@ -15,6 +15,7 @@ from ophot import require_logged_in
 from ophot import site_config
 from ophot.queries import Q_CHANGE_CATEGORY
 from ophot.queries import Q_CHANGE_CATEGORY_NAME
+from ophot.queries import Q_CHANGE_DISPLAY_POS
 from ophot.queries import Q_DELETE_CATEGORY
 from ophot.queries import Q_DELETE_PHOTO
 from ophot.queries import Q_GET_PHOTO_POS
