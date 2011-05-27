@@ -24,7 +24,11 @@ function changeCategory(data, textStatus, xhr) {
 
 function movedRight(data, textStatus, xhr) {
   if (data["moved"]) {
-    // TODO do something
+    var cell = $('img[id~="' + data["photoid"] + '"]').parents(".photo-cell");
+    var next = cell.next();
+    var parentRow = cell.parent();
+    cell.detach();
+    next.after(cell);
   } else {
     // TODO do something
     alert("could not move right");

@@ -137,8 +137,9 @@ def move_photo_right():
     The request argument is *photoid*, which is the ID of the photo to move.
 
     Returns a JSON object mapping *moved* to a boolean representing whether the
-    photo was successfully moved and *displayposition* to the new display
-    position for the moved photo in its category.
+    photo was successfully moved, *photoid* to the ID of the photo which was
+    moved, and *displayposition* to the new display position for the moved
+    photo (in its category).
 
     If the specified photo is the right-most photo, its position remains the
     same and *moved* is False.
@@ -146,24 +147,22 @@ def move_photo_right():
     # TODO do this all in one query
     require_logged_in()
     photoid = request.args.get('photoid')
-    print 'photo id', photoid
     position, categoryid = g.db.execute('select photodisplayposition, photocategory from photo where photoid == {0}'.format(photoid)).fetchone()
-    print 'position', position
-    print 'category', categoryid
-    next, nextpos = g.db.execute('select photoid, photodisplayposition'
+    result = g.db.execute('select photoid, photodisplayposition'
                                  ' from photo where'
                                  ' photodisplayposition > {0}'
                                  ' and photocategory == {1}'
                                  ' order by photodisplayposition'
                                  ' limit 1'.format(position, categoryid)
                                  ).fetchone()
-    print 'next', next
-    print 'next pos', nextpos
+    if result is None:
+        return jsonify(moved=False, photoid=photoid, displayposition=position)
+    next, nextpos = result
     # swap the display positions of the original photo and the next photo
     g.db.execute('update photo set photodisplayposition={0} where photoid == {1}'.format(nextpos, photoid))
     g.db.execute('update photo set photodisplayposition={0} where photoid == {1}'.format(position, next))
     g.db.commit()
-    return jsonify(moved=True, displayposition=position)
+    return jsonify(moved=True, photoid=photoid, displayposition=position)
 
 
 @app.route('/_update_personal', methods=['GET'])
