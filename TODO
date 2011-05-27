@@ -10,3 +10,4 @@
 * change to data["changed"] == "True"?
 * add a select_one() function
 * change the word "method" to "function"
+* http://blog.greenfelt.net/2009/09/01/caching-javascript-safely/
