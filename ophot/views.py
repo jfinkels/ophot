@@ -189,9 +189,7 @@ def add_photos():
                     wdth = im.size[0] * app.config['PHOTO_HEIGHT'] / im.size[1]
                     im = im.resize((wdth, app.config['PHOTO_HEIGHT']))
                     im.save(long_filename, format)
-                g.db.execute('insert into photo (photofilename, photocategory,'
-                             ' photodisplayposition) values (?, ?, ?)',
-                             [filename, categoryid, position])
+                g.db.execute(Q_ADD_PHOTO, [filename, categoryid, position])
                 g.db.commit()
                 num_photos_added += 1
             else:

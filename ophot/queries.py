@@ -1,6 +1,8 @@
 """Provides query strings for queries to the database."""
 
 Q_ADD_CATEGORY = 'insert into category (categoryname) values (?)'
+Q_ADD_PHOTO = ('insert into photo (photofilename, photocategory,'
+               ' photodisplayposition) values (?, ?, ?)')
 Q_CHANGE_CATEGORY = ('update photo'
                      ' set photocategory={0},photodisplayposition={1}'
                      ' where photoid={2}')
