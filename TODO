@@ -2,8 +2,11 @@
 * combine redundant CSS declarations
 * fix validation messages so that they don't display as generic unstyled lists
 * allow PNG files
-* refactor "if not session.logged_in" code into a method
 * change _get_categories() to return an ordered dict so that in the "edit_settings" page, the categories show up in alphabetical order
 * refactor redundant javascript in splash.js
 * set min-width of photos-container to full width of window, and right margin, and no rounded corners
 * add a view and a stylesheet for "mobile" web browsers (the stylesheet should imitate, for example, the iPhone's UI effects)
+* update jquery version
+* change to data["changed"] == "True"?
+* add a select_one() function
+* change the word "method" to "function"
