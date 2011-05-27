@@ -225,6 +225,8 @@ p.choice {
 
 div.move-right, div.move-left {
   background-color: black;
+  box-shadow: 0px 0px 5px black;
+  -webkit-box-shadow: 0px 0px 5px black;
   font-size: 30pt;
   height: 100px;
   line-height: 100px;
