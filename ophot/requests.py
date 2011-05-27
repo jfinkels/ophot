@@ -1,6 +1,3 @@
-# imports from built-in modules
-from collections import OrderedDict
-
 # imports from third-party modules
 from flask import g
 from flask import jsonify
@@ -26,12 +23,31 @@ def get_photos():
     filenames of photos in the category specified in the request argument
     *categoryid*.
 
+    Returns a JSON object which is a mapping from the string "values" to an
+    array in which each element is a mapping containing the keys "photoid" and
+    "filename". For example:
+    
+    { "values":
+      [
+        { "photoid": 5, "filename": /path/to/photo5 },
+        { "photoid": 2, "filename": /path/to/photo2 },
+        ...
+      ]
+    }
+
+    The elements of the array are in ascending order according to photo display
+    position.
     """
     category = request.args.get('categoryid')
     cursor = g.db.execute(Q_GET_PHOTOS.format(category))
-    # add the / so that the filenames are relative to the root of the app
-    photos = OrderedDict([(row[0], '/' + row[1]) for row in cursor.fetchall()])
-    return jsonify(photos)
+    # Add the / so that the filenames are relative to the root of the app.
+    photos = [dict(photoid=row[0], filename='/' + row[1]) for row in
+              cursor.fetchall()]
+    # NOTE: we have to do this funny business of creating an array of mappings
+    # because JSON does not guarantee ordered mappings. The workaround is to
+    # provide this array in order, sorted by photo display position, which is
+    # what's happening in the lines above.
+    return jsonify(values=photos)
 
 
 @app.route('/_add_category', methods=['GET'])
@@ -112,6 +128,42 @@ def change_category_name():
 
     g.db.commit()
     return jsonify(changed=True)
+
+@app.route('/_move_photo_right', methods=['GET'])
+def move_photo_right():
+    """Ajax method which transposes the display position of the specified photo
+    with the one on its right.
+
+    The request argument is *photoid*, which is the ID of the photo to move.
+
+    Returns a JSON object mapping *moved* to a boolean representing whether the
+    photo was successfully moved and *displayposition* to the new display
+    position for the moved photo in its category.
+
+    If the specified photo is the right-most photo, its position remains the
+    same and *moved* is False.
+    """
+    # TODO do this all in one query
+    require_logged_in()
+    photoid = request.args.get('photoid')
+    print 'photo id', photoid
+    position, categoryid = g.db.execute('select photodisplayposition, photocategory from photo where photoid == {0}'.format(photoid)).fetchone()
+    print 'position', position
+    print 'category', categoryid
+    next, nextpos = g.db.execute('select photoid, photodisplayposition'
+                                 ' from photo where'
+                                 ' photodisplayposition > {0}'
+                                 ' and photocategory == {1}'
+                                 ' order by photodisplayposition'
+                                 ' limit 1'.format(position, categoryid)
+                                 ).fetchone()
+    print 'next', next
+    print 'next pos', nextpos
+    # swap the display positions of the original photo and the next photo
+    g.db.execute('update photo set photodisplayposition={0} where photoid == {1}'.format(nextpos, photoid))
+    g.db.execute('update photo set photodisplayposition={0} where photoid == {1}'.format(position, next))
+    g.db.commit()
+    return jsonify(moved=True, displayposition=position)
 
 
 @app.route('/_update_personal', methods=['GET'])
