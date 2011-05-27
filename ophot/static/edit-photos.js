@@ -35,6 +35,19 @@ function movedRight(data, textStatus, xhr) {
   }
 }
 
+function movedLeft(data, textStatus, xhr) {
+  if (data["moved"]) {
+    var cell = $('img[id~="' + data["photoid"] + '"]').parents(".photo-cell");
+    var prev = cell.prev();
+    var parentRow = cell.parent();
+    cell.detach();
+    prev.before(cell);
+  } else {
+    // TODO do something
+    alert("could not move left");
+  }
+}
+
 $(document).ready(function() {
   $(".photo-container").live("hover", function() {
     $(this).children(".edit-menu").toggle();
@@ -183,6 +196,15 @@ $(document).ready(function() {
     $.getJSON(SCRIPT_ROOT + '/_move_photo_right',
               { photoid: photoid },
               movedRight
+             );
+  });
+
+  $(".move-left").live("click", function(event) {
+    event.preventDefault();
+    var photoid = $(this).siblings("img").attr("id");
+    $.getJSON(SCRIPT_ROOT + '/_move_photo_left',
+              { photoid: photoid },
+              movedLeft
              );
   });
 });
