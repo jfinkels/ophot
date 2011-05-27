@@ -10,4 +10,3 @@
 * change to data["changed"] == "True"?
 * add a select_one() function
 * change the word "method" to "function"
-* change the goofy moving right database queries so that the front end simply sends to the back end the id's of the photos to swap!

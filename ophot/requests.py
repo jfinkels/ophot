@@ -17,64 +17,6 @@ from ophot.queries import Q_DELETE_PHOTO
 from ophot.queries import Q_GET_PHOTOS
 
 
-# constants specifying which direction to move a photo
-LEFT = 'left'
-RIGHT = 'right'
-
-
-def _move_photo_left_or_right(direction):
-    """Helper function which transposes the display position of the specified
-    photo with the one on its left or right, specified by the *direction*, and
-    returns a JSON object.
-
-    This function is for use with the Ajax functions move_photo_left() and
-    move_photo_right().
-
-    Pre-condition: the *direction* argument must be either *LEFT* or *RIGHT*.
-
-    The request argument is *photoid*, which is the ID of the photo to move.
-
-    Returns a JSON object mapping *moved* to a boolean representing whether the
-    photo was successfully moved, *photoid* to the ID of the photo which was
-    moved, and *displayposition* to the new display position for the moved
-    photo (in its category).
-
-    If direction is *LEFT* and the specified photo is the left-most photo, its
-    position remains the same and *moved* is False. If direction is *RIGHT* and
-    the specified photo is the right-most photo, its position remains the same
-    and *moved* is False.
-    """
-    # TODO do this all in one query
-    require_logged_in()
-    photoid = request.args.get('photoid')
-    result = g.db.execute('select photodisplayposition,'
-                          ' photocategory from photo where'
-                          ' photoid == {0}'.format(photoid)).fetchone()
-    position, categoryid = result
-    if direction == LEFT:
-        comparison = '<'
-        order = 'desc'
-    else:
-        comparison = '>'
-        order = 'asc'
-    result = g.db.execute('select photoid, photodisplayposition from photo'
-                          ' where photodisplayposition {0} {1}'
-                          ' and photocategory == {2}'
-                          ' order by photodisplayposition {3}'
-                          ' limit 1'.format(comparison, position, categoryid,
-                                            order)).fetchone()
-    if result is None:
-        return jsonify(moved=False, photoid=photoid, displayposition=position)
-    next, nextpos = result
-    # swap the display positions of the original photo and the next photo
-    g.db.execute('update photo set photodisplayposition={0}'
-                 ' where photoid == {1}'.format(nextpos, photoid))
-    g.db.execute('update photo set photodisplayposition={0}'
-                 ' where photoid == {1}'.format(position, next))
-    g.db.commit()
-    return jsonify(moved=True, photoid=photoid, displayposition=position)
-
-
 @app.route('/_get_photos', methods=['GET'])
 def get_photos():
     """Ajax method which returns a JSON object which is a map from photoid to
@@ -188,40 +130,32 @@ def change_category_name():
     return jsonify(changed=True)
 
 
-@app.route('/_move_photo_right', methods=['GET'])
-def move_photo_right():
-    """Ajax method which transposes the display position of the specified photo
-    with the one on its right.
+@app.route('/_swap_display_positions', methods=['GET'])
+def swap_display_positions():
+    """Ajax function which swaps the display positions of two photos.
 
-    The request argument is *photoid*, which is the ID of the photo to move.
-
-    Returns a JSON object mapping *moved* to a boolean representing whether the
-    photo was successfully moved, *photoid* to the ID of the photo which was
-    moved, and *displayposition* to the new display position for the moved
-    photo (in its category).
-
-    If the specified photo is the right-most photo, its position remains the
-    same and *moved* is False.
-    """
-    return _move_photo_left_or_right(RIGHT)
-
-
-@app.route('/_move_photo_left', methods=['GET'])
-def move_photo_left():
-    """Ajax method which transposes the display position of the specified photo
-    with the one on its left.
-
-    The request argument is *photoid*, which is the ID of the photo to move.
+    The request arguments are *photoid1* and *photoid2*, the ID numbers of the
+    photos whose display positions will be swapped.
 
     Returns a JSON object mapping *moved* to a boolean representing whether the
-    photo was successfully moved, *photoid* to the ID of the photo which was
-    moved, and *displayposition* to the new display position for the moved
-    photo (in its category).
-
-    If the specified photo is the left-most photo, its position remains the
-    same and *moved* is False.
+    swap was successful, *photoid1* to the ID number of the first photo
+    swapped, *photoid2* to the ID number of the second photo swapped,
+    *displayposition1* to the NEW display position of photo 1, and
+    *displayposition2* to the NEW displayposition of photo 2.
     """
-    return _move_photo_left_or_right(LEFT)
+    photoid1 = request.args.get('photoid1')
+    photoid2 = request.args.get('photoid2')
+    pos1 = g.db.execute('select photodisplayposition from photo where'
+                        ' photoid == {0}'.format(photoid1)).fetchone()[0]
+    pos2 = g.db.execute('select photodisplayposition from photo where'
+                        ' photoid == {0}'.format(photoid2)).fetchone()[0]
+    g.db.execute('update photo set photodisplayposition={0}'
+                 ' where photoid == {1}'.format(pos2, photoid1))
+    g.db.execute('update photo set photodisplayposition={0}'
+                 ' where photoid == {1}'.format(pos1, photoid2))
+    g.db.commit()
+    return jsonify(moved=True, photoid1=photoid1, displayposition1=pos2,
+                   photoid2=photoid2, displayposition2=pos1)
 
 
 @app.route('/_update_personal', methods=['GET'])

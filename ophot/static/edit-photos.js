@@ -24,8 +24,9 @@ function changeCategory(data, textStatus, xhr) {
 
 function movedRight(data, textStatus, xhr) {
   if (data["moved"]) {
-    var img = $('img[id~="' + data["photoid"] + '"]');
+    var img = $('img[id~="' + data["photoid1"] + '"]');
     var cell = img.parents(".photo-cell");
+    // TODO here we are assuming that cell.next() == data["photoid2"]
     var next = cell.next();
     var parentRow = cell.parent();
 
@@ -41,8 +42,6 @@ function movedRight(data, textStatus, xhr) {
     // hide the right arrow if this is the last photo
     if (cell.is(":last-child")) {
       img.siblings(".move-right").hide();
-      // HACK if we don't do this, the toggling gets all out of whack
-      next.children(".move-left, .move-right").show();
     }
   } else {
     // TODO do something
@@ -52,9 +51,9 @@ function movedRight(data, textStatus, xhr) {
 
 function movedLeft(data, textStatus, xhr) {
   if (data["moved"]) {
-    //var cell = $('img[id~="' + data["photoid"] + '"]').parents(".photo-cell");
-    var img = $('img[id~="' + data["photoid"] + '"]');
+    var img = $('img[id~="' + data["photoid1"] + '"]');
     var cell = img.parents(".photo-cell");
+    // TODO here we are assuming that cell.prev() == data["photoid2"]
     var prev = cell.prev();
     var parentRow = cell.parent();
 
@@ -70,8 +69,6 @@ function movedLeft(data, textStatus, xhr) {
     // hide the left arrow if this is the first photo
     if (cell.is(":first-child")) {
       img.siblings(".move-left").hide();
-      // HACK if we don't do this, the toggling gets all out of whack
-      prev.children(".move-left, .move-right").show();
     }
   } else {
     // TODO do something
@@ -232,19 +229,27 @@ $(document).ready(function() {
 
   $(".move-right").live("click", function(event) {
     event.preventDefault();
-    var photoid = $(this).siblings("img").attr("id");
-    $.getJSON(SCRIPT_ROOT + '/_move_photo_right',
-              { photoid: photoid },
-              movedRight
-             );
+    var cell = $(this).parents(".photo-cell");
+    if (!(cell.is(":last-child"))) {
+      var photoid = $(this).siblings("img").attr("id");
+      var nextid = cell.next().find("img").attr("id");
+      $.getJSON(SCRIPT_ROOT + '/_swap_display_positions',
+                { photoid1: photoid, photoid2: nextid },
+                movedRight
+               );
+    }
   });
 
   $(".move-left").live("click", function(event) {
     event.preventDefault();
-    var photoid = $(this).siblings("img").attr("id");
-    $.getJSON(SCRIPT_ROOT + '/_move_photo_left',
-              { photoid: photoid },
-              movedLeft
-             );
+    var cell = $(this).parents(".photo-cell");
+    if (!(cell.is(":first-child"))) {
+      var photoid = $(this).siblings("img").attr("id");
+      var previousid = cell.prev().find("img").attr("id");
+      $.getJSON(SCRIPT_ROOT + '/_swap_display_positions',
+                { photoid1: photoid, photoid2: previousid },
+                movedLeft
+               );
+    }
   });
 });
