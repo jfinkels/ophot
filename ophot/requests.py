@@ -7,6 +7,7 @@ from flask import request
 from ophot import _add_new_category
 from ophot import _get_categories
 from ophot import _get_last_display_position
+from ophot import _select_single
 from ophot import app
 from ophot import require_logged_in
 from ophot import site_config
@@ -145,10 +146,10 @@ def swap_display_positions():
     """
     photoid1 = request.args.get('photoid1')
     photoid2 = request.args.get('photoid2')
-    pos1 = g.db.execute('select photodisplayposition from photo where'
-                        ' photoid == {0}'.format(photoid1)).fetchone()[0]
-    pos2 = g.db.execute('select photodisplayposition from photo where'
-                        ' photoid == {0}'.format(photoid2)).fetchone()[0]
+    pos1 = _select_single('select photodisplayposition from photo where'
+                          ' photoid == {0}'.format(photoid1))
+    pos2 = _select_single('select photodisplayposition from photo where'
+                          ' photoid == {0}'.format(photoid2))
     g.db.execute('update photo set photodisplayposition={0}'
                  ' where photoid == {1}'.format(pos2, photoid1))
     g.db.execute('update photo set photodisplayposition={0}'

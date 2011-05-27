@@ -72,7 +72,7 @@ def _add_new_category(categoryname):
     g.db.execute(Q_ADD_CATEGORY, [categoryname])
     g.db.commit()
     # get the ID of the category that we just inserted
-    return g.db.execute(Q_GET_CATEGORY.format(categoryname)).fetchone()[0]
+    return _select_single(Q_GET_CATEGORY.format(categoryname))
 
 
 def _get_categories():
@@ -92,8 +92,17 @@ def _get_last_display_position(categoryid):
 
     """
     # sometimes returns None
-    return g.db.execute(Q_GET_LAST_DISP_POS.format(categoryid)).fetchone()[0]
+    return _select_single(Q_GET_LAST_DISP_POS.format(categoryid))
 
+
+def _select_single(query):
+    """Executes the given *query* and returns the first field in the first
+    matching row.
+
+    Might return None
+
+    """
+    return g.db.execute(query).fetchone()[0]
 
 def init_db():
     """Initialize the database using the schema specified in the configuration.
