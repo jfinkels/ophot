@@ -142,6 +142,23 @@ $(document).ready(function() {
   $(".submenu").hide();
   $("#change-splash-photo").hide();
 
+  // set the minimum width of the photos container to be the width of the
+  // window, and reset the minimum width after resize
+  $("#photos-container").css("min-width", $(window).width());
+    // TODO use the jquery debounce plugin on this function
+  $(window).resize(function() {
+    var paddingLeft = parseInt($("#photos-container").css("padding-left"));
+    var paddingRight = parseInt($("#photos-container").css("padding-right"));
+    var paddingOffset = paddingLeft + paddingRight;
+    // TODO once the debounce plugin works (see
+    // https://github.com/cowboy/jquery-throttle-debounce/issues/4), then use
+    // this to animate the change
+    //$("#photos-container").animate(
+    //  {"min-width" : $(window).width() - paddingOffset}
+    //);
+    $("#photos-container").css("min-width", $(window).width() - paddingOffset);
+  });
+
   $(".purchase").live("click", function(event) {
     event.preventDefault();
     $(this).siblings(".photo-shadow").fadeIn();
