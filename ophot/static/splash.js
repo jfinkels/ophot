@@ -133,30 +133,31 @@ $(document).ready(function() {
   $('.scroll-pane').css('padding-bottom', '10px');
   $('.scroll-pane').css('padding-top', '10px');
 
+  var photosContainer = $("#photos-container");
   $("#contact-info").hide();
   $("#purchase-info").hide();
   $("#bio").hide();
   $("#photos-banner").hide();
-  $("#photos-container").hide();
+  photosContainer.hide();
   $("#splash-shadow").hide();
   $(".submenu").hide();
   $("#change-splash-photo").hide();
 
   // set the minimum width of the photos container to be the width of the
   // window, and reset the minimum width after resize
-  $("#photos-container").css("min-width", $(window).width());
+  photosContainer.css("min-width", $(window).width());
     // TODO use the jquery debounce plugin on this function
   $(window).resize(function() {
-    var paddingLeft = parseInt($("#photos-container").css("padding-left"));
-    var paddingRight = parseInt($("#photos-container").css("padding-right"));
+    var paddingLeft = parseInt(photosContainer.css("padding-left"));
+    var paddingRight = parseInt(photosContainer.css("padding-right"));
     var paddingOffset = paddingLeft + paddingRight;
     // TODO once the debounce plugin works (see
     // https://github.com/cowboy/jquery-throttle-debounce/issues/4), then use
     // this to animate the change
-    //$("#photos-container").animate(
+    //photosContainer.animate(
     //  {"min-width" : $(window).width() - paddingOffset}
     //);
-    $("#photos-container").css("min-width", $(window).width() - paddingOffset);
+    photosContainer.css("min-width", $(window).width() - paddingOffset);
   });
 
   $(".purchase").live("click", function(event) {
@@ -181,7 +182,7 @@ $(document).ready(function() {
       $(this).removeClass("selected");
       $(".photo-link").removeClass("selected");
       $(".submenu").hide(0, function() {
-        $("#photos-container").fadeOut();
+        photosContainer.fadeOut();
         $("#splash-shadow").fadeOut(400, function() {
           $("#banner-container").animate({ top : 400 }, 500);
         });
@@ -280,14 +281,14 @@ $(document).ready(function() {
       $("#contact-info").fadeOut();
       $("#purchase-info").fadeOut();
       $("#bio").fadeOut();
-      if ($("#photos-container").is(":hidden")) {
+      if (photosContainer.is(":hidden")) {
         $("#banner-container").animate(
           { top : 497 },
           {
             duration: 500,
             complete: function() {
               $("#splash-shadow").fadeIn();
-              $("#photos-container").fadeIn();
+              photosContainer.fadeIn();
             }
           });
       }
