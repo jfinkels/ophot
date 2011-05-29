@@ -4,7 +4,6 @@
 * allow PNG files
 * change _get_categories() to return an ordered dict so that in the "edit_settings" page, the categories show up in alphabetical order
 * refactor redundant javascript in splash.js
-* set min-width of photos-container to full width of window, and right margin, and no rounded corners
 * add a view and a stylesheet for "mobile" web browsers (the stylesheet should imitate, for example, the iPhone's UI effects)
 * change to data["changed"] == "True"?
 * http://blog.greenfelt.net/2009/09/01/caching-javascript-safely/
