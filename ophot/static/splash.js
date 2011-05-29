@@ -88,21 +88,18 @@ function displayPhotos(data, textStatus, xhr) {
   // assume the data is in the format described in the documentation for the
   // _get_photos route
   var photos = data['values'];
+  var cats = globalVariables.categories;
   for (var i = 0; i < photos.length; ++i) {
-    $("#the-row").append(createPhotoCellString(photos[i].photoid,
-                                               photos[i].filename,
-                                               globalVariables.categories));
+    var photoid = photos[i].photoid;
+    var filename = photos[i].filename;
+    var photoCellString = createPhotoCellString(photoid, filename, cats);
+    $("#the-row").append(photoCellString);
   }
 
   // hide these things as soon as they are created
-  $(".edit-menu").hide();
-  $(".cat-chooser").hide();
-  $(".purchase").hide();
-  $(".photo-shadow").hide();
-  $(".delete-dialog").hide();
-  $(".purchase-information").hide();
-  $(".move-right").hide();
-  $(".move-left").hide();
+  _hideMany([".edit-menu", ".cat-chooser", ".purchase", ".photo-shadow",
+             ".delete-dialog", ".purchase-information", ".move-right",
+             ".move-left"]);
 }
 
 /**
@@ -139,15 +136,10 @@ function _photosContainerWidth() {
   });
 }
 
-function _hideObjects() {
-  $("#contact-info").hide();
-  $("#purchase-info").hide();
-  $("#bio").hide();
-  $("#photos-banner").hide();
-  $("#photos-container").hide();
-  $("#splash-shadow").hide();
-  $(".submenu").hide();
-  $("#change-splash-photo").hide();
+function _hideMany(selectors) {
+  for (var i = 0; i < selectors.length; ++i) {
+    $(selectors[i]).hide();
+  }
 }
 
 function _purchaseClick() {
@@ -186,90 +178,46 @@ function _photosClick() {
       });
     } else {
       // TODO add :visible to selectors
-      $("#bio-link").removeClass("selected");
-      $("#contact-link").removeClass("selected");
-      $("#purchase-link").removeClass("selected");
+      _removeClassFromMany(["#bio-link", "#contact-link", "#purchase-link"],
+                           "selected");
       $(this).addClass("selected");
-      $("#contact-info").fadeOut();
-      $("#purchase-info").fadeOut();
-      $("#splash-shadow").fadeOut();
-      $("#bio").fadeOut();
+      _fadeOutMany(["#contact-info", "#purchase-info", "#splash-shadow",
+                    "#bio"]);
       $(".submenu").show();
     }
   });
 }
 
-function _bioClick() {
-  $("#bio-link").click(function(event) {
-    event.preventDefault();
-    if ($(this).hasClass("selected")) {
-      $(this).removeClass("selected");
-      $("#splash-shadow").fadeOut();
-      $("#bio").fadeOut();
-    } else {
-      $("#photos-link").removeClass("selected");
-      $(".photo-link").removeClass("selected");
-      $("#contact-link").removeClass("selected");
-      $("#purchase-link").removeClass("selected");
-      $(this).addClass("selected");
-
-      $(".submenu").hide();
-      $("#contact-info").fadeOut();
-      $("#purchase-info").fadeOut();
-      $("#splash-shadow").fadeIn();
-
-      // fade out the photos-container and fade in the bio
-      fadeOutFadeIn("#bio");
-    }
-  });
+function _fadeOutMany(selectors) {
+  for (var i = 0; i < selectors.length; ++i) {
+    $(selectors[i]).fadeOut();
+  }
 }
 
-function _contactClick() {
-  $("#contact-link").click(function(event) {
+function _removeClassFromMany(selectors, clazz) {
+  for (var i = 0; i < selectors.length; ++i) {
+    $(selectors[i]).removeClass(clazz);
+  }
+}
+
+function _basicInfoClick(linkSelector, infoSelector, otherLinkSelectors,
+                         otherInfoSelectors) {
+  $(linkSelector).click(function(event) {
     event.preventDefault();
     if ($(this).hasClass("selected")) {
       $(this).removeClass("selected");
-      $("#splash-shadow").fadeOut();
-      $("#contact-info").fadeOut();
+      _fadeOutMany(["#splash-shadow", infoSelector]);
     } else {
-      $("#photos-link").removeClass("selected");
-      $(".photo-link").removeClass("selected");
-      $("#bio-link").removeClass("selected");
-      $("#purchase-link").removeClass("selected");
+      var remove = otherLinkSelectors.concat(["#photos-link", ".photo-link"]);
+      _removeClassFromMany(remove, "selected");
       $(this).addClass("selected");
 
       $(".submenu").hide();
-      $("#bio").fadeOut();
-      $("#purchase-info").fadeOut();
+      _fadeOutMany(otherInfoSelectors);
       $("#splash-shadow").fadeIn();
 
       // fade out the photos-container and fade in the contact info
-      fadeOutFadeIn("#contact-info");
-    }
-  });
-}
-
-function _purchaseLinkClick() {
-  $("#purchase-link").click(function(event) {
-    event.preventDefault();
-    if ($(this).hasClass("selected")) {
-      $(this).removeClass("selected");
-      $("#splash-shadow").fadeOut();
-      $("#purchase-info").fadeOut();
-    } else {
-      $("#photos-link").removeClass("selected");
-      $(".photo-link").removeClass("selected");
-      $("#contact-link").removeClass("selected");
-      $("#bio-link").removeClass("selected");
-      $(this).addClass("selected");
-
-      $(".submenu").hide();
-      $("#contact-info").fadeOut();
-      $("#bio").fadeOut();
-      $("#splash-shadow").fadeIn();
-
-      // fade out the photos-container and fade in the purchase info
-      fadeOutFadeIn("#purchase-info");
+      fadeOutFadeIn(infoSelector);
     }
   });
 }
@@ -278,14 +226,11 @@ function _photoLinkClick() {
   $(".photo-link").click(function(event) {
     event.preventDefault();
     if (!$(this).hasClass("selected")) {
-      $("#contact-link").removeClass("selected");
-      $("#purchase-link").removeClass("selected");
-      $(".photo-link").removeClass("selected");
+      _removeClassFromMany(["#contact-link", "#purchase-link", ".photo-link"],
+                           "selected");
       $(this).addClass("selected");
 
-      $("#contact-info").fadeOut();
-      $("#purchase-info").fadeOut();
-      $("#bio").fadeOut();
+      _fadeOutMany(["#contact-info", "#purchase-info", "#bio"]);
       if ($("#photos-container").is(":hidden")) {
         $("#banner-container").animate(
           { top : 497 },
@@ -323,7 +268,9 @@ $(document).ready(function() {
   _addScrollPane();
 
   // hide the elements which need to be hidden initially
-  _hideObjects();
+  _hideMany(["#contact-info", "#purchase-info", "#bio", "#photos-banner",
+             "#photos-container", "#splash-shadow", ".submenu",
+             "#change-splash-photo"]);
 
   // set the minimum width of the photos container to be the width of the
   // window, and reset the minimum width after resize
@@ -343,7 +290,14 @@ $(document).ready(function() {
   _photoLinkClick();
 
   // handle a click on the bio, contact, and purchase links
-  _bioClick();
-  _contactClick();
-  _purchaseLinkClick();
+  _basicInfoClick("#bio-link", "#bio",
+                  ["#contact-link", "#purchase-link"],
+                  ["#contact-info", "#purchase-info"]);
+  _basicInfoClick("#contact-link", "#contact-info",
+                  ["#bio-link", "#purchase-link"],
+                  ["#bio", "#purchase-info"]);
+  _basicInfoClick("#purchase-link", "#purchase-info",
+                  ["#bio-link", "#contact-link"],
+                  ["#bio", "#contact-info"]);
 });
+  
