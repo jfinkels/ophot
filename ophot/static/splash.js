@@ -122,67 +122,64 @@ function fadeOutFadeIn(inSelector) {
   });
 }
 
-/**
- * Initializes the state of some elements and establishes some event handlers.
- */
-$(document).ready(function() {
-  // allow scrolling in the bio window. NOTE: this must occur before hiding!
-  $('.scroll-pane').jScrollPane();
-  // need to do this here because jscrollpane does some black magic on the
-  // style of my elements
-  $('.scroll-pane').css('padding-bottom', '10px');
-  $('.scroll-pane').css('padding-top', '10px');
-
-  var photosContainer = $("#photos-container");
-  $("#contact-info").hide();
-  $("#purchase-info").hide();
-  $("#bio").hide();
-  $("#photos-banner").hide();
-  photosContainer.hide();
-  $("#splash-shadow").hide();
-  $(".submenu").hide();
-  $("#change-splash-photo").hide();
-
-  // set the minimum width of the photos container to be the width of the
-  // window, and reset the minimum width after resize
-  photosContainer.css("min-width", $(window).width());
+function _photosContainerWidth() {
+  $("#photos-container").css("min-width", $(window).width());
     // TODO use the jquery debounce plugin on this function
   $(window).resize(function() {
-    var paddingLeft = parseInt(photosContainer.css("padding-left"));
-    var paddingRight = parseInt(photosContainer.css("padding-right"));
+    var paddingLeft = parseInt($("#photos-container").css("padding-left"));
+    var paddingRight = parseInt($("#photos-container").css("padding-right"));
     var paddingOffset = paddingLeft + paddingRight;
     // TODO once the debounce plugin works (see
     // https://github.com/cowboy/jquery-throttle-debounce/issues/4), then use
     // this to animate the change
-    //photosContainer.animate(
+    //$("#photos-container").animate(
     //  {"min-width" : $(window).width() - paddingOffset}
     //);
-    photosContainer.css("min-width", $(window).width() - paddingOffset);
+    $("#photos-container").css("min-width", $(window).width() - paddingOffset);
   });
+}
 
+function _hideObjects() {
+  $("#contact-info").hide();
+  $("#purchase-info").hide();
+  $("#bio").hide();
+  $("#photos-banner").hide();
+  $("#photos-container").hide();
+  $("#splash-shadow").hide();
+  $(".submenu").hide();
+  $("#change-splash-photo").hide();
+}
+
+function _purchaseClick() {
   $(".purchase").live("click", function(event) {
     event.preventDefault();
     $(this).siblings(".photo-shadow").fadeIn();
     $(this).siblings(".purchase-information").fadeIn();
   });
+}
 
+function _closeClick() {
   $("a.close").live("click", function(event) {
     event.preventDefault();
     $(this).parent().fadeOut();
     $(this).parent().siblings(".photo-shadow").fadeOut();
   });
+}
 
+function _photoHover() {
   $(".photo-container").live("hover", function() {
     $(this).children(".purchase").toggle();
   });
+}
 
+function _photosClick() {
   $("#photos-link").click(function(event) {
     event.preventDefault();
     if ($(this).hasClass("selected")) {
       $(this).removeClass("selected");
       $(".photo-link").removeClass("selected");
       $(".submenu").hide(0, function() {
-        photosContainer.fadeOut();
+        $("#photos-container").fadeOut();
         $("#splash-shadow").fadeOut(400, function() {
           $("#banner-container").animate({ top : 400 }, 500);
         });
@@ -200,7 +197,9 @@ $(document).ready(function() {
       $(".submenu").show();
     }
   });
+}
 
+function _bioClick() {
   $("#bio-link").click(function(event) {
     event.preventDefault();
     if ($(this).hasClass("selected")) {
@@ -223,7 +222,9 @@ $(document).ready(function() {
       fadeOutFadeIn("#bio");
     }
   });
+}
 
+function _contactClick() {
   $("#contact-link").click(function(event) {
     event.preventDefault();
     if ($(this).hasClass("selected")) {
@@ -246,7 +247,9 @@ $(document).ready(function() {
       fadeOutFadeIn("#contact-info");
     }
   });
+}
 
+function _purchaseLinkClick() {
   $("#purchase-link").click(function(event) {
     event.preventDefault();
     if ($(this).hasClass("selected")) {
@@ -269,7 +272,9 @@ $(document).ready(function() {
       fadeOutFadeIn("#purchase-info");
     }
   });
+}
 
+function _photoLinkClick() {
   $(".photo-link").click(function(event) {
     event.preventDefault();
     if (!$(this).hasClass("selected")) {
@@ -281,14 +286,14 @@ $(document).ready(function() {
       $("#contact-info").fadeOut();
       $("#purchase-info").fadeOut();
       $("#bio").fadeOut();
-      if (photosContainer.is(":hidden")) {
+      if ($("#photos-container").is(":hidden")) {
         $("#banner-container").animate(
           { top : 497 },
           {
             duration: 500,
             complete: function() {
               $("#splash-shadow").fadeIn();
-              photosContainer.fadeIn();
+              $("#photos-container").fadeIn();
             }
           });
       }
@@ -299,4 +304,46 @@ $(document).ready(function() {
                 displayPhotos);
     }
   });
+}
+
+function _addScrollPane() {
+  // allow scrolling in the bio window. NOTE: this must occur before hiding!
+  $('.scroll-pane').jScrollPane();
+  // need to do this here because jscrollpane does some black magic on the
+  // style of my elements
+  $('.scroll-pane').css('padding-bottom', '10px');
+  $('.scroll-pane').css('padding-top', '10px');
+}
+
+/**
+ * Initializes the state of some elements and establishes some event handlers.
+ */
+$(document).ready(function() {
+  // add the scroll pane to the biographical information element
+  _addScrollPane();
+
+  // hide the elements which need to be hidden initially
+  _hideObjects();
+
+  // set the minimum width of the photos container to be the width of the
+  // window, and reset the minimum width after resize
+  _photosContainerWidth();
+
+  // handle a click on the purchase info link
+  _purchaseClick();
+
+  // handle a click on the close link (the X in the top right corner)
+  _closeClick();
+
+  // handle a hover over a photo
+  _photoHover();
+
+  // handle a click on the photos link and on a link to specific category
+  _photosClick();
+  _photoLinkClick();
+
+  // handle a click on the bio, contact, and purchase links
+  _bioClick();
+  _contactClick();
+  _purchaseLinkClick();
 });
