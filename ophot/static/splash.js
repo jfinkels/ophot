@@ -106,6 +106,23 @@ function displayPhotos(data, textStatus, xhr) {
 }
 
 /**
+ * Fades out the photos container, slides the banner container up, and fades in
+ * the object specified by *inSelector*.
+ */
+function fadeOutFadeIn(inSelector) {
+  $("#photos-container").fadeOut(400, function() {
+    $("#banner-container").animate(
+      { top : 400 },
+      {
+        duration: 500,
+        complete: function() {
+          $(inSelector).fadeIn();
+        }
+      });
+  });
+}
+
+/**
  * Initializes the state of some elements and establishes some event handlers.
  */
 $(document).ready(function() {
@@ -184,20 +201,8 @@ $(document).ready(function() {
       $("#purchase-info").fadeOut();
       $("#splash-shadow").fadeIn();
 
-      if ($("#photos-container").is(":visible")) {
-        $("#photos-container").fadeOut(400, function() {
-          $("#banner-container").animate(
-            { top : 400 },
-            {
-              duration: 500,
-              complete: function() {
-                $("#bio").fadeIn();
-              }
-            });
-        });
-      } else {
-        $("#bio").fadeIn();        
-      }
+      // fade out the photos-container and fade in the bio
+      fadeOutFadeIn("#bio");
     }
   });
 
@@ -219,20 +224,8 @@ $(document).ready(function() {
       $("#purchase-info").fadeOut();
       $("#splash-shadow").fadeIn();
 
-      if ($("#photos-container").is(":visible")) {
-        $("#photos-container").fadeOut(400, function() {
-          $("#banner-container").animate(
-            { top : 400 }, 
-            {
-              duration: 500,
-              complete: function() {
-                $("#contact-info").fadeIn();
-              }
-            });
-        });
-      } else {
-        $("#contact-info").fadeIn();        
-      }
+      // fade out the photos-container and fade in the contact info
+      fadeOutFadeIn("#contact-info");
     }
   });
 
@@ -254,20 +247,8 @@ $(document).ready(function() {
       $("#bio").fadeOut();
       $("#splash-shadow").fadeIn();
 
-      if ($("#photos-container").is(":visible")) {
-        $("#photos-container").fadeOut(400, function() {
-          $("#banner-container").animate(
-            { top : 400 },
-            {
-              duration: 500,
-              complete: function() {
-                $("#purchase-info").fadeIn();
-              }
-            });
-        });
-      } else {
-        $("#purchase-info").fadeIn();
-      }
+      // fade out the photos-container and fade in the purchase info
+      fadeOutFadeIn("#purchase-info");
     }
   });
 
