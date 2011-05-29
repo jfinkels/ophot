@@ -6,7 +6,6 @@
 * refactor redundant javascript in splash.js
 * set min-width of photos-container to full width of window, and right margin, and no rounded corners
 * add a view and a stylesheet for "mobile" web browsers (the stylesheet should imitate, for example, the iPhone's UI effects)
-* update jquery version
 * change to data["changed"] == "True"?
 * add a select_one() function
 * change the word "method" to "function"
