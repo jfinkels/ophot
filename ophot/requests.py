@@ -24,7 +24,7 @@ from ophot.queries import Q_GET_PHOTOS
 
 @app.route('/_get_photos', methods=['GET'])
 def get_photos():
-    """Ajax method which returns a JSON object which is a map from photoid to
+    """Ajax function which returns a JSON object which is a map from photoid to
     filenames of photos in the category specified in the request argument
     *categoryid*.
 
@@ -57,7 +57,7 @@ def get_photos():
 
 @app.route('/_add_category', methods=['GET'])
 def add_category():
-    """Ajax method which adds a new category to the database.
+    """Ajax function which adds a new category to the database.
 
     Request argument is *categoryname*, a string which is the name of the
     category to add.
@@ -72,20 +72,21 @@ def add_category():
 
 @app.route('/_change_category', methods=['GET'])
 def change_category():
-    """Ajax method which changes the category of a photo.
+    """Ajax function which changes the category of a photo.
 
     Request arguments are *photoid*, an integer which is the ID of the photo to
     change, and *categoryid*, an integer which is the ID of the category to
-    which the photo will be moved. If *categoryid* is equal to -1, this method
-    will check for the *categoryname* request argument, create the category
-    with that name, and move the photo with the specified ID to that category.
+    which the photo will be moved. If *categoryid* is equal to -1, this
+    function will check for the *categoryname* request argument, create the
+    category with that name, and move the photo with the specified ID to that
+    category.
 
     Returns a JSON object mapping *changed* to a boolean representing whether
     the category was successfully changed, *photoid* to the ID of the photo,
     and *categoryid* to the ID of the category.
 
-    If the photo is being changed to the same category, this method will change
-    its display order position to be last.
+    If the photo is being changed to the same category, this function will
+    change its display order position to be last.
     """
     require_logged_in()
     categoryid = request.args.get('categoryid')
@@ -106,7 +107,7 @@ def change_category():
 
 @app.route('/_get_categories', methods=['GET'])
 def get_categories():
-    """Ajax method which returns a JSON object storing an array of categories
+    """Ajax function which returns a JSON object storing an array of categories
     in alphabetical (lexicographical) order.
 
     """
@@ -115,8 +116,8 @@ def get_categories():
 
 @app.route('/_change_category_name', methods=['GET'])
 def change_category_name():
-    """Ajax method which updates the name of the category with the specified ID
-    number to the specified new name.
+    """Ajax function which updates the name of the category with the specified
+    ID number to the specified new name.
 
     Request arguments are *categoryid*, an integer which is the ID of the
     category whose name will be changed, and *categoryname*, the new name for
@@ -161,7 +162,8 @@ def swap_display_positions():
 
 @app.route('/_update_personal', methods=['GET'])
 def update_personal():
-    """Ajax method which changes either bio information or contact information.
+    """Ajax function which changes either bio information or contact
+    information.
 
     The request arguments are *name*, which must be either "bio" or "contact",
     and *value* which is the new value for the personal information.
@@ -185,8 +187,8 @@ def update_personal():
 # TODO POST method doesn't seem to be working
 @app.route('/_change_spacing', methods=['GET'])
 def change_spacing():
-    """Ajax method which changes the value of the spacing between photos on the
-    photo display page.
+    """Ajax function which changes the value of the spacing between photos on
+    the photo display page.
 
     The only request argument is *spacing*, the number of pixels between
     photos.
@@ -204,7 +206,7 @@ def change_spacing():
 
 @app.route('/delete/<int:photoid>', methods=['DELETE'])
 def delete_photo(photoid):
-    """Ajax method which deletes the photo with the specified ID number from
+    """Ajax function which deletes the photo with the specified ID number from
     the database, and returns a boolean representing whether the action was
     successful.
 
@@ -217,9 +219,9 @@ def delete_photo(photoid):
 
 @app.route('/delete_category/<int:categoryid>', methods=['DELETE'])
 def delete_category(categoryid):
-    """Ajax method which deletes the category with the specified ID number from
-    the database, and returns a boolean representing whether the action was
-    successful.
+    """Ajax function which deletes the category with the specified ID number
+    from the database, and returns a boolean representing whether the action
+    was successful.
 
     All photos with that category will no longer be accessible.
 

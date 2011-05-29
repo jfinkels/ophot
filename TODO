@@ -7,5 +7,4 @@
 * set min-width of photos-container to full width of window, and right margin, and no rounded corners
 * add a view and a stylesheet for "mobile" web browsers (the stylesheet should imitate, for example, the iPhone's UI effects)
 * change to data["changed"] == "True"?
-* change the word "method" to "function"
 * http://blog.greenfelt.net/2009/09/01/caching-javascript-safely/
