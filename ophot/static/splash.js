@@ -121,7 +121,7 @@ function fadeOutFadeIn(inSelector) {
 
 function _photosContainerWidth() {
   $("#photos-container").css("min-width", $(window).width());
-    // TODO use the jquery debounce plugin on this function
+  // TODO use the jquery debounce plugin on this function
   $(window).resize(function() {
     var paddingLeft = parseInt($("#photos-container").css("padding-left"));
     var paddingRight = parseInt($("#photos-container").css("padding-right"));
