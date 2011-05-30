@@ -119,6 +119,11 @@ function fadeOutFadeIn(inSelector) {
   });
 }
 
+/**
+ * Sets the minimum width of the photos-container div to be the current width
+ * of the window, and sets up the listener for the window resize event to reset
+ * the width of the photos-container.
+ */
 function _photosContainerWidth() {
   $("#photos-container").css("min-width", $(window).width());
   // TODO use the jquery debounce plugin on this function
@@ -136,12 +141,19 @@ function _photosContainerWidth() {
   });
 }
 
+/**
+ * Hides the jQuery objects specified by the given array of jQuery selectors.
+ */
 function _hideMany(selectors) {
   for (var i = 0; i < selectors.length; ++i) {
     $(selectors[i]).hide();
   }
 }
 
+/**
+ * Sets up the purchase link on each photo to listen for clicks and show the
+ * purchase information.
+ */
 function _purchaseClick() {
   $(".purchase").live("click", function(event) {
     event.preventDefault();
@@ -150,6 +162,10 @@ function _purchaseClick() {
   });
 }
 
+/**
+ * Sets up the close link (the X in the upper right corner of a div) to listen
+ * for clicks and close its parent container.
+ */
 function _closeClick() {
   $("a.close").live("click", function(event) {
     event.preventDefault();
@@ -158,12 +174,20 @@ function _closeClick() {
   });
 }
 
+/**
+ * Sets up each photo to listen for the hover event and toggle the purchase
+ * information link.
+ */
 function _photoHover() {
   $(".photo-container").live("hover", function() {
     $(this).children(".purchase").toggle();
   });
 }
 
+/**
+ * Sets up the photos link in the banner to listen for click events and show
+ * the list of category links.
+ */
 function _photosClick() {
   $("#photos-link").click(function(event) {
     event.preventDefault();
@@ -188,18 +212,32 @@ function _photosClick() {
   });
 }
 
+/**
+ * Fades out each of the jQuery objects specified by the given array of jQuery
+ * selectors.
+ */
 function _fadeOutMany(selectors) {
   for (var i = 0; i < selectors.length; ++i) {
     $(selectors[i]).fadeOut();
   }
 }
 
+/**
+ * Removed the class *clazz* from each of the jQuery objects selected by the
+ * elements of the specified array of jQuery selectors.
+ */
 function _removeClassFromMany(selectors, clazz) {
   for (var i = 0; i < selectors.length; ++i) {
     $(selectors[i]).removeClass(clazz);
   }
 }
 
+/**
+ * Toggles the link and displays the information div specified by
+ * *linkSelector* and *infoSelector*, respectively, and deselects the links and
+ * hides the information divs specified by the *otherLinkSelectors* array and
+ * *otherInfoSelectors* array, respectively.
+ */
 function _basicInfoClick(linkSelector, infoSelector, otherLinkSelectors,
                          otherInfoSelectors) {
   $(linkSelector).click(function(event) {
@@ -222,6 +260,10 @@ function _basicInfoClick(linkSelector, infoSelector, otherLinkSelectors,
   });
 }
 
+/**
+ * Sets up a photo category link to listen for clicks and show the photos for
+ * the category clicked.
+ */
 function _photoLinkClick() {
   $(".photo-link").click(function(event) {
     event.preventDefault();
@@ -251,6 +293,11 @@ function _photoLinkClick() {
   });
 }
 
+/**
+ * Adds jScrollPane functionality to any element of class "scroll-pane".
+ *
+ * This requires the jScrollPane jQuery plugin.
+ */
 function _addScrollPane() {
   // allow scrolling in the bio window. NOTE: this must occur before hiding!
   $('.scroll-pane').jScrollPane();
@@ -300,4 +347,3 @@ $(document).ready(function() {
                   ["#bio-link", "#contact-link"],
                   ["#bio", "#contact-info"]);
 });
-  
