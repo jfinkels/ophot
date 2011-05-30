@@ -9,27 +9,27 @@
   </style>
 
   <!-- jscrollpane style (must be included before the javascript) -->
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='jquery.jscrollpane.css') }}" />
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='plugins/jquery.jscrollpane.css') }}" />
   
   <!-- splash page javascript -->
-  <script type="text/javascript" src="{{ url_for('static', filename='splash.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='scripts/splash.js') }}"></script>
   
   <!-- javascript libraries required for jscrollpane to work -->
 
   <!-- mousewheel intent plugin which prevents the user from unintentionally
   getting caught in the scroll pane -->
-  <script type="text/javascript" src="{{ url_for('static', filename='mwheelIntent.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='plugins/mwheelIntent.js') }}"></script>
 
   <!-- the mousewheel plugin -->
-  <script type="text/javascript" src="{{ url_for('static', filename='jquery.mousewheel.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='plugins/jquery.mousewheel.js') }}"></script>
 
   <!-- the jScrollPane script -->
-  <script type="text/javascript" src="{{ url_for('static', filename='jquery.jscrollpane.min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='plugins/jquery.jscrollpane.min.js') }}"></script>
 
   {% if session.logged_in %}
   <!-- this should only show up if a user is logged in -->
   <!-- javascript for editing photos -->
-  <script type="text/javascript" src="{{ url_for('static', filename='edit-photos.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='scripts/edit-photos.js') }}"></script>
   {% endif %}
 {% endblock %}
 {% block photos %}
