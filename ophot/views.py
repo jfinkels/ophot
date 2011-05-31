@@ -1,3 +1,4 @@
+"""Provides routes which are viewed as webpages by the user."""
 # imports from built-in modules
 import os.path
 from uuid import uuid4 as random_uuid

@@ -1,3 +1,5 @@
+"""This module contains configuration variables for the Flask application."""
+
 # The set of extensions which the user is allowed to upload.
 ALLOWED_EXTENSIONS = set(('png', 'jpg', 'jpeg'))
 

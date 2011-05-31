@@ -1,5 +1,4 @@
 """Provides query strings for queries to the database."""
-
 Q_ADD_CATEGORY = 'insert into category (categoryname) values (?)'
 Q_ADD_PHOTO = ('insert into photo (photofilename, photocategory,'
                ' photodisplayposition) values (?, ?, ?)')

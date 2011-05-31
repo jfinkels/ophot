@@ -1,5 +1,4 @@
 """Provides routes for ajax requests to the server."""
-
 # imports from third-party modules
 from flask import g
 from flask import jsonify
