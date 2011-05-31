@@ -126,19 +126,12 @@ function fadeOutFadeIn(inSelector) {
  */
 function _photosContainerWidth() {
   $("#photos-container").css("min-width", $(window).width());
-  // TODO use the jquery debounce plugin on this function
-  $(window).resize(function() {
+  $(window).resize($.debounce(250, function() {
     var paddingLeft = parseInt($("#photos-container").css("padding-left"));
     var paddingRight = parseInt($("#photos-container").css("padding-right"));
-    var paddingOffset = paddingLeft + paddingRight;
-    // TODO once the debounce plugin works (see
-    // https://github.com/cowboy/jquery-throttle-debounce/issues/4), then use
-    // this to animate the change
-    //$("#photos-container").animate(
-    //  {"min-width" : $(window).width() - paddingOffset}
-    //);
-    $("#photos-container").css("min-width", $(window).width() - paddingOffset);
-  });
+    var newWidth = $(window).width() - (paddingLeft + paddingRight);
+    $("#photos-container").animate({"min-width": newWidth});
+  }));
 }
 
 /**
