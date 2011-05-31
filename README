@@ -5,7 +5,44 @@ This is ophot, a small web application which provides a simple photography
 portfolio website. It allows a manager to log in in order to add or remove
 photos. It allows viewers to purchase prints of photographs.
 
-This README was last updated on 20 April 2011.
+This README was last updated on 31 May 2011.
+
+Contents
+--------
+
+This package contains:
+
+* MANIFEST.in - the manifest file for creating a Python distutils package
+* ophot/ - the Python package containing the application itself
+* ophot.wsgi - the WSGI specification file which runs the application when
+  deployed to a server as a WSGI application
+* README - this file
+* reset-db.sh - script which resets the database to an initial empty state
+  (warning: this will remove any photos which have been uploaded to the
+  application)
+* runserver.py - Python script which runs the Ophot Flask application in the
+  current directory
+* setup.py - Python setuptools configuration file for packaging this
+  application
+* TODO - tasks to be done for developers of this application
+
+The ophot/ directory contains:
+
+* config.py - configuration for the application and some settings for
+  user-visible parts of the site
+* db/ - the directory which contains the database, the error log, and the local
+  settings file created by the application (by default)
+* forms.py - a module containing WTF Form class definitions for use in the
+  application
+* __init__.py - general setup and definitions for the Ophot package
+* queries.py - string constants which are used in queries to the database
+* requests.py - functions which process routes which are used as Ajax calls
+* schema.sql - the database schema for the photo database
+* static/ - the static content for the site, including scripts and styles
+* templates/ - the Jinja templates defining the dynamically generated HTML
+  pages for the site
+* views.py - functions which process routes which are the views for users of
+  the site
 
 Installing
 ----------
