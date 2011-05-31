@@ -25,6 +25,7 @@ from ophot import require_logged_in
 from ophot import site_config
 from ophot.forms import ChangeSplashPhotoForm
 from ophot.forms import SettingsForm
+from ophot.queries import Q_ADD_PHOTO
 
 # the first and last name of the photographer
 realname = app.config['NAME']
@@ -97,8 +98,8 @@ def change_splash_photo():
     form = ChangeSplashPhotoForm()
     if form.validate_on_submit():
         require_logged_in()
-        # HACK see comment in add_photos
-        filename = os.path.join('ophot', app.config['SPLASH_PHOTO_FILENAME'])
+        filename = os.path.join(app.config['BASE_DIR'],
+                                app.config['SPLASH_PHOTO_FILENAME'])
         # TODO see comment in add_photos
         request.files['photo'].save(filename)
         im = Image.open(filename)
@@ -154,8 +155,8 @@ def add_photos():
         num_photos_added = 0
         for photo in photos:
             if _allowed_file(photo.filename):
-                # HACK see below
-                photo_dir = os.path.join('ophot', app.config['PHOTO_DIR'])
+                photo_dir = os.path.join(app.config['BASE_DIR'],
+                                         app.config['PHOTO_DIR'])
                 if not os.path.exists(photo_dir):
                     os.mkdir(photo_dir)
                 # TODO the type coercion is not working for some reason
@@ -178,7 +179,7 @@ def add_photos():
                 # HACK long_filename is needed for using python to operate on
                 # files in the filesystem. the shorter filename is needed for
                 # the webpage to correctly link to image sources
-                long_filename = os.path.join('ophot', filename)
+                long_filename = os.path.join(app.config['BASE_DIR'], filename)
                 # TODO inefficient to read and write the file so many times,
                 # but using the file descriptor instead does not seem to save
                 # the changes we make on the "im.save()" call below

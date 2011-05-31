@@ -29,20 +29,29 @@ PHOTO_HEIGHT = 440
 # displaying photos in a row.
 DEFAULT_PHOTO_SPACING = 10
 
-# This is the location (relative to the directory from which the server is run)
-# of the database schema.
+# This is the location of the database schema (relative to the directory from
+# which the "reset-db.sh" script is run, which is the top level directory of
+# this application).
 SCHEMA = 'ophot/schema.sql'
+
+# The base directory for the application. When debugging this application by
+# running, for example the "runserver.py" script, this should be 'ophot', since
+# the script runs a server in the top level directory of the application. When
+# deploying this application as a WSGI application, this should be
+# 'ophot/ophot', because the server runs outside of the top level directory of
+# this application..
+BASE_DIR = 'ophot'
 
 # The location (relative to the directory from which the server is run) to
 # store the database for photos.
-DATABASE = 'ophot/db/ophot.db'
+DATABASE = BASE_DIR + '/db/ophot.db'
 
 # The location of the file which stores the general, site-wide configuration
 # settings (like spacing between photos, biography and contact info).
-SETTINGS_FILE = 'ophot/db/settings'
+SETTINGS_FILE = BASE_DIR + '/db/settings'
 
 # The location of the file to which warnings and errors will be logged.
-LOGFILE = 'ophot/db/ophot.log'
+LOGFILE = BASE_DIR + '/db/ophot.log'
 
 # A list of recipients to whom emails will be sent when the application
 # encounters an error.
