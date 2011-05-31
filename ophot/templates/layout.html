@@ -35,7 +35,7 @@
     {% endfor %}
     {% if session.logged_in %}
     <ul id="admin-links">
-      <li><a href="{{ url_for('edit_settings') }}" id="settings" class="admin-link">settings</a></li>
+      <li><a href="{{ url_for('settings') }}" id="settings" class="admin-link">settings</a></li>
       <li><a href="{{ url_for('logout') }}" id="logout" class="admin-link">logout</a></li>
     </ul>
     {% endif %}

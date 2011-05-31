@@ -205,7 +205,7 @@ def add_photos():
 
 
 @app.route('/settings', methods=['GET'])
-def edit_settings():
+def settings():
     # create this class so that the form can automatically fill in its values
     # using the values of the attributes of this class
     class Settings(object):
@@ -214,7 +214,7 @@ def edit_settings():
         contact = site_config['CONTACT']
     # populate the fields of the settings form
     form = SettingsForm(obj=Settings())
-    return render_template('edit_settings.html', realname=realname, form=form,
+    return render_template('settings.html', realname=realname, form=form,
                            categories=_get_categories().iteritems())
 
 
