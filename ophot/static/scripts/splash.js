@@ -125,12 +125,13 @@ function fadeOutFadeIn(inSelector) {
  * the width of the photos-container.
  */
 function _photosContainerWidth() {
-  $("#photos-container").css("min-width", $(window).width());
+  var container = $("#photos-container");
+  container.css("min-width", $(window).width());
   $(window).resize($.debounce(250, function() {
-    var paddingLeft = parseInt($("#photos-container").css("padding-left"));
-    var paddingRight = parseInt($("#photos-container").css("padding-right"));
+    var paddingLeft = parseInt(container.css("padding-left"));
+    var paddingRight = parseInt(container.css("padding-right"));
     var newWidth = $(window).width() - (paddingLeft + paddingRight);
-    $("#photos-container").animate({"min-width": newWidth});
+    container.animate({"min-width": newWidth});
   }));
 }
 
