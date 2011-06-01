@@ -152,6 +152,3 @@ def require_logged_in():
 
 import ophot.requests
 import ophot.views
-
-if __name__ == '__main__':
-    app.run()
