@@ -104,7 +104,14 @@ To run the web server and start serving, run:
 Remember to disable debug mode when running on a production server.
 
 One can also deploy this application as a WSGI application, using, for example,
-mod_wsgi for Apache.
+mod_wsgi for Apache. To deploy this application as a WSGI application, edit the
+first two lines in the ophot.wsgi file from
+
+  PATH_TO_APP = '/var/www/ophot'
+  PATH_TO_VIRTUALENV = PATH_TO_APP + '/env/bin/activate_this.py'
+
+to be the correct paths to the top level directory of the application and the
+virtualenv environment in which the application should run, respectively.
 
 Contact
 -------
