@@ -1,8 +1,19 @@
 syntax: glob
 
+# temporary and compiled files
 \#*\#
 *.pyc
 *~
+
+# virtualenv environment
 env/
+
+# local data for use in testing the application
 static/photos
 db/
+
+# setuptools build artifacts
+build/
+dist/
+*.egg
+*.egg-info
