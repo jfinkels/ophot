@@ -12,7 +12,6 @@ Contents
 
 This package contains:
 
-* MANIFEST.in - the manifest file for creating a Python distutils package
 * ophot/ - the Python package containing the application itself
 * ophot.wsgi - the WSGI specification file which runs the application when
   deployed to a server as a WSGI application
