@@ -61,6 +61,12 @@ Using "pip" or "easy_install" is probably the easiest way to install these:
 
   pip install Flask Flask-Uploads Flask-WTF PIL configobj
 
+Building as a Python egg
+------------------------
+
+This package can be built, installed, etc. as a Python egg using the provided
+setup.py script.
+
 Configuring
 -----------
 
