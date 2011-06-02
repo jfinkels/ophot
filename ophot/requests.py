@@ -6,11 +6,11 @@ from flask import request
 
 # imports from this application
 from ophot import add_new_category
+from ophot import app
 from ophot import get_categories
 from ophot import get_last_display_position
-from ophot import select_single
-from ophot import app
 from ophot import require_logged_in
+from ophot import select_single
 from ophot import site_config
 from ophot.queries import Q_CHANGE_CATEGORY
 from ophot.queries import Q_CHANGE_CATEGORY_NAME
