@@ -80,6 +80,29 @@ def _add_new_category(categoryname):
     return _select_single(Q_GET_CATEGORY.format(categoryname))
 
 
+@app.after_request
+def after_request(response):
+    """Closes the database connection stored in the db attribute of the g
+    object.
+
+    The response to the request is returned unchanged.
+
+    """
+    g.db.close()
+    return response
+
+
+@app.before_request
+def before_request():
+    """Stores the database connection in the db attribute of the g object."""
+    g.db = connect_db()
+
+
+def connect_db():
+    """Gets a connection to the SQLite database."""
+    return sqlite3.connect(app.config['DATABASE'])
+
+
 def _get_categories():
     """Helper method which returns a map from category ID to category name,
     sorted in alphabetical (lexicographical) order by category name.
@@ -100,15 +123,6 @@ def _get_last_display_position(categoryid):
     return _select_single(Q_GET_LAST_DISP_POS.format(categoryid))
 
 
-def _select_single(query):
-    """Executes the given *query* and returns the first field in the first
-    matching row.
-
-    Might return None
-
-    """
-    return g.db.execute(query).fetchone()[0]
-
 def init_db():
     """Initialize the database using the schema specified in the configuration.
 
@@ -119,29 +133,6 @@ def init_db():
         db.commit()
 
 
-def connect_db():
-    """Gets a connection to the SQLite database."""
-    return sqlite3.connect(app.config['DATABASE'])
-
-
-@app.before_request
-def before_request():
-    """Stores the database connection in the db attribute of the g object."""
-    g.db = connect_db()
-
-
-@app.after_request
-def after_request(response):
-    """Closes the database connection stored in the db attribute of the g
-    object.
-
-    The response to the request is returned unchanged.
-
-    """
-    g.db.close()
-    return response
-
-
 def require_logged_in():
     """Aborts with HTTP error 401 Unauthorized if the user is not logged in on
     this session.
@@ -149,6 +140,17 @@ def require_logged_in():
     """
     if not session.get('logged_in'):
         abort(401)
+
+
+def _select_single(query):
+    """Executes the given *query* and returns the first field in the first
+    matching row.
+
+    Might return None
+
+    """
+    return g.db.execute(query).fetchone()[0]
+
 
 import ophot.requests
 import ophot.views

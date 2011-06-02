@@ -75,50 +75,6 @@ def _to_html_paragraphs(string):
                    if line)
 
 
-@app.route('/')
-def show_splash():
-    """Shows the splash page as the root."""
-    categories = _get_categories().iteritems()
-    bio = _to_html_paragraphs(site_config['BIO'])
-    contact = _to_html_paragraphs(site_config['CONTACT'])
-    return render_template('splash.html', realname=realname,
-                           categories=categories,
-                           filename=app.config['SPLASH_PHOTO_FILENAME'],
-                           photo_padding=site_config['SPACING'],
-                           bio=bio,
-                           contact=contact)
-
-
-@app.route('/change_splash_photo', methods=['GET', 'POST'])
-def change_splash_photo():
-    """View which on GET requests shows a page containing a form with which the
-    user can upload a photo to be the background on the splash page, and on
-    POST requests stores the new photo.
-
-    """
-    form = ChangeSplashPhotoForm()
-    if form.validate_on_submit():
-        require_logged_in()
-        filename = os.path.join(app.config['BASE_DIR'],
-                                app.config['SPLASH_PHOTO_FILENAME'])
-        # TODO see comment in add_photos
-        request.files['photo'].save(filename)
-        im = Image.open(filename)
-        format = im.format
-        if im.size[0] > int(app.config['SPLASH_PHOTO_WIDTH']) \
-                or im.size[1] > int(app.config['SPLASH_PHOTO_HEIGHT']):
-            im = im.resize((int(app.config['SPLASH_PHOTO_WIDTH']),
-                            int(app.config['SPLASH_PHOTO_HEIGHT'])),
-                           Image.ANTIALIAS)
-            im.save(filename, format)
-        flash('New splash photo uploaded.')
-        return redirect(url_for('show_splash'))
-    return render_template('change_splash_photo.html', form=form,
-                           realname=realname,
-                           height=app.config['SPLASH_PHOTO_HEIGHT'],
-                           width=app.config['SPLASH_PHOTO_WIDTH'])
-
-
 @app.route('/add', methods=['GET', 'POST'])
 def add_photos():
     """View which on GET requests shows a page containing a form with which the
@@ -205,18 +161,39 @@ def add_photos():
                            height=app.config['PHOTO_HEIGHT'])
 
 
-@app.route('/settings', methods=['GET'])
-def settings():
-    # create this class so that the form can automatically fill in its values
-    # using the values of the attributes of this class
-    class Settings(object):
-        spacing = site_config['SPACING']
-        bio = site_config['BIO']
-        contact = site_config['CONTACT']
-    # populate the fields of the settings form
-    form = SettingsForm(obj=Settings())
-    return render_template('settings.html', realname=realname, form=form,
-                           categories=_get_categories().iteritems())
+@app.route('/change_splash_photo', methods=['GET', 'POST'])
+def change_splash_photo():
+    """View which on GET requests shows a page containing a form with which the
+    user can upload a photo to be the background on the splash page, and on
+    POST requests stores the new photo.
+
+    """
+    form = ChangeSplashPhotoForm()
+    if form.validate_on_submit():
+        require_logged_in()
+        filename = os.path.join(app.config['BASE_DIR'],
+                                app.config['SPLASH_PHOTO_FILENAME'])
+        # TODO see comment in add_photos
+        request.files['photo'].save(filename)
+        im = Image.open(filename)
+        format = im.format
+        if im.size[0] > int(app.config['SPLASH_PHOTO_WIDTH']) \
+                or im.size[1] > int(app.config['SPLASH_PHOTO_HEIGHT']):
+            im = im.resize((int(app.config['SPLASH_PHOTO_WIDTH']),
+                            int(app.config['SPLASH_PHOTO_HEIGHT'])),
+                           Image.ANTIALIAS)
+            im.save(filename, format)
+        flash('New splash photo uploaded.')
+        return redirect(url_for('show_splash'))
+    return render_template('change_splash_photo.html', form=form,
+                           realname=realname,
+                           height=app.config['SPLASH_PHOTO_HEIGHT'],
+                           width=app.config['SPLASH_PHOTO_WIDTH'])
+
+
+@app.errorhandler(403)
+def forbidden(error):
+    return render_template('forbidden.html', realname=realname), 403
 
 
 # TODO use Flask-CSRF?
@@ -246,6 +223,29 @@ def page_not_found(error):
     return render_template('page_not_found.html', realname=realname), 404
 
 
-@app.errorhandler(403)
-def forbidden(error):
-    return render_template('forbidden.html', realname=realname), 403
+@app.route('/')
+def show_splash():
+    """Shows the splash page as the root."""
+    categories = _get_categories().iteritems()
+    bio = _to_html_paragraphs(site_config['BIO'])
+    contact = _to_html_paragraphs(site_config['CONTACT'])
+    return render_template('splash.html', realname=realname,
+                           categories=categories,
+                           filename=app.config['SPLASH_PHOTO_FILENAME'],
+                           photo_padding=site_config['SPACING'],
+                           bio=bio,
+                           contact=contact)
+
+
+@app.route('/settings', methods=['GET'])
+def settings():
+    # create this class so that the form can automatically fill in its values
+    # using the values of the attributes of this class
+    class Settings(object):
+        spacing = site_config['SPACING']
+        bio = site_config['BIO']
+        contact = site_config['CONTACT']
+    # populate the fields of the settings form
+    form = SettingsForm(obj=Settings())
+    return render_template('settings.html', realname=realname, form=form,
+                           categories=_get_categories().iteritems())

@@ -21,39 +21,6 @@ from ophot.queries import Q_GET_PHOTO_POS
 from ophot.queries import Q_GET_PHOTOS
 
 
-@app.route('/_get_photos', methods=['GET'])
-def get_photos():
-    """Ajax function which returns a JSON object which is a map from photoid to
-    filenames of photos in the category specified in the request argument
-    *categoryid*.
-
-    Returns a JSON object which is a mapping from the string "values" to an
-    array in which each element is a mapping containing the keys "photoid" and
-    "filename". For example:
-
-    { "values":
-      [
-        { "photoid": 5, "filename": /path/to/photo5 },
-        { "photoid": 2, "filename": /path/to/photo2 },
-        ...
-      ]
-    }
-
-    The elements of the array are in ascending order according to photo display
-    position.
-    """
-    category = request.args.get('categoryid')
-    cursor = g.db.execute(Q_GET_PHOTOS.format(category))
-    # Add the / so that the filenames are relative to the root of the app.
-    photos = [dict(photoid=row[0], filename='/' + row[1]) for row in
-              cursor.fetchall()]
-    # NOTE: we have to do this funny business of creating an array of mappings
-    # because JSON does not guarantee ordered mappings. The workaround is to
-    # provide this array in order, sorted by photo display position, which is
-    # what's happening in the lines above.
-    return jsonify(values=photos)
-
-
 @app.route('/_add_category', methods=['GET'])
 def add_category():
     """Ajax function which adds a new category to the database.
@@ -104,15 +71,6 @@ def change_category():
     return jsonify(changed=True, photoid=photoid, categoryid=categoryid)
 
 
-@app.route('/_get_categories', methods=['GET'])
-def get_categories():
-    """Ajax function which returns a JSON object storing an array of categories
-    in alphabetical (lexicographical) order.
-
-    """
-    return jsonify(_get_categories().iteritems())
-
-
 @app.route('/_change_category_name', methods=['GET'])
 def change_category_name():
     """Ajax function which updates the name of the category with the specified
@@ -133,6 +91,99 @@ def change_category_name():
 
     g.db.commit()
     return jsonify(changed=True)
+
+
+# TODO POST method doesn't seem to be working
+@app.route('/_change_spacing', methods=['GET'])
+def change_spacing():
+    """Ajax function which changes the value of the spacing between photos on
+    the photo display page.
+
+    The only request argument is *spacing*, the number of pixels between
+    photos.
+
+    Returns a JSON object mapping *changed* to a boolean representing whether
+    the spacing was successfully changed.
+
+    """
+    require_logged_in()
+    # TODO use a validator for configobj
+    site_config['SPACING'] = int(request.args.get('spacing'))
+    site_config.write()
+    return jsonify(changed=True)
+
+
+@app.route('/delete_category/<int:categoryid>', methods=['DELETE'])
+def delete_category(categoryid):
+    """Ajax function which deletes the category with the specified ID number
+    from the database, and returns a boolean representing whether the action
+    was successful.
+
+    All photos with that category will no longer be accessible.
+
+    """
+    # TODO what should we do with photos orphaned by this deletion? perhaps
+    # create a page for managing photo thumbnails by dragging and dropping them
+    # onto categories...
+    require_logged_in()
+    g.db.execute(Q_DELETE_CATEGORY.format(categoryid))
+    g.db.commit()
+    return jsonify(deleted=True, categoryid=categoryid)
+
+
+@app.route('/delete/<int:photoid>', methods=['DELETE'])
+def delete_photo(photoid):
+    """Ajax function which deletes the photo with the specified ID number from
+    the database, and returns a boolean representing whether the action was
+    successful.
+
+    """
+    require_logged_in()
+    g.db.execute(Q_DELETE_PHOTO.format(photoid))
+    g.db.commit()
+    return jsonify(deleted=True, photoid=photoid)
+
+
+@app.route('/_get_categories', methods=['GET'])
+def get_categories():
+    """Ajax function which returns a JSON object storing an array of categories
+    in alphabetical (lexicographical) order.
+
+    """
+    return jsonify(_get_categories().iteritems())
+
+
+@app.route('/_get_photos', methods=['GET'])
+def get_photos():
+    """Ajax function which returns a JSON object which is a map from photoid to
+    filenames of photos in the category specified in the request argument
+    *categoryid*.
+
+    Returns a JSON object which is a mapping from the string "values" to an
+    array in which each element is a mapping containing the keys "photoid" and
+    "filename". For example:
+
+    { "values":
+      [
+        { "photoid": 5, "filename": /path/to/photo5 },
+        { "photoid": 2, "filename": /path/to/photo2 },
+        ...
+      ]
+    }
+
+    The elements of the array are in ascending order according to photo display
+    position.
+    """
+    category = request.args.get('categoryid')
+    cursor = g.db.execute(Q_GET_PHOTOS.format(category))
+    # Add the / so that the filenames are relative to the root of the app.
+    photos = [dict(photoid=row[0], filename='/' + row[1]) for row in
+              cursor.fetchall()]
+    # NOTE: we have to do this funny business of creating an array of mappings
+    # because JSON does not guarantee ordered mappings. The workaround is to
+    # provide this array in order, sorted by photo display position, which is
+    # what's happening in the lines above.
+    return jsonify(values=photos)
 
 
 @app.route('/_swap_display_positions', methods=['GET'])
@@ -181,54 +232,3 @@ def update_personal():
         # TODO log this as an error
         pass
     return jsonify(changed=True)
-
-
-# TODO POST method doesn't seem to be working
-@app.route('/_change_spacing', methods=['GET'])
-def change_spacing():
-    """Ajax function which changes the value of the spacing between photos on
-    the photo display page.
-
-    The only request argument is *spacing*, the number of pixels between
-    photos.
-
-    Returns a JSON object mapping *changed* to a boolean representing whether
-    the spacing was successfully changed.
-
-    """
-    require_logged_in()
-    # TODO use a validator for configobj
-    site_config['SPACING'] = int(request.args.get('spacing'))
-    site_config.write()
-    return jsonify(changed=True)
-
-
-@app.route('/delete/<int:photoid>', methods=['DELETE'])
-def delete_photo(photoid):
-    """Ajax function which deletes the photo with the specified ID number from
-    the database, and returns a boolean representing whether the action was
-    successful.
-
-    """
-    require_logged_in()
-    g.db.execute(Q_DELETE_PHOTO.format(photoid))
-    g.db.commit()
-    return jsonify(deleted=True, photoid=photoid)
-
-
-@app.route('/delete_category/<int:categoryid>', methods=['DELETE'])
-def delete_category(categoryid):
-    """Ajax function which deletes the category with the specified ID number
-    from the database, and returns a boolean representing whether the action
-    was successful.
-
-    All photos with that category will no longer be accessible.
-
-    """
-    # TODO what should we do with photos orphaned by this deletion? perhaps
-    # create a page for managing photo thumbnails by dragging and dropping them
-    # onto categories...
-    require_logged_in()
-    g.db.execute(Q_DELETE_CATEGORY.format(categoryid))
-    g.db.commit()
-    return jsonify(deleted=True, categoryid=categoryid)
