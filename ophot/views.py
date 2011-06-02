@@ -34,6 +34,10 @@ realname = app.config['NAME']
 
 # TODO use mime types or magic numbers to identify files
 def _allowed_file(filename):
+    """Returns True if and only if the specified filename has an allowed file
+    extension, which are defined in the application configuration.
+
+    """
     return '.' in filename and filename.rsplit('.', 1)[1].lower() \
         in app.config['ALLOWED_EXTENSIONS']
 
@@ -139,11 +143,11 @@ def add_photos():
                 # the changes we make on the "im.save()" call below
                 photo.save(long_filename)
                 im = Image.open(long_filename)
-                format = im.format
+                image_format = im.format
                 if im.size[1] > app.config['PHOTO_HEIGHT']:
                     wdth = im.size[0] * app.config['PHOTO_HEIGHT'] / im.size[1]
                     im = im.resize((wdth, app.config['PHOTO_HEIGHT']))
-                    im.save(long_filename, format)
+                    im.save(long_filename, image_format)
                 g.db.execute(Q_ADD_PHOTO, [filename, categoryid, position])
                 g.db.commit()
                 num_photos_added += 1
@@ -173,13 +177,13 @@ def change_splash_photo():
         # TODO see comment in add_photos
         request.files['photo'].save(filename)
         im = Image.open(filename)
-        format = im.format
+        image_format = im.format
         if im.size[0] > int(app.config['SPLASH_PHOTO_WIDTH']) \
                 or im.size[1] > int(app.config['SPLASH_PHOTO_HEIGHT']):
             im = im.resize((int(app.config['SPLASH_PHOTO_WIDTH']),
                             int(app.config['SPLASH_PHOTO_HEIGHT'])),
                            Image.ANTIALIAS)
-            im.save(filename, format)
+            im.save(filename, image_format)
         flash('New splash photo uploaded.')
         return redirect(url_for('show_splash'))
     return render_template('change_splash_photo.html', form=form,
@@ -188,14 +192,21 @@ def change_splash_photo():
                            width=app.config['SPLASH_PHOTO_WIDTH'])
 
 
+# TODO use the error parameter
 @app.errorhandler(403)
 def forbidden(error):
+    """Renders the template for an HTML error status 403 (Forbidden)."""
     return render_template('forbidden.html', realname=realname), 403
 
 
 # TODO use Flask-CSRF?
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    """On a GET request, renders the login template, and on a POST request,
+    sets the 'logged_in' property of the session variable to be True after
+    checking the POSTed credentials.
+
+    """
     error = None
     if request.method == 'POST':
         if request.form['username'] != app.config['USERNAME'] \
@@ -210,13 +221,19 @@ def login():
 
 @app.route('/logout')
 def logout():
+    """Unsets the 'logged_in' property of the session variable, then redirects
+    to the splash page.
+
+    """
     session.pop('logged_in', None)
     flash('You have successfully logged out.')
     return redirect(url_for('show_splash'))
 
 
+# TODO use the error parameter
 @app.errorhandler(404)
 def page_not_found(error):
+    """Renders the template for an HTML error status 404 (Not Found)."""
     return render_template('page_not_found.html', realname=realname), 404
 
 
@@ -236,6 +253,7 @@ def show_splash():
 
 @app.route('/settings', methods=['GET'])
 def settings():
+    """Renders the edit settings template."""
     # create this class so that the form can automatically fill in its values
     # using the values of the attributes of this class
     class Settings(object):

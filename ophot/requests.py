@@ -7,7 +7,7 @@ from flask import request
 # imports from this application
 from ophot import add_new_category
 from ophot import app
-from ophot import get_categories
+from ophot import get_categories as _get_categories
 from ophot import get_last_display_position
 from ophot import require_logged_in
 from ophot import select_single
@@ -56,13 +56,13 @@ def change_category():
     """
     require_logged_in()
     categoryid = request.args.get('categoryid')
+    photoid = request.args.get('photoid')
     if int(categoryid) == -1:
         categoryname = request.args.get('categoryname')
         if categoryname is None or len(categoryname) == 0:
             return jsonify(changed=False, photoid=photoid,
                            categoryid=categoryid, reason='No name received.')
         categoryid = add_new_category(categoryname)
-    photoid = request.args.get('photoid')
     position = get_last_display_position(categoryid)
     if position is None:
         position = 1
@@ -150,7 +150,7 @@ def get_categories():
     in alphabetical (lexicographical) order.
 
     """
-    return jsonify(get_categories().iteritems())
+    return jsonify(_get_categories().iteritems())
 
 
 @app.route('/_get_photos', methods=['GET'])

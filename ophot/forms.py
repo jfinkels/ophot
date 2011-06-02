@@ -8,8 +8,6 @@ to submit information to the application.
 #from flaskext.uploads import IMAGES
 from flaskext.wtf import FileField
 from flaskext.wtf import Form
-from flaskext.wtf import SelectField
-from flaskext.wtf import TextField
 from flaskext.wtf import TextAreaField
 from flaskext.wtf.html5 import IntegerField
 #from flaskext.wtf.file import file_allowed
