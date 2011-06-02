@@ -5,10 +5,10 @@ from flask import jsonify
 from flask import request
 
 # imports from this application
-from ophot import _add_new_category
-from ophot import _get_categories
-from ophot import _get_last_display_position
-from ophot import _select_single
+from ophot import add_new_category
+from ophot import get_categories
+from ophot import get_last_display_position
+from ophot import select_single
 from ophot import app
 from ophot import require_logged_in
 from ophot import site_config
@@ -31,7 +31,7 @@ def add_category():
     """
     require_logged_in()
     categoryname = request.args.get('categoryname')
-    categoryid = _add_new_category(categoryname)
+    categoryid = add_new_category(categoryname)
     return jsonify(added=True, categoryid=categoryid,
                    categoryname=categoryname)
 
@@ -61,9 +61,9 @@ def change_category():
         if categoryname is None or len(categoryname) == 0:
             return jsonify(changed=False, photoid=photoid,
                            categoryid=categoryid, reason='No name received.')
-        categoryid = _add_new_category(categoryname)
+        categoryid = add_new_category(categoryname)
     photoid = request.args.get('photoid')
-    position = _get_last_display_position(categoryid)
+    position = get_last_display_position(categoryid)
     if position is None:
         position = 1
     g.db.execute(Q_CHANGE_CATEGORY.format(categoryid, position, photoid))
@@ -150,7 +150,7 @@ def get_categories():
     in alphabetical (lexicographical) order.
 
     """
-    return jsonify(_get_categories().iteritems())
+    return jsonify(get_categories().iteritems())
 
 
 @app.route('/_get_photos', methods=['GET'])
@@ -201,8 +201,8 @@ def swap_display_positions():
     """
     photoid1 = request.args.get('photoid1')
     photoid2 = request.args.get('photoid2')
-    pos1 = _select_single(Q_GET_PHOTO_POS.format(photoid1))
-    pos2 = _select_single(Q_GET_PHOTO_POS.format(photoid2))
+    pos1 = select_single(Q_GET_PHOTO_POS.format(photoid1))
+    pos2 = select_single(Q_GET_PHOTO_POS.format(photoid2))
     g.db.execute(Q_CHANGE_DISPLAY_POS.format(pos2, photoid1))
     g.db.execute(Q_CHANGE_DISPLAY_POS.format(pos1, photoid2))
     g.db.commit()

@@ -18,9 +18,9 @@ from flaskext.wtf.file import file_required
 import Image
 
 # imports from this application
-from ophot import _add_new_category
-from ophot import _get_categories
-from ophot import _get_last_display_position
+from ophot import add_new_category
+from ophot import get_categories
+from ophot import get_last_display_position
 from ophot import app
 from ophot import require_logged_in
 from ophot import site_config
@@ -63,7 +63,7 @@ def _get_categories_plus_new():
 
     Pre-condition: none of the existing categories have an ID of -1.
     """
-    return _get_categories().items() + [(-1, 'new category...')]
+    return get_categories().items() + [(-1, 'new category...')]
 
 
 def _to_html_paragraphs(string):
@@ -120,14 +120,14 @@ def add_photos():
                 categoryid = int(request.form['category'])
                 if categoryid == -1:
                     new_category_name = request.form['new-cat-name']
-                    if new_category_name in _get_categories().values():
+                    if new_category_name in get_categories().values():
                         # TODO this should be an error message
                         flash('Cannot add new category "{0}" because it'
                               ' already exists.')
                         return redirect(url_for('add_photos'))
-                    categoryid = _add_new_category(new_category_name)
-                result = _get_last_display_position(categoryid)
-                if _get_last_display_position(categoryid) is None:
+                    categoryid = add_new_category(new_category_name)
+                result = get_last_display_position(categoryid)
+                if get_last_display_position(categoryid) is None:
                     position = 1
                 else:
                     position = result + 1
@@ -226,7 +226,7 @@ def page_not_found(error):
 @app.route('/')
 def show_splash():
     """Shows the splash page as the root."""
-    categories = _get_categories().iteritems()
+    categories = get_categories().iteritems()
     bio = _to_html_paragraphs(site_config['BIO'])
     contact = _to_html_paragraphs(site_config['CONTACT'])
     return render_template('splash.html', realname=realname,
@@ -248,4 +248,4 @@ def settings():
     # populate the fields of the settings form
     form = SettingsForm(obj=Settings())
     return render_template('settings.html', realname=realname, form=form,
-                           categories=_get_categories().iteritems())
+                           categories=get_categories().iteritems())

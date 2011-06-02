@@ -69,7 +69,7 @@ Message:
     app.logger.addHandler(file_handler)
 
 
-def _add_new_category(categoryname):
+def add_new_category(categoryname):
     """Creates a new category in the database with the specified *categoryname*
     and returns its ID number.
 
@@ -77,7 +77,7 @@ def _add_new_category(categoryname):
     g.db.execute(Q_ADD_CATEGORY, [categoryname])
     g.db.commit()
     # get the ID of the category that we just inserted
-    return _select_single(Q_GET_CATEGORY.format(categoryname))
+    return select_single(Q_GET_CATEGORY.format(categoryname))
 
 
 @app.after_request
@@ -103,7 +103,7 @@ def connect_db():
     return sqlite3.connect(app.config['DATABASE'])
 
 
-def _get_categories():
+def get_categories():
     """Helper method which returns a map from category ID to category name,
     sorted in alphabetical (lexicographical) order by category name.
 
@@ -112,7 +112,7 @@ def _get_categories():
     return OrderedDict([(row[0], row[1]) for row in cursor.fetchall()])
 
 
-def _get_last_display_position(categoryid):
+def get_last_display_position(categoryid):
     """Helper method which returns the index in the display sequence of the
     last photo in the specified category.
 
@@ -120,7 +120,7 @@ def _get_last_display_position(categoryid):
 
     """
     # sometimes returns None
-    return _select_single(Q_GET_LAST_DISP_POS.format(categoryid))
+    return select_single(Q_GET_LAST_DISP_POS.format(categoryid))
 
 
 def init_db():
@@ -142,7 +142,7 @@ def require_logged_in():
         abort(401)
 
 
-def _select_single(query):
+def select_single(query):
     """Executes the given *query* and returns the first field in the first
     matching row.
 
