@@ -86,7 +86,6 @@ def change_category_name():
     categoryid = request.args.get('categoryid')
     categoryname = request.args.get('categoryname')
     g.db.execute(Q_CHANGE_CATEGORY_NAME.format(categoryname, categoryid))
-
     g.db.commit()
     return jsonify(changed=True)
 
