@@ -130,8 +130,7 @@ def add_photos():
                               ' already exists.')
                         return redirect(url_for('add_photos'))
                     categoryid = add_new_category(new_category_name)
-                result = get_last_display_position(categoryid)
-                position = (result or 0) + 1
+                position = (get_last_display_position(categoryid) or 0) + 1
                 filename = _generate_filename(app.config['PHOTO_DIR'],
                                               photo.filename)
                 # HACK long_filename is needed for using python to operate on

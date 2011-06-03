@@ -63,9 +63,7 @@ def change_category():
             return jsonify(changed=False, photoid=photoid,
                            categoryid=categoryid, reason='No name received.')
         categoryid = add_new_category(categoryname)
-    position = get_last_display_position(categoryid)
-    if position is None:
-        position = 1
+    position = (get_last_display_position(categoryid) or 0) + 1
     g.db.execute(Q_CHANGE_CATEGORY.format(categoryid, position, photoid))
     g.db.commit()
     return jsonify(changed=True, photoid=photoid, categoryid=categoryid)
