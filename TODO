@@ -5,3 +5,6 @@
 * add a view and a stylesheet for "mobile" web browsers (the stylesheet should imitate, for example, the iPhone's UI effects)
 * change to data["changed"] == "True"?
 * http://blog.greenfelt.net/2009/09/01/caching-javascript-safely/
+* remove name from purchase info
+* put styles in separate files
+* put styles first, scripts second in head element
