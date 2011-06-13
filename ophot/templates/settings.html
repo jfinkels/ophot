@@ -1,9 +1,9 @@
 {% extends "layout.html" %}
-{% block head %}
-{{ super() }}
+  {% block scripts %}
+    {{ super() }}
   <!-- javascript for editing settings -->
   <script type="text/javascript" src="{{ url_for('static', filename='scripts/settings.js') }}" ></script>
-{% endblock %}
+  {% endblock %}
 {% block content %}
 {% if session.logged_in %}
     <p class="desc">This page allows you to change some of the general
