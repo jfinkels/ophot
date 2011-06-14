@@ -5,13 +5,23 @@ This is ophot, a small web application which provides a simple photography
 portfolio website. It allows a manager to log in in order to add or remove
 photos. It allows viewers to purchase prints of photographs.
 
-This README was last updated on 31 May 2011.
+This README was last updated on 14 June 2011.
+
+Copyright license
+-----------------
+
+The code comprising this web application is copyright 2011 Jeffrey Finkelstein,
+and is published under the GNU Affero General Public License, either version 3
+or (at your option) any later version. For more information see the LICENSE
+file.
 
 Contents
 --------
 
 This package contains:
 
+* LICENSE - the copyright license under which this program is distributed to
+  you (the GNU Affero General Public License version 3 or later)
 * ophot/ - the Python package containing the application itself
 * ophot.wsgi - the WSGI specification file which runs the application when
   deployed to a server as a WSGI application
@@ -71,7 +81,8 @@ Configuring
 
 To configure this application, edit the configuration file "config.py". You
 must add at least USERNAME, PASSWORD, and SECRET_KEY for allowing the
-administrator to log in. You probably want to change the NAME value as well.
+administrator to log in. You probably want to change the values of NAME and
+PURCHASE_EMAIL, plus some others as well.
 
 Instead of editing the configuration file directly, you can set the
 OPHOT_SETTINGS environment variable to be the path to a file containing the
