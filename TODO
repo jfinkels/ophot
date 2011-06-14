@@ -8,3 +8,4 @@
 * remove name from purchase info
 * put styles in separate files
 * put styles first, scripts second in head element
+* use debounce to automatically save bio info, etc.

@@ -1,11 +1,16 @@
 {% from "_formhelpers.html" import render_field %}
 {% extends "layout.html" %}
-{% block head %}
-{{ super() }}
+  {% block styles %}
+    {{ super() }}
+  {% if session.logged_in %}
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/add_photos.css') }}" />
+  {% endif %}
+  {% endblock %}
+  {% block scripts %}
+    {{ super() }}
   <!-- javascript needed for adding a new category -->
   <script type="text/javascript" src="{{ url_for('static', filename='scripts/add-photos.js') }}"></script>
-
-{% endblock %}
+  {% endblock %}
 {% block content %}
 {% if session.logged_in %}
 <p class="description">This page allows you to upload one or more photos and
