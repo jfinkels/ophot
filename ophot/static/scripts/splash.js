@@ -42,7 +42,7 @@ function createPhotoCellString(photoid, filename, categories) {
        + "      <a class=\"close\">X</a>\n"
        + "      <p>\n"
        + "        For pricing or to order prints email\n"
-       + "        mike@mikefinkphotography.com\n"
+       + "        " + PURCHASE_EMAIL + "\n"
        + "      </p>\n"
        + "    </div>\n"
        + "    <div class=\"delete-dialog\">\n"

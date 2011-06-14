@@ -37,6 +37,10 @@
   <!-- javascript for editing photos -->
   <script type="text/javascript" src="{{ url_for('static', filename='scripts/edit-photos.js') }}"></script>
   {% endif %}
+
+  <script type="text/javascript">
+    var PURCHASE_EMAIL = {{ purchase_email }}
+  </script>
   {% endblock %}
 {% block photos %}
   <div id="photos-container">

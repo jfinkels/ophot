@@ -86,3 +86,7 @@ DOMAIN_NAME = "example.com"
 
 # Add the name that you wish to appear across the site.
 NAME = 'Example Exampleson'
+
+# Add the email address which the user should contact when he or she wishes to
+# purchase a print.
+PURCHASE_EMAIL = 'example@example.com'
