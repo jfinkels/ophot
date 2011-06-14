@@ -196,13 +196,6 @@ div#splash-shadow {
   opacity: 0.65;
 }
 
-footer {
-  color: gray;
-  font-size: small;
-  margin-top: 1em;
-  text-align: right;
-}
-
 form {
   font-weight: bold;
 }
@@ -231,6 +224,13 @@ p.description {
 
 p.description a:hover {
   text-decoration: underline;
+}
+
+small#copyright {
+  color: gray;
+/*  font-size: small; */
+  margin-top: 1em;
+  text-align: right;
 }
 
 table {

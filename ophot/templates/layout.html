@@ -47,11 +47,7 @@
     <h1><a href="{{ url_for('show_splash') }}">{{ realname }} <span class="darker">photography</span></a></h1>
     {% block content %}
     {% endblock %}
-    <footer>
-      {% block footer %}
-      All photos copyright 2011 {{ realname }}.
-      {% endblock %}
-    </footer>
+    <footer><small id="copyright">All photos copyright 2011 {{ realname }}.</small></footer>
   </div>
 </body>
 </html>
