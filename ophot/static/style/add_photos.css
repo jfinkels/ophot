@@ -1,0 +1,8 @@
+input#new-cat-name {
+  border: none;
+  /*border-radius: 2px;
+  -moz-border-radius: 2px;*/
+  font-size: 14pt;
+  padding-left: 3px;
+  padding-right: 3px;
+}
