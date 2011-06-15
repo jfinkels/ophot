@@ -83,7 +83,7 @@ class temp_photos(object):
 
 
 class OphotTestCase(unittest.TestCase):
-    """Test class for the ophot module."""
+    """Test class for the __init__ module in the ophot package."""
 
     def _login(self, username=app.config['USERNAME'],
                password=app.config['PASSWORD']):
@@ -220,8 +220,3 @@ class OphotTestCase(unittest.TestCase):
                 position = select_single('select photodisplayposition from'
                                          ' photo where photocategory=3')
                 self.assertIsNone(None, position)
-
-
-def suite():
-    """Returns the test suite which runs all tests in this module."""
-    return unittest.TestLoader().loadTestsFromTestCase(OphotTestCase)
