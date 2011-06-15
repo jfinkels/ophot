@@ -19,6 +19,10 @@ Provides general functions needed for all other modules in this package, and
 allows this directory to be treated as a Python package.
 
 """
+# imports for compatibility with future python versions
+from __future__ import absolute_import
+from __future__ import division
+
 # imports from built-in modules
 from collections import OrderedDict
 from contextlib import closing
