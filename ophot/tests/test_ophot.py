@@ -20,11 +20,12 @@ import os
 import sqlite3
 import tempfile
 import unittest
-import uuid
+#import uuid
 
 # imports from third party modules
-from werkzeug.datastructures import FileStorage
-from werkzeug.datastructures import MultiDict
+#from werkzeug.datastructures import FileStorage
+#from werkzeug.datastructures import MultiDict
+from werkzeug.exceptions import Unauthorized
 
 # imports from this application
 from ophot import add_new_category
@@ -32,8 +33,42 @@ from ophot import app
 from ophot import after_request
 from ophot import before_request
 from ophot import connect_db
-from ophot import get_categories
 from ophot import init_db
+from ophot import get_categories
+from ophot import get_last_display_position
+from ophot import require_logged_in
+from ophot import select_single
+
+
+class temp_photos(object):
+    """
+    Context manager (for use in a "with" statement) which creates temporary
+    files representing photos, connects to the database, adds photos to it,
+    then on exit removes the files.
+
+    """
+    def __init__(self):
+        """This method does nothing."""
+        pass
+
+    def __enter__(self):
+        """Creates temporary photos and adds them to the database."""
+        # mkstemp() returns a 2-tuple: (file_descriptor, filename)
+        self.photos = [tempfile.mkstemp() for i in range(2)]
+        self.conn = connect_db()
+        for i in range(len(self.photos)):
+            self.conn.execute('insert into photo (photofilename,'
+                              ' photocategory, photodisplayposition)'
+                              ' values (?, ?, ?)',
+                              [self.photos[i][1], '1', str(i + 1)])
+        self.conn.commit()
+
+    def __exit__(self, exception_type, exception_value, traceback):
+        """Unlinks the temporary files and closes the database connection."""
+        self.conn.close()
+        for f in self.photos:
+            os.unlink(f[1])
+
 
 class OphotTestCase(unittest.TestCase):
     """Test class for the ophot module."""
@@ -63,6 +98,47 @@ class OphotTestCase(unittest.TestCase):
             self.assertNotIn(new_id, categories)
             self.assertEqual(max(categories) + 1, new_id)
             self.assertIn('foobar', new_categories.values())
+
+
+    def test_get_categories(self):
+        """Test for getting categories with their ID numbers."""
+        with app.test_request_context('/'):
+            before_request()
+            categories = get_categories()
+            self.assertIn((1, 'landscape'), categories.items())
+            self.assertIn((2, 'personal'), categories.items())
+            self.assertIn((3, 'portrait'), categories.items())
+
+
+    def test_get_last_display_position(self):
+        """
+        Test for getting the display position of the photo which is to be
+        displayed last.
+
+        """
+        with app.test_request_context('/'):
+            before_request()
+            with temp_photos():
+                x = get_last_display_position(1)
+                self.assertEqual(2, get_last_display_position(1))
+                self.assertEqual(None, get_last_display_position(2))
+
+
+    def test_require_logged_in(self):
+        """
+        Test for requiring that the user is marked as logged in on the session.
+
+        """
+        with app.test_request_context('/'):
+            self.assertRaisesRegexp(Unauthorized, '401', require_logged_in)
+            self.login()
+            # here we expect no exception
+            require_logged_in()
+
+
+    def test_select_single(self):
+        self.fail("Not yet implemented.")
+
 
     def login(self, username=app.config['USERNAME'],
               password=app.config['PASSWORD']):
