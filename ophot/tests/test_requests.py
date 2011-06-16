@@ -92,7 +92,7 @@ class RequestsTestCase(TestSupport):
             url = query_url('/_get_photos', categoryid=3)
             photos = json.loads(self.app.get(url).data)
             self.assertEqual(0, len(photos['values']))
-<<<<<<< local
+
 
     def test_change_category_name(self):
         """Tests changing the name of a category."""
