@@ -36,6 +36,7 @@ from ophot.requests import get_photos
 from ophot.requests import swap_display_positions
 from ophot.requests import update_personal
 from ophot.tests import TestSupport
+from ophot.tests import temp_photos
 
 
 def query_url(base, **kw):
@@ -58,3 +59,36 @@ class RequestsTestCase(TestSupport):
         self.assertEqual(True, result['added'])
         self.assertEqual(4, result['categoryid'])
         self.assertEqual('foo', result['categoryname'])
+
+    def test_change_category(self):
+        """Test for changing the category of a photo."""
+        self._login()
+        with temp_photos():
+            url = query_url('/_change_category', photoid=1, categoryid=3)
+            result = json.loads(self.app.get(url).data)
+            self.assertEqual(True, result['changed'])
+            self.assertEqual(1, int(result['photoid']))
+            self.assertEqual(3, int(result['categoryid']))
+            # get the photos by category
+            url = (query_url('/_get_photos', categoryid=n+1) for n in range(3))
+            photos = (json.loads(self.app.get(u).data) for u in url)
+            # each category should have just one photo now
+            for p in photos:
+                self.assertEqual(1, len(p['values']))
+
+            # now test adding a new category
+            url = query_url('/_change_category', photoid=1, categoryid=-1,
+                            categoryname='foo')
+            result = json.loads(self.app.get(url).data)
+            self.assertEqual(True, result['changed'])
+            self.assertEqual(1, int(result['photoid']))
+            self.assertEqual(4, int(result['categoryid']))
+            # get the photos by category (category 3 should have 0 now)
+            url = (query_url('/_get_photos', categoryid=n) for n in (1,2,4))
+            photos = (json.loads(self.app.get(u).data) for u in url)
+            # each category should have just one photo now
+            for p in photos:
+                self.assertEqual(1, len(p['values']))
+            url = query_url('/_get_photos', categoryid=3)
+            photos = json.loads(self.app.get(url).data)
+            self.assertEqual(0, len(photos['values']))
