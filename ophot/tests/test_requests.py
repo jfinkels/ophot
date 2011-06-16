@@ -20,11 +20,13 @@ import os
 import tempfile
 import unittest
 
+from configobj import ConfigObj
 from flask import request
 
 from ophot import app
 from ophot import before_request
 from ophot import init_db
+from ophot import site_config
 from ophot.requests import add_category
 from ophot.requests import change_category
 from ophot.requests import change_category_name
@@ -37,6 +39,31 @@ from ophot.requests import swap_display_positions
 from ophot.requests import update_personal
 from ophot.tests import TestSupport
 from ophot.tests import temp_photos
+
+
+class preserve_site_config:
+    """Context manager (for use in a "with" statement) which stores the
+    original configuration settings from a file on enter, and rewrites those
+    settings on exit.
+
+    """
+    def __init__(self):
+        """Does nothing."""
+        pass
+
+    def __enter__(self):
+        """Reads the configuration settings file and stashes it so that it can
+        be restored later.
+
+        """
+        self.original_config = ConfigObj(app.config['SETTINGS_FILE'])
+
+    def __exit__(self, exception_type, exception_value, traceback):
+        """Writes the original configuration settings back to the settings
+        file.
+
+        """
+        self.original_config.write()
 
 
 def query_url(base, **kw):
@@ -114,3 +141,14 @@ class RequestsTestCase(TestSupport):
             self.assertEqual('foo', categories['1'])
             self.assertEqual('personal', categories['2'])
             self.assertEqual('portrait', categories['3'])
+
+    def test_change_spacing(self):
+        """Tests changing the spacing (in pixels) between photos on the splash
+        page.
+
+        """
+        self._login()
+        with preserve_site_config():
+            result = json.loads(self.app.get(query_url('/_change_spacing', spacing=123)).data)
+            self.assertTrue(result['changed'])
+            self.assertEqual(123, site_config['SPACING'])
