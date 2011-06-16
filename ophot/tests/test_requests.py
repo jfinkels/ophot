@@ -119,6 +119,8 @@ class RequestsTestCase(TestSupport):
             url = query_url('/_get_photos', categoryid=3)
             photos = json.loads(self.app.get(url).data)
             self.assertEqual(0, len(photos['values']))
+        # TODO test changing category of a photo which doesn't exist
+        # TODO test changing to a category which doesn't exist
 
     def test_change_category_name(self):
         """Tests changing the name of a category."""
@@ -140,6 +142,7 @@ class RequestsTestCase(TestSupport):
             self.assertEqual('foo', categories['1'])
             self.assertEqual('personal', categories['2'])
             self.assertEqual('portrait', categories['3'])
+        # TODO test trying to change name of a category which doesn't exist
 
     def test_change_spacing(self):
         """Tests changing the spacing (in pixels) between photos on the splash
@@ -152,14 +155,25 @@ class RequestsTestCase(TestSupport):
             result = json.loads(self.app.get(url).data)
             self.assertTrue(result['changed'])
             self.assertEqual(123, site_config['SPACING'])
+        # TODO test change spacing if no spacing exists yet
 
     def test_delete_category(self):
-        """Tests deleting a category from the database.
-
-        """
+        """Tests deleting a category from the database."""
         self._login()
         result = json.loads(self.app.delete('/delete_category/1').data)
         self.assertTrue(result['deleted'])
-        self.assertEqual(1, result['categoryid'])
+        self.assertEqual(1, int(result['categoryid']))
         categories = json.loads(self.app.get('/_get_categories').data)
         self.assertNotIn(1, categories.keys())
+        # TODO test deleting a category which does not exist
+
+    def test_delete_photo(self):
+        """Test for deleting a photo from the database."""
+        self._login()
+        with temp_photos():
+            result = json.loads(self.app.delete('/delete/1').data)
+            self.assertTrue(result['deleted'])
+            self.assertEqual(1, int(result['photoid']))
+            url = query_url('/_get_photos', categoryid=1)
+            result = json.loads(self.app.get(url).data)
+            self.assertEqual(1, len(result['values']))
