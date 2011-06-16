@@ -120,7 +120,6 @@ class RequestsTestCase(TestSupport):
             photos = json.loads(self.app.get(url).data)
             self.assertEqual(0, len(photos['values']))
 
-
     def test_change_category_name(self):
         """Tests changing the name of a category."""
         self._login()
@@ -149,6 +148,18 @@ class RequestsTestCase(TestSupport):
         """
         self._login()
         with preserve_site_config():
-            result = json.loads(self.app.get(query_url('/_change_spacing', spacing=123)).data)
+            url = query_url('/_change_spacing', spacing=123)
+            result = json.loads(self.app.get(url).data)
             self.assertTrue(result['changed'])
             self.assertEqual(123, site_config['SPACING'])
+
+    def test_delete_category(self):
+        """Tests deleting a category from the database.
+
+        """
+        self._login()
+        result = json.loads(self.app.delete('/delete_category/1').data)
+        self.assertTrue(result['deleted'])
+        self.assertEqual(1, result['categoryid'])
+        categories = json.loads(self.app.get('/_get_categories').data)
+        self.assertNotIn(1, categories.keys())
