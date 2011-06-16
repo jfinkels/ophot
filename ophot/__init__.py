@@ -162,10 +162,13 @@ def select_single(query):
     """Executes the given *query* and returns the first field in the first
     matching row.
 
-    Might return None
-
+    If the specified query would return no rows, then this function returns
+    None.
     """
-    return g.db.execute(query).fetchone()[0]
+    result = g.db.execute(query).fetchone()
+    if result is None:
+        return None
+    return result[0]
 
 
 import ophot.requests

@@ -10,3 +10,5 @@
 * put styles first, scripts second in head element
 * use debounce to automatically save bio info, etc.
 * check out Flask-Login
+* use load_tests protocol for unit tests
+* use a better RESTful API for getting photos and categories
