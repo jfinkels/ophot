@@ -21,7 +21,7 @@ Q_ADD_PHOTO = ('insert into photo (photofilename, photocategory,'
 Q_CHANGE_CATEGORY = ('update photo'
                      ' set photocategory={0},photodisplayposition={1}'
                      ' where photoid={2}')
-Q_CHANGE_CATEGORY_NAME = ('update category set categoryname="{0}"',
+Q_CHANGE_CATEGORY_NAME = ('update category set categoryname="{0}"'
                           ' where categoryid={1}')
 Q_CHANGE_DISPLAY_POS = ('update photo set photodisplayposition={0}'
                         ' where photoid == {1}')

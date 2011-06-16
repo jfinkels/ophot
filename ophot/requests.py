@@ -103,7 +103,8 @@ def change_category_name():
     categoryname = request.args.get('categoryname')
     g.db.execute(Q_CHANGE_CATEGORY_NAME.format(categoryname, categoryid))
     g.db.commit()
-    return jsonify(changed=True)
+    return jsonify(changed=True, categoryname=categoryname,
+                   categoryid=categoryid)
 
 
 # TODO POST method doesn't seem to be working
