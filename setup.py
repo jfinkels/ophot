@@ -17,7 +17,7 @@ setup(
     name='Ophot',
     packages=['ophot'],
     setup_requires=['setuptools_hg'],
-    test_suite='ophot.tests.alltests',
+    test_suite='ophot.tests.alltests.alltests',
     url='https://github.com/jfinkels/ophot',
     version='0.1',
     zip_safe=False

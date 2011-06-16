@@ -38,82 +38,12 @@ from ophot import get_categories
 from ophot import get_last_display_position
 from ophot import require_logged_in
 from ophot import select_single
+from ophot.tests import TestSupport
+from ophot.tests import temp_photos
 
 
-class temp_photos(object):
-    """Context manager (for use in a "with" statement) which creates temporary
-    files representing photos, connects to the database, adds photos to it,
-    then on exit removes the files.
-
-    """
-    def __init__(self):
-        """This method does nothing."""
-        pass
-
-    def __enter__(self):
-        """Creates temporary photos and adds them to the database.
-
-        Specifically, two photos will be added to category with ID 1, one photo
-        will be added to category with ID 2, and no photos will be added to
-        category with ID 3.
-
-        """
-        # mkstemp() returns a 2-tuple: (file_descriptor, filename)
-        self.photos = [tempfile.mkstemp() for i in range(3)]
-        self.conn = connect_db()
-        self.conn.execute('insert into photo (photofilename,'
-                          ' photocategory, photodisplayposition)'
-                          ' values (?, ?, ?)',
-                          [self.photos[0][1], '1', '1'])
-        self.conn.execute('insert into photo (photofilename,'
-                          ' photocategory, photodisplayposition)'
-                          ' values (?, ?, ?)',
-                          [self.photos[1][1], '1', '2'])
-        self.conn.execute('insert into photo (photofilename,'
-                          ' photocategory, photodisplayposition)'
-                          ' values (?, ?, ?)',
-                          [self.photos[2][1], '2', '1'])
-        self.conn.commit()
-
-    def __exit__(self, exception_type, exception_value, traceback):
-        """Unlinks the temporary files and closes the database connection."""
-        self.conn.close()
-        for f in self.photos:
-            os.unlink(f[1])
-
-
-class OphotTestCase(unittest.TestCase):
+class OphotTestCase(TestSupport):
     """Test class for the __init__ module in the ophot package."""
-
-    def _login(self, username=app.config['USERNAME'],
-               password=app.config['PASSWORD']):
-        """Makes a POST request to login to the Flask application with the
-        specified username and password. If no username and password are
-        specified, the ones from the configuration will be used.
-
-        """
-        return self.app.post('/login',
-                             data={'username': username, 'password': password},
-                             follow_redirects=True)
-
-    def _logout(self):
-        """Logs out from the current application."""
-        return self.app.get('/logout', follow_redirects=True)
-
-    def setUp(self):
-        """Connects the Flask application to a temporary database and creates a
-        client for testing.
-
-        """
-        s = tempfile.mkstemp()
-        self.db_fd, app.config['DATABASE'] = tempfile.mkstemp()
-        self.app = app.test_client()
-        init_db()
-
-    def tearDown(self):
-        """Closes and deletes the database."""
-        os.close(self.db_fd)
-        os.unlink(app.config['DATABASE'])
 
     def test_add_new_category(self):
         """Test for adding a new category to the database."""

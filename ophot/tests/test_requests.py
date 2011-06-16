@@ -35,43 +35,20 @@ from ophot.requests import get_categories
 from ophot.requests import get_photos
 from ophot.requests import swap_display_positions
 from ophot.requests import update_personal
+from ophot.tests import TestSupport
+
 
 def query_url(base, **kw):
+    """Creates a URL with initial part *base* and with query strings given by
+    keyword arguments.
+
+    """
     query = '&'.join('{0[0]}={0[1]}'.format(item) for item in kw.iteritems())
     return '{0}?{1}'.format(base, query)
 
-class RequestsTestCase(unittest.TestCase):
+
+class RequestsTestCase(TestSupport):
     """Test class for the requests module."""
-
-    def _login(self, username=app.config['USERNAME'],
-               password=app.config['PASSWORD']):
-        """Makes a POST request to login to the Flask application with the
-        specified username and password. If no username and password are
-        specified, the ones from the configuration will be used.
-
-        """
-        return self.app.post('/login',
-                             data={'username': username, 'password': password},
-                             follow_redirects=True)
-
-    def _logout(self):
-        """Logs out from the current application."""
-        return self.app.get('/logout', follow_redirects=True)
-
-    def setUp(self):
-        """Connects the Flask application to a temporary database and creates a
-        client for testing.
-
-        """
-        s = tempfile.mkstemp()
-        self.db_fd, app.config['DATABASE'] = tempfile.mkstemp()
-        self.app = app.test_client()
-        init_db()
-
-    def tearDown(self):
-        """Closes and deletes the database."""
-        os.close(self.db_fd)
-        os.unlink(app.config['DATABASE'])
 
     def test_add_category(self):
         """Test for adding a category."""
