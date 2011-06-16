@@ -32,7 +32,7 @@ class temp_photos(object):
 
     """
     def __init__(self):
-        """This method does nothing."""
+        """This function does nothing."""
         pass
 
     def __enter__(self):
