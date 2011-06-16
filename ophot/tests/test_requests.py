@@ -92,3 +92,25 @@ class RequestsTestCase(TestSupport):
             url = query_url('/_get_photos', categoryid=3)
             photos = json.loads(self.app.get(url).data)
             self.assertEqual(0, len(photos['values']))
+<<<<<<< local
+
+    def test_change_category_name(self):
+        """Tests changing the name of a category."""
+        self._login()
+        with temp_photos():
+            url = query_url('/_get_photos', categoryid=1)
+            photos_before = json.loads(self.app.get(url).data)
+            url = query_url('/_change_category_name', categoryid=1,
+                            categoryname='foo')
+            result = json.loads(self.app.get(url).data)
+            self.assertEqual(True, result['changed'])
+            self.assertEqual(1, int(result['categoryid']))
+            self.assertEqual('foo', result['categoryname'])
+            url = query_url('/_get_photos', categoryid=1)
+            photos_after = json.loads(self.app.get(url).data)
+            self.assertEqual(photos_before, photos_after)
+            url = query_url('/_get_categories')
+            categories = json.loads(self.app.get(url).data)
+            self.assertEqual('foo', categories['1'])
+            self.assertEqual('personal', categories['2'])
+            self.assertEqual('portrait', categories['3'])
