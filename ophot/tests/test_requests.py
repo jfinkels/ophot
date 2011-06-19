@@ -177,3 +177,42 @@ class RequestsTestCase(TestSupport):
             url = query_url('/_get_photos', categoryid=1)
             result = json.loads(self.app.get(url).data)
             self.assertEqual(1, len(result['values']))
+        # TODO test deleting a photo which does not exist
+
+    def test_get_categories(self):
+        """Test for getting categories from the database."""
+        categories = json.loads(self.app.get('_get_categories').data)
+        self.assertIn('landscape', categories.values())
+        self.assertIn('portrait', categories.values())
+        self.assertIn('personal', categories.values())
+        # TODO change get_categories so that they are returned in alphabetical
+        # order
+
+    def test_get_photos(self):
+        """Test for getting photos from the database."""
+        with temp_photos():
+            url = query_url('_get_photos', categoryid=1)
+            result = json.loads(self.app.get(url).data)
+            self.assertEqual(2, len(result['values']))
+            self.assertEqual(2, result['values'][0]['photoid'])
+            self.assertEqual(1, result['values'][1]['photoid'])
+            url = query_url('_get_photos', categoryid=2)
+            result = json.loads(self.app.get(url).data)
+            self.assertEqual(1, len(result['values']))
+            self.assertEqual(3, result['values'][0]['photoid'])
+            url = query_url('_get_photos', categoryid=3)
+            result = json.loads(self.app.get(url).data)
+            self.assertEqual(0, len(result['values']))
+
+    def test_swap_display_positions(self):
+        """Test for swapping the display positions of two photos."""
+        with temp_photos():
+            url = query_url('_swap_display_positions', photoid1=1, photoid2=2)
+            result = json.loads(self.app.get(url).data)
+            self.assertTrue(result['moved'])
+            self.assertEqual(1, int(result['photoid1']))
+            self.assertEqual(2, int(result['photoid2']))
+            self.assertEqual(1, int(result['displayposition1']))
+            self.assertEqual(2, int(result['displayposition2']))
+        # TODO test swapping display positions for photos in different
+        # categories, or photos which don't exist
