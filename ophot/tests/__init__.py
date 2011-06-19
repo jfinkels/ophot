@@ -43,28 +43,24 @@ class temp_photos(object):
         category with ID 3.
 
         """
-        # mkstemp() returns a 2-tuple: (file_descriptor, filename)
-        self.photos = [tempfile.mkstemp() for i in range(3)]
         self.conn = connect_db()
         self.conn.execute('insert into photo (photofilename,'
                           ' photocategory, photodisplayposition)'
                           ' values (?, ?, ?)',
-                          [self.photos[0][1], '1', '2'])
+                          ['photo1', '1', '2'])
         self.conn.execute('insert into photo (photofilename,'
                           ' photocategory, photodisplayposition)'
                           ' values (?, ?, ?)',
-                          [self.photos[1][1], '1', '1'])
+                          ['photo2', '1', '1'])
         self.conn.execute('insert into photo (photofilename,'
                           ' photocategory, photodisplayposition)'
                           ' values (?, ?, ?)',
-                          [self.photos[2][1], '2', '1'])
+                          ['photo3', '2', '1'])
         self.conn.commit()
 
     def __exit__(self, exception_type, exception_value, traceback):
         """Unlinks the temporary files and closes the database connection."""
         self.conn.close()
-        for f in self.photos:
-            os.unlink(f[1])
 
 
 class TestSupport(TestCase):
