@@ -254,20 +254,6 @@ def page_not_found(error):
     return render_template('page_not_found.html', realname=realname), 404
 
 
-@app.route('/')
-def show_splash():
-    """Shows the splash page as the root."""
-    categories = get_categories().iteritems()
-    bio = _to_html_paragraphs(site_config['BIO'])
-    contact = _to_html_paragraphs(site_config['CONTACT'])
-    return render_template('splash.html', realname=realname,
-                           categories=categories,
-                           filename=app.config['SPLASH_PHOTO_FILENAME'],
-                           photo_padding=site_config['SPACING'],
-                           bio=bio, purchase_email=purchase_email,
-                           contact=contact)
-
-
 @app.route('/settings', methods=['GET'])
 def settings():
     """Renders the edit settings template."""
@@ -281,3 +267,17 @@ def settings():
     form = SettingsForm(obj=Settings())
     return render_template('settings.html', realname=realname, form=form,
                            categories=get_categories().iteritems())
+
+
+@app.route('/')
+def show_splash():
+    """Shows the splash page as the root."""
+    categories = get_categories().iteritems()
+    bio = _to_html_paragraphs(site_config['BIO'])
+    contact = _to_html_paragraphs(site_config['CONTACT'])
+    return render_template('splash.html', realname=realname,
+                           categories=categories,
+                           filename=app.config['SPLASH_PHOTO_FILENAME'],
+                           photo_padding=site_config['SPACING'],
+                           bio=bio, purchase_email=purchase_email,
+                           contact=contact)
