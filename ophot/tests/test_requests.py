@@ -216,3 +216,17 @@ class RequestsTestCase(TestSupport):
             self.assertEqual(2, int(result['displayposition2']))
         # TODO test swapping display positions for photos in different
         # categories, or photos which don't exist
+
+    def test_update_personal(self):
+        """Test for updating bio and contact information."""
+        self._login()
+        with preserve_site_config():
+            url = query_url('_update_personal', name='bio', value='foo bar')
+            result = json.loads(self.app.get(url).data)
+            self.assertTrue(result['changed'])
+            self.assertEqual('foo bar', site_config['BIO'])
+            url = query_url('_update_personal', name='contact', value='baz')
+            result = json.loads(self.app.get(url).data)
+            self.assertTrue(result['changed'])
+            self.assertEqual('baz', site_config['CONTACT'])
+        # TODO test bogus parameters
