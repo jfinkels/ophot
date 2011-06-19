@@ -49,11 +49,11 @@ class temp_photos(object):
         self.conn.execute('insert into photo (photofilename,'
                           ' photocategory, photodisplayposition)'
                           ' values (?, ?, ?)',
-                          [self.photos[0][1], '1', '1'])
+                          [self.photos[0][1], '1', '2'])
         self.conn.execute('insert into photo (photofilename,'
                           ' photocategory, photodisplayposition)'
                           ' values (?, ?, ?)',
-                          [self.photos[1][1], '1', '2'])
+                          [self.photos[1][1], '1', '1'])
         self.conn.execute('insert into photo (photofilename,'
                           ' photocategory, photodisplayposition)'
                           ' values (?, ?, ?)',
