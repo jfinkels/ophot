@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Ophot.  If not, see <http://www.gnu.org/licenses/>.
 """Unit tests for the views module."""
+import os.path
 import tempfile
 import uuid
 
@@ -35,6 +36,7 @@ from ophot.views import settings
 from ophot.views import show_splash
 from ophot.views import unauthorized
 
+
 class ViewsTestCase(TestSupport):
     """Test class for the requests module."""
 
@@ -52,7 +54,7 @@ class ViewsTestCase(TestSupport):
         filename = _generate_filename('/foo/bar', 'baz.jpg')
         self.assertTrue(filename.endswith('.jpg'))
         try:
-            uuid.UUID(filename.split('.')[0])
+            uuid.UUID(os.path.basename(filename).split('.')[0])
         except ValueError:
             self.fail("Prefix of generated filename doesn't look like a UUID.")
 
@@ -133,7 +135,6 @@ Paragraph 4
 
     def test_login_display(self):
         """Test that the login page is displayed correctly."""
-        
         self.fail('not yet implemented')
 
     def test_login_credentials(self):

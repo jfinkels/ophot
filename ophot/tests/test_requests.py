@@ -97,7 +97,7 @@ class RequestsTestCase(TestSupport):
             self.assertEqual(1, int(result['photoid']))
             self.assertEqual(3, int(result['categoryid']))
             # get the photos by category
-            url = (query_url('/_get_photos', categoryid=n+1) for n in range(3))
+            url = (query_url('/_get_photos', categoryid=n) for n in (1, 2, 3))
             photos = (json.loads(self.app.get(u).data) for u in url)
             # each category should have just one photo now
             for p in photos:
@@ -111,7 +111,7 @@ class RequestsTestCase(TestSupport):
             self.assertEqual(1, int(result['photoid']))
             self.assertEqual(4, int(result['categoryid']))
             # get the photos by category (category 3 should have 0 now)
-            url = (query_url('/_get_photos', categoryid=n) for n in (1,2,4))
+            url = (query_url('/_get_photos', categoryid=n) for n in (1, 2, 4))
             photos = (json.loads(self.app.get(u).data) for u in url)
             # each category should have just one photo now
             for p in photos:
