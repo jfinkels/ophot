@@ -12,3 +12,4 @@
 * check out Flask-Login
 * use load_tests protocol for unit tests
 * use a better RESTful API for getting photos and categories
+* in tests, use self.app.get('whatever', data={}) instead of using query_url()
