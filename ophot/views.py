@@ -281,3 +281,10 @@ def show_splash():
                            photo_padding=site_config['SPACING'],
                            bio=bio, purchase_email=purchase_email,
                            contact=contact)
+
+
+# TODO use the error parameter
+@app.errorhandler(401)
+def unauthorized(error):
+    """Renders the template for an HTML error status 401 (Unauthorized)."""
+    return render_template('unauthorized.html', realname=realname), 401
