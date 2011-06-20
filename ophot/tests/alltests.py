@@ -34,4 +34,5 @@ def tests_from_modules(*modules):
 
 import test_ophot
 import test_requests
-alltests = tests_from_modules(test_ophot, test_requests)
+import test_views
+alltests = tests_from_modules(test_ophot, test_requests, test_views)
