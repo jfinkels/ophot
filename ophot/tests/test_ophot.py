@@ -23,6 +23,7 @@ import unittest
 #import uuid
 
 # imports from third party modules
+from flask import g
 #from werkzeug.datastructures import FileStorage
 #from werkzeug.datastructures import MultiDict
 from werkzeug.exceptions import Unauthorized
@@ -55,6 +56,24 @@ class OphotTestCase(TestSupport):
             self.assertNotIn(new_id, categories)
             self.assertEqual(max(categories) + 1, new_id)
             self.assertIn('foobar', new_categories.values())
+
+    def test_after_request(self):
+        """Tests that the database is disconnected on each response from the
+        server.
+
+        """
+        # assert that the connection is closed somehow? maybe try to close it
+        # twice and catch the error
+        self.fail('Not yet implemented.')
+
+    def test_before_request(self):
+        """Tests that the database object is connected on the Flask global
+        object before each request.
+
+        """
+        with app.test_request_context('/'):
+            before_request()
+            self.assertIsInstance(g.db, sqlite3.Connection)
 
     def test_connect_db(self):
         """Tests that the ophot module correctly connects to a database."""

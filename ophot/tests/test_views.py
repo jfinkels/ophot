@@ -15,7 +15,11 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Ophot.  If not, see <http://www.gnu.org/licenses/>.
 """Unit tests for the views module."""
+import tempfile
+import uuid
 
+from ophot import app
+from ophot import before_request
 from ophot.tests import TestSupport
 from ophot.views import _allowed_file
 from ophot.views import _generate_filename
@@ -29,57 +33,107 @@ from ophot.views import logout
 from ophot.views import page_not_found
 from ophot.views import settings
 from ophot.views import show_splash
+from ophot.views import unauthorized
 
 class ViewsTestCase(TestSupport):
     """Test class for the requests module."""
 
     def test_allowed_file(self):
         """Tests that only certain image file types are allowed."""
-        self.fail('not yet implemented')
+        good_names = ['1.jpg', '2.JPG', '3.png', '4.PNG', '5.jpeg', '6.JPEG']
+        bad_names = ['1', '2.jpg.2', '3.txt', '']
+        for name in good_names:
+            self.assertTrue(_allowed_file(name))
+        for name in bad_names:
+            self.assertFalse(_allowed_file(name))
 
     def test_generate_filename(self):
         """Tests that filenames are correctly generated for uploaded photos."""
-        self.fail('not yet implemented')
+        filename = _generate_filename('/foo/bar', 'baz.jpg')
+        self.assertTrue(filename.endswith('.jpg'))
+        try:
+            uuid.UUID(filename.split('.')[0])
+        except ValueError:
+            self.fail("Prefix of generated filename doesn't look like a UUID.")
 
     def test_get_categories_plus_new(self):
         """Test for getting the names of all categories, plus the string
         'new...'.
 
         """
-        self.fail('not yet implemented')
+        with app.test_request_context('/'):
+            before_request()
+            categories = _get_categories_plus_new()
+            self.assertIn((1, 'landscape'), categories)
+            self.assertIn((2, 'personal'), categories)
+            self.assertIn((3, 'portrait'), categories)
+            self.assertIn((-1, 'new category...'), categories)
 
     def test_to_html_paragraphs(self):
         """Test for converting a multi-line string to sequence of HTML <p>
         blocks.
 
         """
-        self.fail('not yet implemented')
+        string = '''Paragraph 1
+Paragraph 2
+
+Paragraph 3
+Paragraph 4
+'''
+        result = _to_html_paragraphs(string)
+        self.assertIn('<p>Paragraph 1</p>', result)
+        self.assertIn('<p>Paragraph 2</p>', result)
+        self.assertIn('<p>Paragraph 3</p>', result)
+        self.assertIn('<p>Paragraph 4</p>', result)
 
     def test_add_photos_display(self):
         """Test for displaying the add photos page."""
-        self.fail('not yet implemented')
+        result = self.app.get('/add')
+        self.assertIn('Only the administrator may add photos', result.data)
+        self._login()
+        result = self.app.get('/add')
+        self.assertIn('upload one or more photos', result.data)
+        self.assertIn('images will be scaled', result.data)
+        self.assertIn('id="add-photo-form"', result.data)
 
     def test_add_photos_upload(self):
         """Test for uploading photos using the add photos page."""
-        self.fail('not yet implemented')
+        # TODO figure out how to send files through data
+        #self.login()
+        testfile = tempfile.TemporaryFile()
+        result = self.app.post('/add', data={'photos': testfile,
+                                             'category': 1},
+                               follow_redirects=True)
+        self.fail('Not yet implemented')
 
     def test_change_splash_photo_display(self):
         """Test for displaying the change splash photo page."""
-        self.fail('not yet implemented')
+        result = self.app.get('/change_splash_photo')
+        self.assertIn('Only the administrator', result.data)
+        self.assertNotIn('id="photo-upload-form"', result.data)
+        self._login()
+        result = self.app.get('/change_splash_photo')
+        self.assertNotIn('Only the administrator', result.data)
+        self.assertIn('id="photo-upload-form"', result.data)
+        self.assertIn(str(app.config['SPLASH_PHOTO_WIDTH']), result.data)
+        self.assertIn(str(app.config['SPLASH_PHOTO_HEIGHT']), result.data)
 
     def test_change_splash_photo_upload(self):
         """Test for uploading a new splash page photo using the change splash
         photo page.
 
         """
+        # TODO figure out how to send files through data
         self.fail('not yet implemented')
 
     def test_forbidden(self):
         """Test for the HTTP error 403 page."""
+        # TODO figure out how to trigger an HTTP error 403
         self.fail('not yet implemented')
 
     def test_login_display(self):
         """Test that the login page is displayed correctly."""
+        
         self.fail('not yet implemented')
 
     def test_login_credentials(self):
@@ -95,7 +149,8 @@ class ViewsTestCase(TestSupport):
 
     def test_page_not_found(self):
         """Tests that the HTTP error 404 page displays correctly."""
-        self.fail('not yet implemented')
+        res = self.app.get('/bogusurl', follow_redirects=True)
+        self.assertIn('Could not find the page you requested.', res.data)
 
     def test_settings(self):
         """Tests that the settings page displays correctly."""
@@ -103,4 +158,12 @@ class ViewsTestCase(TestSupport):
 
     def test_show_splash(self):
         """Tests that the splash page displays correctly."""
-        self.fail('not yet implemented')
+        result = self.app.get('/')
+        self.assertIn(app.config['NAME'], result.data)
+        self.assertIn('copyright', result.data)
+
+    def test_unauthorized(self):
+        """Test for the HTTP error 401 page."""
+        result = self.app.delete('/delete/1')
+        self.assertEqual(401, result.status_code)
+        self.assertIn('not authorized', result.data)
