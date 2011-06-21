@@ -17,10 +17,12 @@
 """Unit tests for the views module."""
 import os.path
 import tempfile
+import unittest
 import uuid
 
 from ophot import app
 from ophot import before_request
+from ophot import get_categories
 from ophot.tests import TestSupport
 from ophot.views import _allowed_file
 from ophot.views import _generate_filename
@@ -98,14 +100,15 @@ Paragraph 4
         self.assertIn('images will be scaled', result.data)
         self.assertIn('id="add-photo-form"', result.data)
 
+    @unittest.expectedFailure
     def test_add_photos_upload(self):
         """Test for uploading photos using the add photos page."""
         # TODO figure out how to send files through data
         #self.login()
-        testfile = tempfile.TemporaryFile()
-        result = self.app.post('/add', data={'photos': testfile,
-                                             'category': 1},
-                               follow_redirects=True)
+        #testfile = tempfile.TemporaryFile()
+        #result = self.app.post('/add', data={'photos': testfile,
+        #                                     'category': 1},
+        #                       follow_redirects=True)
         self.fail('Not yet implemented')
 
     def test_change_splash_photo_display(self):
@@ -120,6 +123,7 @@ Paragraph 4
         self.assertIn(str(app.config['SPLASH_PHOTO_WIDTH']), result.data)
         self.assertIn(str(app.config['SPLASH_PHOTO_HEIGHT']), result.data)
 
+    @unittest.expectedFailure
     def test_change_splash_photo_upload(self):
         """Test for uploading a new splash page photo using the change splash
         photo page.
@@ -128,6 +132,7 @@ Paragraph 4
         # TODO figure out how to send files through data
         self.fail('not yet implemented')
 
+    @unittest.expectedFailure
     def test_forbidden(self):
         """Test for the HTTP error 403 page."""
         # TODO figure out how to trigger an HTTP error 403
@@ -135,27 +140,47 @@ Paragraph 4
 
     def test_login_display(self):
         """Test that the login page is displayed correctly."""
-        self.fail('not yet implemented')
+        result = self.app.get('login')
+        self.assertIn('username', result.data)
+        self.assertIn('password', result.data)
+        self.assertIn('id="login-form"', result.data)
 
     def test_login_credentials(self):
         """Test that logging in by providing a username and password works as
         expected.
 
         """
-        self.fail('not yet implemented')
+        result = self._login()
+        self.assertIn('You have successfully logged in.', result.data)
+        result = self._logout()
+        self.assertIn('You have successfully logged out.', result.data)
+        result = self._login(username='bogus')
+        self.assertIn('Invalid username or password.', result.data)
+        result = self._login(password='bogus')
+        self.assertIn('Invalid username or password.', result.data)
 
     def test_logout(self):
         """Tests that logging out works."""
-        self.fail('not yet implemented')
+        result = self._login()
+        self.assertIn('You have successfully logged in.', result.data)
+        result = self._logout()
+        self.assertIn('You have successfully logged out.', result.data)
 
     def test_page_not_found(self):
         """Tests that the HTTP error 404 page displays correctly."""
-        res = self.app.get('/bogusurl', follow_redirects=True)
-        self.assertIn('Could not find the page you requested.', res.data)
+        result = self.app.get('/bogusurl', follow_redirects=True)
+        self.assertIn('Could not find the page you requested.', result.data)
 
-    def test_settings(self):
+    def test_settings_display(self):
         """Tests that the settings page displays correctly."""
-        self.fail('not yet implemented')
+        self._login()
+        result = self.app.get('/settings')
+        self.assertIn('configuration for the site', result.data)
+        self.assertIn('id="settings-table"', result.data)
+        with app.test_request_context():
+            before_request()
+            for categoryname in get_categories().values():
+                self.assertIn(categoryname, result.data)
 
     def test_show_splash(self):
         """Tests that the splash page displays correctly."""

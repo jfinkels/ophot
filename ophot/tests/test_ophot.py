@@ -57,6 +57,7 @@ class OphotTestCase(TestSupport):
             self.assertEqual(max(categories) + 1, new_id)
             self.assertIn('foobar', new_categories.values())
 
+    @unittest.expectedFailure
     def test_after_request(self):
         """Tests that the database is disconnected on each response from the
         server.
@@ -80,12 +81,12 @@ class OphotTestCase(TestSupport):
         try:
             conn = connect_db()
             cursor = conn.execute('select *  from photo')
-            self.assertTrue(len(cursor.fetchall()) == 0)
+            self.assertEqual(0, len(cursor.fetchall()))
             cursor = conn.execute('select * from category')
             rows = cursor.fetchall()
-            self.assertTrue(rows[0][1] == 'landscape')
-            self.assertTrue(rows[1][1] == 'personal')
-            self.assertTrue(rows[2][1] == 'portrait')
+            self.assertEqual('landscape', rows[0][1])
+            self.assertEqual('personal', rows[1][1])
+            self.assertEqual('portrait', rows[2][1])
         finally:
             conn.close()
 
@@ -117,31 +118,15 @@ class OphotTestCase(TestSupport):
         try:
             conn = sqlite3.connect(app.config['DATABASE'])
             cursor = conn.execute('select *  from photo')
-            self.assertTrue(len(cursor.fetchall()) == 0)
+            self.assertEqual(0, len(cursor.fetchall()))
             cursor = conn.execute('select * from category')
             rows = cursor.fetchall()
-            self.assertTrue(rows[0][1] == 'landscape')
-            self.assertTrue(rows[1][1] == 'personal')
-            self.assertTrue(rows[2][1] == 'portrait')
+            self.assertEqual('landscape', rows[0][1])
+            self.assertEqual('personal', rows[1][1])
+            self.assertEqual('portrait', rows[2][1])
         finally:
             if conn is not None:
                 conn.close()
-
-    def test_login(self):
-        result = self._login()
-        self.assertTrue('You have successfully logged in.' in result.data)
-        result = self._logout()
-        self.assertTrue('You have successfully logged out.' in result.data)
-        result = self._login(username='bogus')
-        self.assertTrue('Invalid username or password.' in result.data)
-        result = self._login(password='bogus')
-        self.assertTrue('Invalid username or password.' in result.data)
-
-    def test_logout(self):
-        result = self._login()
-        self.assertTrue('You have successfully logged in.' in result.data)
-        result = self._logout()
-        self.assertTrue('You have successfully logged out.' in result.data)
 
     @unittest.skip('The flask.session object does not seem to work here.')
     def test_require_logged_in(self):
@@ -149,7 +134,8 @@ class OphotTestCase(TestSupport):
         session.
 
         """
-        with app.test_request_context('/'):
+        with app.test_request_context('/') as c:
+            #before_request()
             self.assertRaisesRegexp(Unauthorized, '401', require_logged_in)
             self._login()
             # here we expect no exception
