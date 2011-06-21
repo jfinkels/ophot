@@ -15,6 +15,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Ophot.  If not, see <http://www.gnu.org/licenses/>.
 """Provides a test suite for all tests for the Ophot package."""
+# imports for compatibility with future python versions
+from __future__ import absolute_import
+from __future__ import division
+
 import os
 import os.path
 import tempfile

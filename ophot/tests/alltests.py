@@ -20,6 +20,10 @@ This test suite can be specified in the setup.py script as the test suite for
 the "python setup.py test" command.
 
 """
+# imports for compatibility with future python versions
+from __future__ import absolute_import
+from __future__ import division
+
 from unittest import defaultTestLoader as loader
 from unittest import TestSuite as Suite
 

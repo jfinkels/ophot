@@ -15,6 +15,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Ophot.  If not, see <http://www.gnu.org/licenses/>.
 """Unit tests for the ophot module."""
+# imports for compatibility with future python versions
+from __future__ import absolute_import
+from __future__ import division
+
 # imports from built-in modules
 import os
 import sqlite3

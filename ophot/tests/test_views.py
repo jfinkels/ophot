@@ -15,6 +15,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Ophot.  If not, see <http://www.gnu.org/licenses/>.
 """Unit tests for the views module."""
+# imports for compatibility with future python versions
+from __future__ import absolute_import
+from __future__ import division
+
 import os.path
 import tempfile
 import unittest
