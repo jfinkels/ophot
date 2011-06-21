@@ -19,6 +19,10 @@ Provides Flask-WTF Form classes for use in creating routes which allow the user
 to submit information to the application.
 
 """
+# imports for compatibility with future python versions
+from __future__ import absolute_import
+from __future__ import division
+
 # imports from third-party modules
 #from flaskext.uploads import UploadSet
 #from flaskext.uploads import IMAGES

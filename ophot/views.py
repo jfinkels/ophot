@@ -15,6 +15,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Ophot.  If not, see <http://www.gnu.org/licenses/>.
 """Provides routes which are viewed as webpages by the user."""
+# imports for compatibility with future python versions
+from __future__ import absolute_import
+from __future__ import division
+
 # imports from built-in modules
 import os.path
 from uuid import uuid4 as random_uuid
@@ -162,7 +166,9 @@ def add_photos():
                 im = Image.open(long_filename)
                 image_format = im.format
                 if im.size[1] > app.config['PHOTO_HEIGHT']:
-                    wdth = im.size[0] * app.config['PHOTO_HEIGHT'] / im.size[1]
+                    wdth = (im.size[0] * app.config['PHOTO_HEIGHT'])
+                    # recall: "a // b" is equivalent to "floor(a / b)"
+                    wdth //= im.size[1]
                     im = im.resize((wdth, app.config['PHOTO_HEIGHT']))
                     im.save(long_filename, image_format)
                 g.db.execute(Q_ADD_PHOTO, [filename, categoryid, position])
