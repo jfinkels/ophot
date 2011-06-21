@@ -36,7 +36,8 @@ def tests_from_modules(*modules):
     return Suite([loader.loadTestsFromModule(module) for module in modules])
 
 
-import test_ophot
-import test_requests
-import test_views
+from ..tests import test_ophot
+from ..tests import test_requests
+from ..tests import test_views
+
 alltests = tests_from_modules(test_ophot, test_requests, test_views)
