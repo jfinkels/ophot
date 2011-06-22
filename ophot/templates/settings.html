@@ -24,6 +24,9 @@
 
   {% block scripts %}
     {{ super() }}
+  <!-- jQuery debounce plugin for throttling number of ajax queries made -->
+  <script type="text/javascript" src="{{ url_for('static', filename='plugins/jquery.ba-throttle-debounce.min.js') }}"></script>
+
   <!-- javascript for editing settings -->
   <script type="text/javascript" src="{{ url_for('static', filename='scripts/settings.js') }}" ></script>
   {% endblock %}
@@ -43,8 +46,11 @@
       <table id="settings-table">
         <tbody>
           <tr>
-            <td>{{ form.spacing.label }}</td>
-            <td>{{ form.spacing(min=0, id="spacing") }}</td>
+            <td>Space between photos (in pixels)</td>
+            <td>
+              <input id="spacing" min="0" type="number"
+                value="{{ spacing }}" />
+            </td>
           </tr>
           <tr>
             <td>Categories</td>
@@ -71,19 +77,15 @@
             </td>
           </tr>
           <tr>
-            <td>{{ form.contact.label }}</td>
+            <td>Contact information</td>
             <td>
-              {{ form.contact }}
-              <input class="save" disabled="true" type="button"
-                     id="save-contact" value="saved" />
+              <textarea id="contact" rows="8">{{ contact }}</textarea>
             </td>
           </tr>
           <tr>
-            <td>{{ form.bio.label }}</td>
+            <td>Bio</td>
             <td>
-              {{ form.bio }}
-              <input class="save" disabled="true" type="button"
-                     id="save-bio" value="saved" />
+              <textarea id="bio" rows="8">{{ bio }}</textarea>
             </td>
           </tr>
         </tbody>

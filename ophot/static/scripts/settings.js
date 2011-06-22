@@ -64,22 +64,16 @@ function renamedCategory(data, textStatus, xhr) {
 }
 
 function spacingChanged(data, textStatus, xhr) {
-  // intentionally unimplemented
+  // TODO show a little "saved" message
 }
 
 function updatedPersonalInfo(data, textStatus, xhr) {
-  // intentionally unimplemented
+  // TODO show a little "saved" message
 }
 
 $(document).ready(function() {
   $(".delete-dialog").hide();
   $("#settings-shadow").hide();
-
-  $("#spacing").change(function() {
-    var spacing = $(this).val();
-    $.getJSON(SCRIPT_ROOT + '/_change_spacing', {spacing: spacing},
-              spacingChanged);
-  });
 
   $("a#new-cat").click(function(event) {
     event.preventDefault();
@@ -152,23 +146,14 @@ $(document).ready(function() {
     });
   });
 
-  $("textarea#contact").keypress(function() {
-    $(this).siblings("input.save").removeAttr("disabled");
-    $(this).siblings("input.save").val("save");
-  });
+  $("#spacing").change($.debounce(500, function() {
+    $.getJSON(SCRIPT_ROOT + '/_change_spacing', {spacing: $(this).val()},
+              spacingChanged);
+  }));
 
-  $("textarea#bio").keypress(function() {
-    $(this).siblings("input.save").removeAttr("disabled");
-    $(this).siblings("input.save").val("save");
-  });
-
-  $('input.save[disabled!="disabled"]').click(function() {
-    $(this).val("saved");
-    $(this).attr("disabled", "disabled");
-    var name = $(this).siblings("textarea").attr("id");
-    var value = $(this).siblings("textarea").val();
+  $("textarea#contact, textarea#bio").keypress($.debounce(500, function() {
     $.getJSON(SCRIPT_ROOT + '/_update_personal',
-              {name: name, value: value},
+              {name: $(this).attr("id"), value: $(this).val()},
               updatedPersonalInfo);
-  })
+  }));
 });
