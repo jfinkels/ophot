@@ -172,7 +172,6 @@ body {
   -webkit-box-shadow: 0 0 5px #000000;
   box-shadow: 0 0 5px #000000;
   height: 450px;
-  padding: 10px 20px 10px 20px;
   position: absolute;
   top: 90px;
   min-width: 800px;
@@ -180,6 +179,7 @@ body {
 }
 
 #photos-container table {
+  margin-left: 10px;
   height: 100%;
 }
 
@@ -261,13 +261,6 @@ table {
 
 .photo-cell:first-child {
   padding-left: 0;
-}
-
-#the-row td:first-child img {
-  -moz-border-radius-topleft: 4px;
-  border-top-left-radius: 4px;
-  -moz-border-radius-bottomleft: 4px;
-  border-bottom-left-radius: 4px;
 }
 
 #the-row td img {
