@@ -4,7 +4,7 @@
  * http://creativecommons.org/licenses/by-sa/3.0/us/.
  */
 
-input#new-cat-name {
+#new-cat-name {
   border: none;
   /*border-radius: 2px;
   -moz-border-radius: 2px;*/
