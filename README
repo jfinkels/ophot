@@ -50,6 +50,7 @@ The ophot/ directory contains:
 * static/ - the static content for the site, including scripts and styles
 * templates/ - the Jinja templates defining the dynamically generated HTML
   pages for the site
+* tests/ - the unit tests for the Python code in this package
 * views.py - functions which process routes which are the views for users of
   the site
 
@@ -122,6 +123,14 @@ first two lines in the ophot.wsgi file from
 
 to be the correct paths to the top level directory of the application and the
 virtualenv environment in which the application should run, respectively.
+
+Testing
+-------
+
+The Python unit tests are contained in the ophot/tests/ directory (which is a
+Python package). To run the test suite, run the command
+
+  python setup.py test
 
 Contact
 -------
