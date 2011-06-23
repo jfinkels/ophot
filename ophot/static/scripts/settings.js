@@ -72,6 +72,8 @@ function updatedPersonalInfo(data, textStatus, xhr) {
 }
 
 $(document).ready(function() {
+  var textareaSelectors;
+
   $(".delete-dialog").hide();
   $("#settings-shadow").hide();
 
@@ -151,9 +153,14 @@ $(document).ready(function() {
               spacingChanged);
   }));
 
-  $("textarea#contact, textarea#bio").keypress($.debounce(500, function() {
+  textareaSelectors = 'textarea[name~="bio"], textarea[name~="contact"]';
+  $(textareaSelectors).keypress($.debounce(500, function() {
     $.getJSON(SCRIPT_ROOT + '/_update_personal',
-              {name: $(this).attr("id"), value: $(this).val()},
+              {name: $(this).attr("name"), value: $(this).val()},
               updatedPersonalInfo);
   }));
+
+  $(textareaSelectors).bind('paste', function() {
+    $(this).keypress();
+  });
 });
