@@ -45,7 +45,6 @@ from ophot import get_last_display_position
 from ophot import require_logged_in
 from ophot import site_config
 from ophot.forms import ChangeSplashPhotoForm
-from ophot.forms import SettingsForm
 from ophot.queries import Q_ADD_PHOTO
 
 # the first and last name of the photographer
@@ -263,16 +262,11 @@ def page_not_found(error):
 @app.route('/settings', methods=['GET'])
 def settings():
     """Renders the edit settings template."""
-    # create this class so that the form can automatically fill in its values
-    # using the values of the attributes of this class
-    class Settings(object):
-        spacing = site_config['SPACING']
-        bio = site_config['BIO']
-        contact = site_config['CONTACT']
-    # populate the fields of the settings form
-    form = SettingsForm(obj=Settings())
-    return render_template('settings.html', realname=realname, form=form,
-                           categories=get_categories().iteritems())
+    return render_template('settings.html', realname=realname,
+                           categories=get_categories().iteritems(),
+                           bio=site_config['BIO'],
+                           contact=site_config['CONTACT'],
+                           spacing=site_config['SPACING'])
 
 
 @app.route('/')

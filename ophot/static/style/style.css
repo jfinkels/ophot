@@ -206,6 +206,19 @@ form {
   font-weight: bold;
 }
 
+footer {
+  color: gray;
+  text-align: right;
+}
+
+footer a:link, footer a:visited {
+  color: gray;
+}
+
+footer a:hover {
+  color: white;
+}
+
 h1 {
   margin: 0px 0px 20px 0px;
   font-family: 'Raleway', sans-serif;
@@ -230,13 +243,6 @@ p.description {
 
 p.description a:hover {
   text-decoration: underline;
-}
-
-small#copyright {
-  color: gray;
-/*  font-size: small; */
-  margin-top: 1em;
-  text-align: right;
 }
 
 table {
