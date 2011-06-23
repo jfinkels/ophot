@@ -274,7 +274,7 @@ table {
 }
 
 .menu li {
-  display: inline;
+  display: inline-block;
   margin-right: 30px;
   position: relative;
 }
@@ -292,7 +292,7 @@ table {
 }
 
 .submenu {
-  display: inline;
+  display: inline-block;
   font-size: 11pt;
   text-align: left;
   margin-left: 20px;
