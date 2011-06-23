@@ -4,76 +4,76 @@
  * http://creativecommons.org/licenses/by-sa/3.0/us/.
  */
 
-a.admin-link:hover {
+.admin-link:hover {
   text-decoration: underline;
 }
 
-a.cancel {
+.cancel {
   color: gray;
   margin-right: 2em;
 }
 
-a.category-option {
+.category-option {
   padding: 3px;
-  border-radius: 4px;
   -moz-border-radius: 4px;
+  border-radius: 4px;
 }
 
-a.category-option:hover {
+.category-option:hover {
   background-color: #000060;
 }
 
-a.cancel:hover, a.confirm-delete:hover, a.confirm-cat-change:hover,
-a.change-cat:hover, a.delete:hover {
+.cancel:hover, .confirm-delete:hover, .confirm-cat-change:hover,
+.change-cat:hover, .delete:hover {
   text-decoration: underline;
 }
 
-a.confirm-delete, a.confirm-cat-change {
+.confirm-delete, a.confirm-cat-change {
   color: gray;
   margin-right: 1em;
 }
 
-a#change-splash-photo {
+#change-splash-photo {
   background-color: black;
-  border-bottom-left-radius: 4px;
   -moz-border-radius-bottomleft: 4px;
-  box-shadow: 0px 0px 5px black;
-  -webkit-box-shadow: 0px 0px 5px black;
+  border-bottom-left-radius: 4px;
+  -webkit-box-shadow: 0 0 5px black;
+  box-shadow: 0 0 5px black;
   opacity: 0.4;
   padding: 4px;
   position: absolute;
   text-shadow: none;
-  top: 0px;
-  right: 0px;
+  top: 0;
+  right: 0;
   transition: opacity .1s linear;
   -webkit-transition: opacity .1s linear;
   -moz-transition: opacity .1s linear;
   z-index: 1;
 }
 
-a#change-splash-photo:hover {
+#change-splash-photo:hover {
   opacity: 1;
   transition: opacity .1s linear;
   -webkit-transition: opacity .1s linear;
   -moz-transition: opacity .1s linear;
 }
 
-a.selected-cat {
+.selected-cat {
   background-color: #000080;
 }
 
-div.cat-chooser {
+.cat-chooser {
   text-align: center;
 }
 
-div.cat-chooser p {
+.cat-chooser p {
   margin-bottom: 5px;
 }
 
-div.delete-dialog, div.cat-chooser {
+.delete-dialog, .cat-chooser {
   background-color: black;
-  border-radius: 5px;
   -moz-border-radius: 10px;
+  border-radius: 5px;
   color: white;
   left: 50%;
   margin-left: -190px;
@@ -84,20 +84,20 @@ div.delete-dialog, div.cat-chooser {
   z-index: 3;
 }
 
-div.delete-dialog p:first-child,
-div.cat-chooser p:first-child {
+.delete-dialog p:first-child,
+.cat-chooser p:first-child {
   text-align: center;
 }
 
-p.choice {
+.choice {
   margin-top: 10px;
   text-align: right;
 }
 
-div.move-right, div.move-left {
+.move-right, .move-left {
   background-color: black;
-  box-shadow: 0px 0px 5px black;
-  -webkit-box-shadow: 0px 0px 5px black;
+  -webkit-box-shadow: 0 0 5px black;
+  box-shadow: 0 0 5px black;
   font-size: 30pt;
   height: 100px;
   line-height: 100px;
@@ -112,71 +112,71 @@ div.move-right, div.move-left {
   top: 50%;
 }
 
-div.move-right:hover, div.move-left:hover {
+.move-right:hover, .move-left:hover {
   opacity: 1;
   transition: opacity .1s linear;
   -webkit-transition: opacity .1s linear;
   -moz-transition: opacity .1s linear;
 }
 
-div.move-right {
+.move-right {
+  -moz-border-radius-topleft: 4px;
   border-top-left-radius: 4px;
+  -moz-border-radius-bottomleft: 4px;
   border-bottom-left-radius: 4px;
-  -moz-border-radius-topleft: 4px;
-  -moz-border-radius-bottomleft: 4px;
-  right: 0px;
+  right: 0;
 }
 
-div.move-left {
+.move-left {
+  -moz-border-radius-topright: 4px;
   border-top-right-radius: 4px;
+  -moz-border-radius-bottomright: 4px;
   border-bottom-right-radius: 4px;
-  -moz-border-radius-topleft: 4px;
-  -moz-border-radius-bottomleft: 4px;
-  left: 0px;
+  left: 0;
 }
 
-form#photo-upload-form {
+#photo-upload-form {
   margin-top: 10px;
 }
 
-ul#admin-links {
+#admin-links {
   list-style-type: none;
   position: absolute;
-  right: 0px;
+  right: 0;
 }
 
-ul#admin-links li {
+#admin-links li {
   display: inline;
   margin-right: 10px;
 }
 
-ul#admin-links li:last-child {
-  margin-right: 0px;
+#admin-links li:last-child {
+  margin-right: 0;
 }
 
-ul.category-list {
+.category-list {
   list-style-type: none;
   display: inline;
   max-width: 380px;
 }
 
-ul.category-list li {
+.category-list li {
   display: inline;
   margin-left: 2em;
 }
 
-ul.category-list li:first-child {
+.category-list li:first-child {
   margin-left: 0em;
 }
 
-ul.edit-menu {
+.edit-menu {
   background-color: black;
-  border-top-left-radius: 4px;
   -moz-border-radius-topleft: 4px;
-  box-shadow: 0px 0px 5px black;
-  -moz-box-shadow: 0px 0px 5px black;
-  -webkit-box-shadow: 0px 0px 5px black;
-  bottom: 0px;
+  border-top-left-radius: 4px;
+  -moz-box-shadow: 0 0 5px black;
+  -webkit-box-shadow: 0 0 5px black;
+  box-shadow: 0 0 5px black;
+  bottom: 0;
   opacity: 0.4;
   padding: 4px;
   position: absolute;
@@ -185,23 +185,23 @@ ul.edit-menu {
   transition: opacity .1s linear;
   -webkit-transition: opacity .1s linear;
   -moz-transition: opacity .1s linear;
-  right: 0px;
+  right: 0;
   z-index: 1;
 }
 
-ul.edit-menu:hover {
+.edit-menu:hover {
   opacity: 1;
   transition: opacity .1s linear;
   -webkit-transition: opacity .1s linear;
   -moz-transition: opacity .1s linear;
 }
 
-ul.edit-menu li {
+.edit-menu li {
   display: inline;
   margin-right: 10px;
 /*  position: relative;*/
 }
 
-ul.edit-menu li:last-child {
-  margin-right: 0px;
+.edit-menu li:last-child {
+  margin-right: 0;
 }
