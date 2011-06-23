@@ -16,15 +16,18 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Ophot.  If not, see <http://www.gnu.org/licenses/>.
  */
+(function() {
+  "use strict";
 
-$(document).ready(function() {
-  $("p#new-category").hide();
-  $("select#category").change(function() {
-    if ($(this).children(":selected").val() == -1) {
-      $("input#new-cat-name").val("");
-      $("p#new-category").show();
-    } else {
-      $("p#new-category:visible").hide();
-    }
+  $(document).ready(function() {
+    $("p#new-category").hide();
+    $("select#category").change(function() {
+      if ($(this).children(":selected").val() == -1) {
+        $("input#new-cat-name").val("");
+        $("p#new-category").show();
+      } else {
+        $("p#new-category:visible").hide();
+      }
+    });
   });
-});
+}());
