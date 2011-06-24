@@ -117,7 +117,6 @@ body {
 #container {
   left: 50%;
   margin-left: -400px;
-  padding-top: 20px;
   /**
    * With "position: fixed", the splash page will not allow vertical scrolling,
    * even if there is content below the window border.
@@ -211,6 +210,7 @@ footer a:hover {
 
 h1 {
   font-family: 'Raleway', sans-serif;
+  margin-top: 10px;
   margin-bottom: 10px;
 }
 
