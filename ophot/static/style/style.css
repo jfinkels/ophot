@@ -225,16 +225,6 @@ table {
   border-collapse: collapse;
 }
 
-#login-form {
-  margin: 10px auto 0 auto;
-  font-size: 14pt;
-}
-
-#login-form td {
-  padding: 3px;
-  text-align: right;
-}
-
 .photo-cell {
   padding-left: 10px;
 }

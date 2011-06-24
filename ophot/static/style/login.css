@@ -1,0 +1,22 @@
+/**
+ * This work is licensed under the Creative Commons Attribution-ShareAlike 3.0
+ * United States License. To view a copy of this license, visit
+ * http://creativecommons.org/licenses/by-sa/3.0/us/.
+ */
+
+.centered {
+  margin: 0 auto 0 auto;
+}
+
+.label, .input-cell {
+  font-size: 14pt;
+  padding: 3px;
+}
+
+.label, .submit-cell {
+  text-align: right;
+}
+
+.input-cell {
+  text-align: left;
+}
