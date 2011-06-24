@@ -5,11 +5,7 @@
  */
 
 #settings-container {
-  border: thin solid gray;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
   margin: 20px auto;
-  padding: 4px;
   width: 600px;
 }
 
@@ -38,19 +34,12 @@
   z-index: 2;
 }
 
-#settings-table {
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-  width: 100%;
-}
-
 #settings-table ul {
   list-style-type: none;
 }
 
 textarea {
-  padding: 2px;
-  width: 100%;
+  width: 300px;
 }
 
 .cat-options {
@@ -58,12 +47,10 @@ textarea {
 }
 
 #categories {
-  width: 100%;
+  width: 300px;
 }
 
 #spacing {
-  border: none;
-  padding: 2px;
   text-align: right;
   width: 40px;
 }
