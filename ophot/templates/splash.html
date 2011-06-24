@@ -71,14 +71,21 @@
       </a>
       {% endif %}
       <div id="splash-shadow"></div>
-      <div id="contact-info">
-        {{ contact|safe }}
+      <div id="contact-info" class="info-box">
+        <div class="info-box-inner">
+          {{ contact|safe }}
+        </div>
       </div>
-      <div id="bio" class="scroll-pane">
-        {{ bio|safe }}
+      <div id="bio" class="info-box">
+        <div class="scroll-pane info-box-inner">
+          {{ bio|safe }}
+        </div>
       </div>
-      <div id="purchase-info">
-        for pricing or to order prints, email mike@mikefinkphotography.com
+      <div id="purchase-info" class="info-box">
+        <div class="info-box-inner">
+          for pricing or to order prints, email
+          <a href="mailto:{{ purchase_email }}">{{ purchase_email }}</a>.
+        </div>
       </div>
       <div id="banner-container">
         <div id="banner">

@@ -281,25 +281,12 @@
   }
 
  /**
-  * Adds jScrollPane functionality to any element of class "scroll-pane".
-  *
-  * This requires the jScrollPane jQuery plugin.
-  */
-  function _addScrollPane() {
-    // allow scrolling in the bio window. NOTE: this must occur before hiding!
-    $('.scroll-pane').jScrollPane();
-    // need to do this here because jscrollpane does some black magic on the
-    // style of my elements
-    $('.scroll-pane').css('padding-bottom', '10px');
-    $('.scroll-pane').css('padding-top', '10px');
-  }
-
- /**
   * Initializes the state of some elements and establishes some event handlers.
   */
   $(document).ready(function() {
     // add the scroll pane to the biographical information element
-    _addScrollPane();
+    // NOTE: this MUST occur BEFORE hiding elements
+    $('.scroll-pane').jScrollPane();
 
     // hide the elements which need to be hidden initially
     _hideMany(["#contact-info", "#purchase-info", "#bio", "#photos-banner",
