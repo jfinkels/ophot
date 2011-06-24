@@ -18,6 +18,9 @@
  */
 (function () {
   "use strict";
+  var prevScrollLeft, MAX_POSITION;
+  MAX_POSITION = 800;
+
  /**
   * Creates the table cell for each photo requested by the displayPhotos()
   * function. The unique ID of the photo is *photoid*, which is filled into the
@@ -280,6 +283,43 @@
     });
   }
 
+  /**
+   * Returns the opacity value for the container shadow over the main splash
+   * photo when the window is scrolled to *position*.
+   *
+   * The returned opacity scales linearly up on the domain [0, MAX_POSITION]
+   * taking values in the range [0, 1].
+   *
+   * Pre-condition: position is an integer.
+   */
+  function _positionToOpacity(position) {
+    if (position <= 0) {
+      return 0;
+    } else if (position >= MAX_POSITION) {
+      return 1;
+    }
+
+    return position / MAX_POSITION;
+  }
+
+  /**
+   * When the window is scrolled to the right or left, set the opacity of the
+   * shadow over the main splash photo so that it fades out when scrolling
+   * away, and fades back in when scrolling back to it.
+   */
+  function _setupScrollShadow() {
+    $(window).scroll(/*$.throttle(*/500, function(event) {
+      var currScrollLeft, newOpacity;
+      var currScrollLeft = $(this).scrollLeft();
+      if (currScrollLeft !== prevScrollLeft) {
+        newOpacity = _positionToOpacity(currScrollLeft);
+        $(".container-shadow").css({ opacity: newOpacity });
+        $("#banner-container").css({ opacity: 1 - newOpacity });
+      }
+      prevScrollLeft = currScrollLeft;
+    })/*)*/;
+  }
+
  /**
   * Initializes the state of some elements and establishes some event handlers.
   */
@@ -296,6 +336,9 @@
     // set the minimum width of the photos container to be the width of the
     // window, and reset the minimum width after resize
     _photosContainerWidth();
+
+    // add a progressive shadow for scrolling away from the main content
+    _setupScrollShadow();
 
     // handle a click on the purchase info link
     _purchaseClick();

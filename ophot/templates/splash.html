@@ -63,6 +63,9 @@
     <table><tbody><tr id="the-row"><td></td></tr></tbody></table>
   </div>
 {% endblock %}
+{% block shadow %}
+  <div class="container-shadow"></div>
+{% endblock %}
 {% block content %}
     <div id="splash" style="background-image: url({{ filename }});">
       {% if session.logged_in %}
