@@ -142,7 +142,6 @@ body {
 }
 */
 
-/* TODO why does this need to 'position: relative'? */
 .photo-container {
   position: relative;
 }
@@ -259,7 +258,6 @@ table {
 .menu li {
   display: inline-block;
   margin-right: 30px;
-  position: relative;
 }
 
 .menu li:last-child {
