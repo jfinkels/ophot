@@ -115,7 +115,12 @@ body {
   left: 50%;
   margin-left: -400px;
   padding-top: 20px;
-  position: fixed;
+  /**
+   * With "position: fixed", the splash page will not allow vertical scrolling,
+   * even if there is content below the window border.
+   */
+  /* position: fixed; */
+  position: absolute;
   width: 800px;
 }
 
@@ -160,6 +165,7 @@ body {
 
 #photos-container table {
   margin-left: 10px;
+  margin-right: 10px;
   height: 100%;
 }
 
@@ -188,6 +194,7 @@ form {
 
 footer {
   color: gray;
+  margin-top: 10px;
   text-align: right;
 }
 
@@ -200,8 +207,8 @@ footer a:hover {
 }
 
 h1 {
-  margin: 0 0 20px 0;
   font-family: 'Raleway', sans-serif;
+  margin-bottom: 10px;
 }
 
 .credentials {
