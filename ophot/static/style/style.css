@@ -126,6 +126,7 @@ body {
   width: 800px;
 }
 
+/*
 .purchase-information {
   background-color: black;
   -moz-border-radius: 10px;
@@ -139,7 +140,9 @@ body {
   width: 380px;
   z-index: 3;
 }
+*/
 
+/* TODO why does this need to 'position: relative'? */
 .photo-container {
   position: relative;
 }

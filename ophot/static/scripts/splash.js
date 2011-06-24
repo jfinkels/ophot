@@ -29,10 +29,9 @@
     // TODO move the logged in specific things out to edit-photo.js
     return "<td class=\"photo-cell\">\n"
       + "  <div class=\"photo-container\">\n"
-      + "    <a class=\"purchase\" href=\"#\">purchase</a>\n"
       + "    <div class=\"photo-shadow\"></div>\n"
-      + "    <div class=\"move-left\"><a href=\"#\">&larr;</a></div>\n"
-      + "    <div class=\"move-right\"><a href=\"#\">&rarr;</a></div>\n"
+    /*
+      + "    <a class=\"purchase\" href=\"#\">purchase</a>\n"
       + "    <div class=\"purchase-information\">\n"
       + "      <a class=\"close\">X</a>\n"
       + "      <p>\n"
@@ -40,6 +39,9 @@
       + "        " + PURCHASE_EMAIL + "\n"
       + "      </p>\n"
       + "    </div>\n"
+    */
+      + "    <div class=\"move-left\"><a href=\"#\">&larr;</a></div>\n"
+      + "    <div class=\"move-right\"><a href=\"#\">&rarr;</a></div>\n"
       + "    <div class=\"delete-dialog\">\n"
       + "      <p>Are you sure you want to delete this photo?</p>\n"
       + "      <p class=\"choice\">\n"
@@ -298,7 +300,8 @@
     _photosContainerWidth();
 
     // handle a click on the purchase info link
-    _purchaseClick();
+    // TODO what until cart works before deploying this
+    //_purchaseClick();
 
     // handle a click on the close link (the X in the top right corner)
     _closeClick();
