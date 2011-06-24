@@ -186,10 +186,10 @@ body {
   background-color: white;
   -moz-border-radius: 10px;
   border-radius: 10px;
+  height: 535px;
   position: absolute;
-  width: 100%;
-  height: 100%;
   opacity: 0.65;
+  width: 800px;
 }
 
 form {
