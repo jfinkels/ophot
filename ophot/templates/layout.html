@@ -48,12 +48,16 @@
   {% endblock %}
 </head>
 <body>
+  {% for message in get_flashed_messages() %}
+  <div class="flash">
+    <div class="flash-inner">
+      {{ message }} <a href="#" class="close">Close me.</a>
+    </div>
+  </div>
+  {% endfor %}
   {# this block will only be implemented by the splash.html template #}
   {% block photos %}{% endblock %}
   <div id="container">
-    {% for message in get_flashed_messages() %}
-    <div class="flash">{{ message }}<a href="#" class="close">X</a></div>
-    {% endfor %}
     {% if session.logged_in %}
     <ul id="admin-links">
       <li><a href="{{ url_for('settings') }}" id="settings" class="admin-link">settings</a></li>
