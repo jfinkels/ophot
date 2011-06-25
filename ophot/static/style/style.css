@@ -114,14 +114,13 @@ body {
   margin-top: 0;
 }
 
+/**
+ * With "position: fixed", the splash page will not allow vertical scrolling,
+ * even if there is content below the window border.
+ */
 #container {
   left: 50%;
   margin-left: -400px;
-  /**
-   * With "position: fixed", the splash page will not allow vertical scrolling,
-   * even if there is content below the window border.
-   */
-  /* position: fixed; */
   position: absolute;
   width: 800px;
 }
