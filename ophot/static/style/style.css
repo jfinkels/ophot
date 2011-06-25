@@ -72,16 +72,13 @@ body {
 
 #banner {
   background-color: black;
-  -moz-box-shadow: 0 3px 5px #000030;
-  -webkit-box-shadow: 0 3px 5px #000000;
-  box-shadow: 0 3px 5px #000030;
+  -moz-box-shadow: 0 3px 5px black;
+  -webkit-box-shadow: 0 3px 5px black;
+  box-shadow: 0 3px 5px black;
   font-size: 16pt;
+  font-weight: bold;
   opacity: 0.8;
   padding: 10px;
-}
-
-#banner-container {
-  font-weight: bold;
   position: relative;
   top: 400px;
 }

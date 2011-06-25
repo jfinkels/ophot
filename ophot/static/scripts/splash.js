@@ -130,7 +130,7 @@
   */
   function fadeOutFadeIn(inSelector) {
     $("#photos-container").fadeOut(400, function() {
-      $("#banner-container").animate(
+      $("#banner").animate(
         { top : 400 },
         {
           duration: 500,
@@ -205,7 +205,7 @@
         $(".submenu").hide(0, function() {
           $("#photos-container").fadeOut();
           $("#splash-shadow").fadeOut(400, function() {
-            $("#banner-container").animate({ top : 400 }, 500);
+            $("#banner").animate({ top : 400 }, 500);
           });
         });
       } else {
@@ -263,7 +263,7 @@
 
         _fadeOutMany(["#contact-info", "#purchase-info", "#bio"]);
         if ($("#photos-container").is(":hidden")) {
-          $("#banner-container").animate(
+          $("#banner").animate(
             { top : 497 },
             {
               duration: 500,
