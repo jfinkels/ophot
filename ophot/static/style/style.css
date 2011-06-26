@@ -29,15 +29,6 @@
  color: white;
 }
 
-.container-shadow {
-  background-color: black;
-  height: 100%;
-  opacity: 0;
-  width: 800px;
-  z-index: 5;
-  position: absolute;
-}
-
 .desc-link:link {
   font-weight: bold;
   text-decoration: underline;

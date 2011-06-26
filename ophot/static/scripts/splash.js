@@ -289,19 +289,21 @@
    * Returns the opacity value for the container shadow over the main splash
    * photo when the window is scrolled to *position*.
    *
-   * The returned opacity scales linearly up on the domain [0, MAX_POSITION]
-   * taking values in the range [0, 1].
+   * The returned opacity scales linearly down on the domain [0, MAX_POSITION]
+   * taking values in the range [0, 1]. For example, at position 0 the opacity
+   * is 1, at position MAX_POSITION the opacity is 0, and at position
+   * MAX_POSITION / 2 the opacity is 0.5.
    *
    * Pre-condition: position is an integer.
    */
   function _positionToOpacity(position) {
     if (position <= 0) {
-      return 0;
-    } else if (position >= MAX_POSITION) {
       return 1;
+    } else if (position >= MAX_POSITION) {
+      return 0;
     }
 
-    return position / MAX_POSITION;
+    return 1 - (position / MAX_POSITION);
   }
 
   /**
@@ -310,16 +312,15 @@
    * away, and fades back in when scrolling back to it.
    */
   function _setupScrollShadow() {
-    $(window).scroll(/*$.throttle(*/500, function(event) {
+    $(window).scroll(function(event) {
       var currScrollLeft, newOpacity;
-      var currScrollLeft = $(this).scrollLeft();
+      currScrollLeft = $(this).scrollLeft();
       if (currScrollLeft !== prevScrollLeft) {
         newOpacity = _positionToOpacity(currScrollLeft);
-        $(".container-shadow").css({ opacity: newOpacity });
-        $("#banner").css({ opacity: 1 - newOpacity });
+        $(".container").css({ opacity: newOpacity });
       }
       prevScrollLeft = currScrollLeft;
-    })/*)*/;
+    });
   }
 
  /**
