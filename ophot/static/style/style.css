@@ -241,6 +241,8 @@ table {
   border-collapse: collapse;
 }
 
+/** This is set in the template, from the site settings. */
+/*
 .photo-cell {
   padding-left: 10px;
 }
@@ -248,6 +250,7 @@ table {
 .photo-cell:first-child {
   padding-left: 0;
 }
+*/
 
 .photo-row td img {
   vertical-align: middle;
@@ -266,14 +269,6 @@ table {
 
 .menu li:last-child {
   margin-right: 0;
-}
-
-.photos {
-  list-style-type: none;
-}
-
-.photos li {
-  display: inline;
 }
 
 .submenu {
