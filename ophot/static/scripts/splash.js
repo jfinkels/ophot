@@ -29,11 +29,10 @@
   * the names of the categories to which a photo can be assigned.
   */
   function createPhotoCellString(photoid, filename) {
-    // TODO move the logged in specific things out to edit-photo.js
     return "<td class=\"photo-cell\">\n"
       + "  <div class=\"photo-container\">\n"
-      + "    <div class=\"photo-shadow absolute-position\"></div>\n"
     /*
+      + "    <div class=\"photo-shadow absolute-position\"></div>\n"
       + "    <a class=\"purchase black-background\" href=\"#\">purchase</a>\n"
       + "    <div class=\"purchase-information\">\n"
       + "      <a class=\"close\">X</a>\n"
@@ -43,29 +42,7 @@
       + "      </p>\n"
       + "    </div>\n"
     */
-      + "    <div class=\"move-left\"><a href=\"#\">&larr;</a></div>\n"
-      + "    <div class=\"move-right\"><a href=\"#\">&rarr;</a></div>\n"
-      + "    <div class=\"delete-dialog\">\n"
-      + "      <p>Are you sure you want to delete this photo?</p>\n"
-      + "      <p class=\"choice\">\n"
-      + "        <a href=\"#\" class=\"cancel\">Cancel</a>\n"
-      + "        <a href=\"#\" class=\"confirm-delete\">Delete</a>\n"
-      + "      </p>\n"
-      + "    </div>\n"
-      + "    <div class=\"cat-chooser\">\n"
-      + "      <p>Change category to:</p>\n"
-      + "      <ul class=\"category-list\"><li></li></ul>\n"
-      + "      <p class=\"choice\">\n"
-      + "        <a href=\"#\" class=\"cancel\">Cancel</a>\n"
-      + "        <a href=\"#\" class=\"confirm-cat-change\">Save</a>\n"
-      + "      </p>\n"
-      + "    </div>\n"
-      + "    <ul class=\"edit-menu\">\n"
-      + "      <li>\n"
-      + "        <a href=\"#\" class=\"change-cat\">change category</a>\n"
-      + "      </li>\n"
-      + "      <li><a href=\"#\" class=\"delete\">delete</a></li>\n"
-      + "    </ul>\n"
+      + EDIT_ELEMENTS
       + "    <img src=" + filename + " id=\"" + photoid + "\"/>\n"
       + "  </div>\n"
       + "</td>\n";
