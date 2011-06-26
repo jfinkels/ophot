@@ -15,6 +15,11 @@
 {# You should have received a copy of the GNU Affero General Public License #}
 {# along with Ophot.  If not, see <http://www.gnu.org/licenses/>. #}
 {% extends "layout.html" %}
+{% block styles %}
+  {{ super() }}
+  <!-- styles for login page elements -->
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/login.css') }}" />
+{% endblock %}
 {% block content %}
 {% if error %}
 <p class="error">
@@ -22,18 +27,25 @@
 </p>
 {% endif %}
 <form action="{{ url_for('login') }}" method=post>
-  <table id="login-form">
+  <table class="centered">
     <tbody>
       <tr>
-        <td>username</td><td><input type="text" name="username"
-        class="credentials" /></td>
+        <td class="label">username</td>
+        <td class="input-cell">
+          <input type="text" name="username" class="credentials" />
+        </td>
       </tr>
       <tr>
-        <td>password</td><td><input type="password" name="password"
-        class="credentials" /></td>
+        <td class="label">password</td>
+        <td class="input-cell">
+          <input type="password" name="password" class="credentials" />
+        </td>
       </tr>
       <tr>
-        <td></td><td><input type="submit" value="Login" class="credentials" /></td>
+        <td></td>
+        <td class="submit-cell">
+          <input type="submit" value="Login" class="credentials" />
+        </td>
       </tr>
     </tbody>
   </table>

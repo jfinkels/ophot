@@ -4,9 +4,19 @@
  * http://creativecommons.org/licenses/by-sa/3.0/us/.
  */
 
-input[type="text"] {
-  border: none;
+.centered {
+  margin: 0 auto 0 auto;
+}
+
+.label, .input-cell {
   font-size: 14pt;
-  padding-left: 3px;
-  padding-right: 3px;
+  padding: 3px;
+}
+
+.label, .submit-cell {
+  text-align: right;
+}
+
+.input-cell {
+  text-align: left;
 }

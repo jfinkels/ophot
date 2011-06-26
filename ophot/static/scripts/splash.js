@@ -29,10 +29,9 @@
     // TODO move the logged in specific things out to edit-photo.js
     return "<td class=\"photo-cell\">\n"
       + "  <div class=\"photo-container\">\n"
-      + "    <a class=\"purchase\" href=\"#\">purchase</a>\n"
-      + "    <div class=\"photo-shadow\"></div>\n"
-      + "    <div class=\"move-left\"><a href=\"#\">&larr;</a></div>\n"
-      + "    <div class=\"move-right\"><a href=\"#\">&rarr;</a></div>\n"
+      + "    <div class=\"photo-shadow absolute-position\"></div>\n"
+    /*
+      + "    <a class=\"purchase black-background\" href=\"#\">purchase</a>\n"
       + "    <div class=\"purchase-information\">\n"
       + "      <a class=\"close\">X</a>\n"
       + "      <p>\n"
@@ -40,6 +39,9 @@
       + "        " + PURCHASE_EMAIL + "\n"
       + "      </p>\n"
       + "    </div>\n"
+    */
+      + "    <div class=\"move-left\"><a href=\"#\">&larr;</a></div>\n"
+      + "    <div class=\"move-right\"><a href=\"#\">&rarr;</a></div>\n"
       + "    <div class=\"delete-dialog\">\n"
       + "      <p>Are you sure you want to delete this photo?</p>\n"
       + "      <p class=\"choice\">\n"
@@ -128,7 +130,7 @@
   */
   function fadeOutFadeIn(inSelector) {
     $("#photos-container").fadeOut(400, function() {
-      $("#banner-container").animate(
+      $("#banner").animate(
         { top : 400 },
         {
           duration: 500,
@@ -203,7 +205,7 @@
         $(".submenu").hide(0, function() {
           $("#photos-container").fadeOut();
           $("#splash-shadow").fadeOut(400, function() {
-            $("#banner-container").animate({ top : 400 }, 500);
+            $("#banner").animate({ top : 400 }, 500);
           });
         });
       } else {
@@ -261,7 +263,7 @@
 
         _fadeOutMany(["#contact-info", "#purchase-info", "#bio"]);
         if ($("#photos-container").is(":hidden")) {
-          $("#banner-container").animate(
+          $("#banner").animate(
             { top : 497 },
             {
               duration: 500,
@@ -281,25 +283,12 @@
   }
 
  /**
-  * Adds jScrollPane functionality to any element of class "scroll-pane".
-  *
-  * This requires the jScrollPane jQuery plugin.
-  */
-  function _addScrollPane() {
-    // allow scrolling in the bio window. NOTE: this must occur before hiding!
-    $('.scroll-pane').jScrollPane();
-    // need to do this here because jscrollpane does some black magic on the
-    // style of my elements
-    $('.scroll-pane').css('padding-bottom', '10px');
-    $('.scroll-pane').css('padding-top', '10px');
-  }
-
- /**
   * Initializes the state of some elements and establishes some event handlers.
   */
   $(document).ready(function() {
     // add the scroll pane to the biographical information element
-    _addScrollPane();
+    // NOTE: this MUST occur BEFORE hiding elements
+    $('.scroll-pane').jScrollPane();
 
     // hide the elements which need to be hidden initially
     _hideMany(["#contact-info", "#purchase-info", "#bio", "#photos-banner",
@@ -311,7 +300,8 @@
     _photosContainerWidth();
 
     // handle a click on the purchase info link
-    _purchaseClick();
+    // TODO what until cart works before deploying this
+    //_purchaseClick();
 
     // handle a click on the close link (the X in the top right corner)
     _closeClick();
