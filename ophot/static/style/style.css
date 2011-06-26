@@ -50,7 +50,7 @@ a:link, a:visited {
 }
 
 .nav-link:hover, .photo-link:hover {
-  text-shadow: 0 0 2px white;
+  text-shadow: 0 0 3px white;
   -moz-transition: text-shadow .15s linear;
   -webkit-transition: text-shadow .15s linear;
   transition: text-shadow .15s linear;
