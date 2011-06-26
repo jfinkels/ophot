@@ -101,30 +101,22 @@
   $(document).ready(function() {
     $(".photo-cell").live("hover", function() {
       $(this).children(".edit-menu").toggle();
-      // don't show the left arrow on the first photo and the right arrow on the
-      // last photo
+      // don't show the left arrow on the first photo and the right arrow on
+      // the last photo
       var toToggle = $(this).children(".move-right, .move-left")
         .not("td.photo-cell:first-child div.move-left")
         .not("td.photo-cell:last-child div.move-right");
 
       toToggle.toggle();
-      // HACK should use .toggle() here, but it causes a problem with the
-      // left-most and right-most photo, which should hide its left and right
-      // arrow, respectively when moving into that position
-      // if (toToggle.is(":visible")) {
-      //   toToggle.hide();
-      // } else {
-      //   toToggle.show();
-      // }
     });
 
     $("#splash").hover(function() {
       $(this).children("#change-splash-photo").toggle();
     });
 
-    // this event is similar to the hover action for the purchase link specified
-    // in the CSS, but we put it in here since we need to change a property on a
-    // different element
+    // this event is similar to the hover action for the purchase link
+    // specified in the CSS, but we put it in here since we need to change a
+    // property on a different element
     $(".change-cat,.delete").live("mouseenter", function() {
       $(this).parents(".edit-menu").animate({opacity: 1}, 100);
     });
@@ -134,16 +126,14 @@
 
     $(".delete").live("click", function(event) {
       event.preventDefault();
-      
-      $(this).parents(".photo-cell").children(".photo-shadow").fadeIn();
-      $(this).parents(".photo-cell").children(".delete-dialog").fadeIn();
+      $(this).parents(".photo-cell")
+        .children(".photo-shadow, .delete-dialog").fadeIn();
     });
 
     $(".cancel").live("click", function(event) {
       event.preventDefault();
-      $(this).parents(".photo-cell").children(".photo-shadow").fadeOut();
-      $(this).parents(".photo-cell").children(".delete-dialog").fadeOut();
-      $(this).parents(".photo-cell").children(".cat-chooser").fadeOut();
+      $(this).parents(".photo-cell")
+        .children(".photo-shadow, .delete-dialog, .cat-chooser").fadeOut();
     });
 
     $(".confirm-delete").live("click", function(event) {
@@ -165,12 +155,12 @@
     });
 
     $(".change-cat").live("click", function(event) {
-      var list;
+      var list, photoCell;
       event.preventDefault();
       
-      $(this).parents(".photo-cell").children(".photo-shadow").fadeIn();
-      $(this).parents(".photo-cell").children(".cat-chooser").fadeIn();
-      list = $(this).parents(".photo-cell").find(".category-list");
+      photoCell = $(this).parents(".photo-cell");
+      photoCell.children(".photo-shadow, .cat-chooser").fadeIn();
+      list = photoCell.find(".category-list");
       list.empty();
 
       $.getJSON(
