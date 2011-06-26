@@ -34,8 +34,8 @@
 {% if session.logged_in %}
     <p class="desc">This page allows you to change some of the general
       configuration for the site.</p>
-    <div id="settings-container">
-      <div id="settings-shadow"></div>
+    <div id="settings-container" class="settings-container">
+      <div id="settings-shadow" class="settings-shadow white-background"></div>
       <div class="delete-dialog">
         <p>Are you sure you want to delete this category?</p>
         <p class="choice">
@@ -43,7 +43,7 @@
           <a href="#" class="confirm-delete">Delete</a>
         </p>
       </div>
-      <table id="settings-table">
+      <table id="settings-table" class="divided-table">
         <tbody>
           <tr>
             <td>Space between photos (in pixels)</td>
@@ -55,7 +55,7 @@
           <tr>
             <td>Categories</td>
             <td>
-              <table id="categories">
+              <table id="categories" class="category-table">
                 <tbody>
                 {% for (id, cname) in categories %}
                 <tr class="category-row">
@@ -73,7 +73,6 @@
                 </tr>
                 </tbody>
               </table>
-              </ul>
             </td>
           </tr>
           <tr>

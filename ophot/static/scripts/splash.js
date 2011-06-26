@@ -32,10 +32,9 @@
     // TODO move the logged in specific things out to edit-photo.js
     return "<td class=\"photo-cell\">\n"
       + "  <div class=\"photo-container\">\n"
-      + "    <a class=\"purchase\" href=\"#\">purchase</a>\n"
-      + "    <div class=\"photo-shadow\"></div>\n"
-      + "    <div class=\"move-left\"><a href=\"#\">&larr;</a></div>\n"
-      + "    <div class=\"move-right\"><a href=\"#\">&rarr;</a></div>\n"
+      + "    <div class=\"photo-shadow absolute-position\"></div>\n"
+    /*
+      + "    <a class=\"purchase black-background\" href=\"#\">purchase</a>\n"
       + "    <div class=\"purchase-information\">\n"
       + "      <a class=\"close\">X</a>\n"
       + "      <p>\n"
@@ -43,6 +42,9 @@
       + "        " + PURCHASE_EMAIL + "\n"
       + "      </p>\n"
       + "    </div>\n"
+    */
+      + "    <div class=\"move-left\"><a href=\"#\">&larr;</a></div>\n"
+      + "    <div class=\"move-right\"><a href=\"#\">&rarr;</a></div>\n"
       + "    <div class=\"delete-dialog\">\n"
       + "      <p>Are you sure you want to delete this photo?</p>\n"
       + "      <p class=\"choice\">\n"
@@ -131,7 +133,7 @@
   */
   function fadeOutFadeIn(inSelector) {
     $("#photos-container").fadeOut(400, function() {
-      $("#banner-container").animate(
+      $("#banner").animate(
         { top : 400 },
         {
           duration: 500,
@@ -206,7 +208,7 @@
         $(".submenu").hide(0, function() {
           $("#photos-container").fadeOut();
           $("#splash-shadow").fadeOut(400, function() {
-            $("#banner-container").animate({ top : 400 }, 500);
+            $("#banner").animate({ top : 400 }, 500);
           });
         });
       } else {
@@ -264,7 +266,7 @@
 
         _fadeOutMany(["#contact-info", "#purchase-info", "#bio"]);
         if ($("#photos-container").is(":hidden")) {
-          $("#banner-container").animate(
+          $("#banner").animate(
             { top : 497 },
             {
               duration: 500,
@@ -341,7 +343,8 @@
     _setupScrollShadow();
 
     // handle a click on the purchase info link
-    _purchaseClick();
+    // TODO what until cart works before deploying this
+    //_purchaseClick();
 
     // handle a click on the close link (the X in the top right corner)
     _closeClick();
