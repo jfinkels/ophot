@@ -1,14 +1,8 @@
-* complete unit tests
-* combine redundant CSS declarations
 * fix validation messages so that they don't display as generic unstyled lists
 * allow PNG files
 * add a view and a stylesheet for "mobile" web browsers (the stylesheet should imitate, for example, the iPhone's UI effects)
 * change to data["changed"] == "True"?
 * http://blog.greenfelt.net/2009/09/01/caching-javascript-safely/
-* remove name from purchase info
-* put styles in separate files
-* put styles first, scripts second in head element
-* use debounce to automatically save bio info, etc.
 * check out Flask-Login
 * use a better RESTful API for getting photos and categories
 * in tests, use self.app.get('whatever', data={}) instead of using query_url()
