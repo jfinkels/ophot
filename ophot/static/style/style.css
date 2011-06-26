@@ -29,17 +29,6 @@
  color: white;
 }
 
-/**
- * With "position: fixed", the splash page will not allow vertical scrolling,
- * even if there is content below the window border.
- */
-.container {
-  left: 50%;
-  margin-left: -400px;
-  width: 800px;
-  position: absolute;
-}
-
 .container-shadow {
   background-color: black;
   height: 100%;
