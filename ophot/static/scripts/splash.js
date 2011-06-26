@@ -19,7 +19,7 @@
 (function () {
   "use strict";
   var prevScrollLeft, MAX_POSITION;
-  MAX_POSITION = 800;
+  MAX_POSITION = 600;
 
  /**
   * Creates the table cell for each photo requested by the displayPhotos()
@@ -316,7 +316,7 @@
       if (currScrollLeft !== prevScrollLeft) {
         newOpacity = _positionToOpacity(currScrollLeft);
         $(".container-shadow").css({ opacity: newOpacity });
-        $("#banner-container").css({ opacity: 1 - newOpacity });
+        $("#banner").css({ opacity: 1 - newOpacity });
       }
       prevScrollLeft = currScrollLeft;
     })/*)*/;
