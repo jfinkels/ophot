@@ -47,24 +47,24 @@
   <script type="text/javascript" src="{{ url_for('static', filename='scripts/layout.js') }}"></script>
   {% endblock %}
 </head>
-<body>
+<body class="black-background">
   {% for message in get_flashed_messages() %}
-  <div class="flash">
-    <div class="flash-inner">
+  <div class="flash black-background">
+    <div class="flash-inner white-text">
       {{ message }} <a href="#" class="close">Close me.</a>
     </div>
   </div>
   {% endfor %}
   {# this block will only be implemented by the splash.html template #}
   {% block photos %}{% endblock %}
-  <div id="container">
+  <div id="container" class="container absolute-position">
     {% if session.logged_in %}
-    <ul id="admin-links">
-      <li><a href="{{ url_for('settings') }}" id="settings" class="admin-link">settings</a></li>
-      <li><a href="{{ url_for('logout') }}" id="logout" class="admin-link">logout</a></li>
+    <ul id="admin-links" class="upper-right inline-list">
+      <li class="admin-li"><a href="{{ url_for('settings') }}" id="settings" class="admin-link">settings</a></li>
+      <li class="admin-li"><a href="{{ url_for('logout') }}" id="logout" class="admin-link">logout</a></li>
     </ul>
     {% endif %}
-    <h1><a href="{{ url_for('show_splash') }}">{{ realname }} <span class="darker">photography</span></a></h1>
+    <h1><a href="{{ url_for('show_splash') }}">{{ realname }} <span class="gray-text">photography</span></a></h1>
     {% block content %}
     {% endblock %}
     <footer>

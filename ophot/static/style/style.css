@@ -9,17 +9,33 @@
   padding: 0;
 }
 
-.close, .close:visited {
+.absolute-position {
+  position: absolute;
+}
+
+.black-background {
+  background-color: black;
+}
+
+.white-background {
+  background-color: white;
+}
+
+.close:link, .close:visited {
   color: gray;
 }
 
 .close:hover {
-  color: white;
+ color: white;
 }
 
 .desc-link:link {
   font-weight: bold;
   text-decoration: underline;
+}
+
+.gray-text {
+  color: gray;
 }
 
 a:link, a:visited {
@@ -34,14 +50,14 @@ a:link, a:visited {
 }
 
 .nav-link:hover, .photo-link:hover {
-  text-shadow: 0 0 2px white;
+  text-shadow: 0 0 3px white;
   -moz-transition: text-shadow .15s linear;
   -webkit-transition: text-shadow .15s linear;
   transition: text-shadow .15s linear;
 }
 
+/*
 .purchase {
-  background-color: black;
   -moz-border-radius-bottomright: 4px;
   border-bottom-right-radius: 4px;
   -webkit-box-shadow: 0 0 5px black;
@@ -63,39 +79,33 @@ a:link, a:visited {
   -moz-transition: opacity .1s linear;
   transition: opacity .1s linear;
 }
+*/
 
 body {
   color: white;
-  background-color: black;
   font-family: sans-serif;
 }
 
-#banner {
-  background-color: black;
-  -moz-box-shadow: 0 3px 5px #000030;
-  -webkit-box-shadow: 0 3px 5px #000000;
-  box-shadow: 0 3px 5px #000030;
+.banner {
+  -moz-box-shadow: 0 3px 5px black;
+  -webkit-box-shadow: 0 3px 5px black;
+  box-shadow: 0 3px 5px black;
   font-size: 16pt;
+  font-weight: bold;
   opacity: 0.8;
   padding: 10px;
-}
-
-#banner-container {
-  font-weight: bold;
   position: relative;
   top: 400px;
 }
 
 .info-box {
-  background-color: black;
   -moz-border-radius: 4px;
   border-radius: 4px;
-  -moz-box-shadow: 1px 1px 4px #000000;
-  -webkit-box-shadow: 1px 1px 4px #000000;
-  box-shadow: 1px 1px 4px #000000;
+  -moz-box-shadow: 1px 1px 4px black;
+  -webkit-box-shadow: 1px 1px 4px black;
+  box-shadow: 1px 1px 4px black;
   max-width: 600px;
   max-height: 300px;
-  position: absolute;
   right: 50px;
   top: 30px;
 }
@@ -114,15 +124,13 @@ body {
   margin-top: 0;
 }
 
-#container {
+/**
+ * With "position: fixed", the splash page will not allow vertical scrolling,
+ * even if there is content below the window border.
+ */
+.container {
   left: 50%;
   margin-left: -400px;
-  /**
-   * With "position: fixed", the splash page will not allow vertical scrolling,
-   * even if there is content below the window border.
-   */
-  /* position: fixed; */
-  position: absolute;
   width: 800px;
 }
 
@@ -151,45 +159,41 @@ body {
   height: 100%;
   opacity: 0.5;
   width: 100%;
-  position: absolute;
   z-index: 2;
 }
 
-#photos-container {
-  background-color: black;
-  -moz-box-shadow: 0 0 5px #000000;
-  -webkit-box-shadow: 0 0 5px #000000;
-  box-shadow: 0 0 5px #000000;
+.photos-container {
+  -moz-box-shadow: 0 0 5px black;
+  -webkit-box-shadow: 0 0 5px black;
+  box-shadow: 0 0 5px black;
   height: 450px;
-  position: absolute;
   top: 90px;
   min-width: 800px;
   z-index: 10;
 }
 
-#photos-container table {
+.photos-container table {
   margin-left: 10px;
   margin-right: 10px;
   height: 100%;
 }
 
-#splash {
+.splash {
   background-repeat: no-repeat;
   background-position: center center;
-  height: 535px;
-  -moz-border-radius: 10px;
-  border-radius: 10px;
   position: relative;
 }
 
-#splash-shadow {
-  background-color: white;
+.splash, .splash-shadow {
+ height: 535px;
   -moz-border-radius: 10px;
   border-radius: 10px;
-  height: 535px;
-  position: absolute;
-  opacity: 0.65;
   width: 800px;
+}
+
+.splash-shadow {
+  background-color: white;
+  opacity: 0.65;
 }
 
 form {
@@ -206,9 +210,9 @@ footer a:link, footer a:visited {
   color: gray;
 }
 
-footer a:hover {
-  color: white;
-}
+/* footer a:hover { */
+/*   color: white; */
+/* } */
 
 h1 {
   font-family: 'Raleway', sans-serif;
@@ -237,6 +241,8 @@ table {
   border-collapse: collapse;
 }
 
+/** This is set in the template, from the site settings. */
+/*
 .photo-cell {
   padding-left: 10px;
 }
@@ -244,8 +250,9 @@ table {
 .photo-cell:first-child {
   padding-left: 0;
 }
+*/
 
-#the-row td img {
+.photo-row td img {
   vertical-align: middle;
 }
 
@@ -264,14 +271,6 @@ table {
   margin-right: 0;
 }
 
-.photos {
-  list-style-type: none;
-}
-
-.photos li {
-  display: inline;
-}
-
 .submenu {
   display: inline-block;
   font-size: 11pt;
@@ -283,13 +282,8 @@ table {
   margin-right: 8px;
 }
 
-.darker {
-  color: gray;
-}
-
 .flash, .error {
   border-bottom: thin solid gray;
-  color: white;
   top: 0;
   width: 100%;
 }
@@ -299,14 +293,14 @@ table {
   margin: 10px auto;
 }
 
-.flash {
-  background: black;
-}
-
 .error {
   background: #990000;
 }
 
 .selected {
   text-shadow: 0 0 3px white;
+}
+
+.white-text {
+  color: white;
 }

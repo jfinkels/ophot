@@ -29,9 +29,9 @@
     // TODO move the logged in specific things out to edit-photo.js
     return "<td class=\"photo-cell\">\n"
       + "  <div class=\"photo-container\">\n"
-      + "    <div class=\"photo-shadow\"></div>\n"
+      + "    <div class=\"photo-shadow absolute-position\"></div>\n"
     /*
-      + "    <a class=\"purchase\" href=\"#\">purchase</a>\n"
+      + "    <a class=\"purchase black-background\" href=\"#\">purchase</a>\n"
       + "    <div class=\"purchase-information\">\n"
       + "      <a class=\"close\">X</a>\n"
       + "      <p>\n"
@@ -130,7 +130,7 @@
   */
   function fadeOutFadeIn(inSelector) {
     $("#photos-container").fadeOut(400, function() {
-      $("#banner-container").animate(
+      $("#banner").animate(
         { top : 400 },
         {
           duration: 500,
@@ -205,7 +205,7 @@
         $(".submenu").hide(0, function() {
           $("#photos-container").fadeOut();
           $("#splash-shadow").fadeOut(400, function() {
-            $("#banner-container").animate({ top : 400 }, 500);
+            $("#banner").animate({ top : 400 }, 500);
           });
         });
       } else {
@@ -263,7 +263,7 @@
 
         _fadeOutMany(["#contact-info", "#purchase-info", "#bio"]);
         if ($("#photos-container").is(":hidden")) {
-          $("#banner-container").animate(
+          $("#banner").animate(
             { top : 497 },
             {
               duration: 500,

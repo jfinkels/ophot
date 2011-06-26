@@ -38,7 +38,7 @@ all in a row. I suggest resizing your image to that height <em>before</em>
 uploading it, so that you control how it looks!</p>
 
 <form action="{{ url_for('add_photos') }}" method="post"
-      enctype="multipart/form-data" id="add-photo-form">
+      enctype="multipart/form-data" id="add-photo-form" class="upload-form">
   {{ form.hidden_tag() }}
   {{ render_field(form.photos, multiple="multiple") }}
   {{ render_field(form.category) }}

@@ -33,29 +33,34 @@
   margin-right: 1em;
 }
 
-#change-splash-photo {
+.hover-link {
   background-color: black;
-  -moz-border-radius-bottomleft: 4px;
-  border-bottom-left-radius: 4px;
   -webkit-box-shadow: 0 0 5px black;
   box-shadow: 0 0 5px black;
   opacity: 0.4;
   padding: 4px;
   position: absolute;
-  text-shadow: none;
-  top: 0;
-  right: 0;
   -webkit-transition: opacity .1s linear;
   -moz-transition: opacity .1s linear;
   transition: opacity .1s linear;
-  z-index: 1;
 }
 
-#change-splash-photo:hover {
+.hover-link:hover {
   opacity: 1;
   -webkit-transition: opacity .1s linear;
   -moz-transition: opacity .1s linear;
   transition: opacity .1s linear;
+}
+
+.upper-right {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.bottom-left-rounded {
+  -moz-border-radius-bottomleft: 4px;
+  border-bottom-left-radius: 4px;
 }
 
 .selected-cat {
@@ -138,22 +143,20 @@
   left: 0;
 }
 
-#photo-upload-form {
+.upload-form {
   margin-top: 10px;
 }
 
-#admin-links {
+.inline-list {
   list-style-type: none;
-  position: absolute;
-  right: 0;
 }
 
-#admin-links li {
+.admin-li {
   display: inline-block;
   margin-right: 10px;
 }
 
-#admin-links li:last-child {
+.top-right-list li:last-child {
   margin-right: 0;
 }
 

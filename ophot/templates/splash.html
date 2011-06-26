@@ -59,36 +59,45 @@
   </script>
   {% endblock %}
 {% block photos %}
-  <div id="photos-container">
-    <table><tbody><tr id="the-row"><td></td></tr></tbody></table>
+  <div id="photos-container"
+       class="photos-container black-background absolute-position">
+    <table>
+      <tbody>
+        <tr id="the-row" class="photo-row">
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 {% endblock %}
 {% block content %}
-    <div id="splash" style="background-image: url({{ filename }});">
+    <div id="splash" style="background-image: url({{ filename }});"
+         class="splash">
       {% if session.logged_in %}
-      <a href="{{ url_for('change_splash_photo') }}" id="change-splash-photo">
+      <a href="{{ url_for('change_splash_photo') }}" id="change-splash-photo" class="hover-link upper-right bottom-left-rounded">
         change splash photo
       </a>
       {% endif %}
-      <div id="splash-shadow"></div>
-      <div id="contact-info" class="info-box">
+      <div id="splash-shadow" class="splash-shadow absolute-position"></div>
+      <div id="contact-info"
+           class="info-box black-background absolute-position">
         <div class="info-box-inner">
           {{ contact|safe }}
         </div>
       </div>
-      <div id="bio" class="info-box">
+      <div id="bio" class="info-box black-background absolute-position">
         <div class="scroll-pane info-box-inner">
           {{ bio|safe }}
         </div>
       </div>
-      <div id="purchase-info" class="info-box">
+      <div id="purchase-info"
+           class="info-box black-background absolute-position">
         <div class="info-box-inner">
           for pricing or to order prints, email
           <a href="mailto:{{ purchase_email }}">{{ purchase_email }}</a>.
         </div>
       </div>
-      <div id="banner-container">
-        <div id="banner">
+        <div id="banner" class="banner black-background">
           <ul class="menu">
             <li>
               <a href="#" class="nav-link" id="photos-link">photos</a>
@@ -106,6 +115,5 @@
             {% endif %}
           </ul>
         </div>
-      </div>
     </div>
 {% endblock %}
