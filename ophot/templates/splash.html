@@ -59,7 +59,8 @@
   </script>
   {% endblock %}
 {% block photos %}
-  <div id="photos-container" class="photos-container black-background">
+  <div id="photos-container"
+       class="photos-container black-background absolute-position">
     <table>
       <tbody>
         <tr id="the-row" class="photo-row">
@@ -77,18 +78,20 @@
         change splash photo
       </a>
       {% endif %}
-      <div id="splash-shadow" class="splash-shadow"></div>
-      <div id="contact-info" class="info-box black-background">
+      <div id="splash-shadow" class="splash-shadow absolute-position"></div>
+      <div id="contact-info"
+           class="info-box black-background absolute-position">
         <div class="info-box-inner">
           {{ contact|safe }}
         </div>
       </div>
-      <div id="bio" class="info-box black-background">
+      <div id="bio" class="info-box black-background absolute-position">
         <div class="scroll-pane info-box-inner">
           {{ bio|safe }}
         </div>
       </div>
-      <div id="purchase-info" class="info-box black-background">
+      <div id="purchase-info"
+           class="info-box black-background absolute-position">
         <div class="info-box-inner">
           for pricing or to order prints, email
           <a href="mailto:{{ purchase_email }}">{{ purchase_email }}</a>.

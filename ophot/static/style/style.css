@@ -9,6 +9,10 @@
   padding: 0;
 }
 
+.absolute-position {
+  position: absolute;
+}
+
 .black-background {
   background-color: black;
 }
@@ -17,17 +21,21 @@
   background-color: white;
 }
 
-.close, .close:visited {
+.close:link, .close:visited {
   color: gray;
 }
 
 .close:hover {
-  color: white;
+ color: white;
 }
 
 .desc-link:link {
   font-weight: bold;
   text-decoration: underline;
+}
+
+.gray-text {
+  color: gray;
 }
 
 a:link, a:visited {
@@ -48,6 +56,7 @@ a:link, a:visited {
   transition: text-shadow .15s linear;
 }
 
+/*
 .purchase {
   -moz-border-radius-bottomright: 4px;
   border-bottom-right-radius: 4px;
@@ -70,6 +79,7 @@ a:link, a:visited {
   -moz-transition: opacity .1s linear;
   transition: opacity .1s linear;
 }
+*/
 
 body {
   color: white;
@@ -96,7 +106,6 @@ body {
   box-shadow: 1px 1px 4px black;
   max-width: 600px;
   max-height: 300px;
-  position: absolute;
   right: 50px;
   top: 30px;
 }
@@ -122,7 +131,6 @@ body {
 .container {
   left: 50%;
   margin-left: -400px;
-  position: absolute;
   width: 800px;
 }
 
@@ -151,7 +159,6 @@ body {
   height: 100%;
   opacity: 0.5;
   width: 100%;
-  position: absolute;
   z-index: 2;
 }
 
@@ -160,7 +167,6 @@ body {
   -webkit-box-shadow: 0 0 5px black;
   box-shadow: 0 0 5px black;
   height: 450px;
-  position: absolute;
   top: 90px;
   min-width: 800px;
   z-index: 10;
@@ -175,20 +181,19 @@ body {
 .splash {
   background-repeat: no-repeat;
   background-position: center center;
-  height: 535px;
+  position: relative;
+}
+
+.splash, .splash-shadow {
+ height: 535px;
   -moz-border-radius: 10px;
   border-radius: 10px;
-  position: relative;
+  width: 800px;
 }
 
 .splash-shadow {
   background-color: white;
-  -moz-border-radius: 10px;
-  border-radius: 10px;
-  height: 535px;
-  position: absolute;
   opacity: 0.65;
-  width: 800px;
 }
 
 form {
@@ -205,9 +210,9 @@ footer a:link, footer a:visited {
   color: gray;
 }
 
-footer a:hover {
-  color: white;
-}
+/* footer a:hover { */
+/*   color: white; */
+/* } */
 
 h1 {
   font-family: 'Raleway', sans-serif;
@@ -282,13 +287,8 @@ table {
   margin-right: 8px;
 }
 
-.darker {
-  color: gray;
-}
-
 .flash, .error {
   border-bottom: thin solid gray;
-  color: white;
   top: 0;
   width: 100%;
 }
@@ -304,4 +304,8 @@ table {
 
 .selected {
   text-shadow: 0 0 3px white;
+}
+
+.white-text {
+  color: white;
 }

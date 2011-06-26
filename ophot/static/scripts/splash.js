@@ -29,7 +29,7 @@
     // TODO move the logged in specific things out to edit-photo.js
     return "<td class=\"photo-cell\">\n"
       + "  <div class=\"photo-container\">\n"
-      + "    <div class=\"photo-shadow\"></div>\n"
+      + "    <div class=\"photo-shadow absolute-position\"></div>\n"
     /*
       + "    <a class=\"purchase black-background\" href=\"#\">purchase</a>\n"
       + "    <div class=\"purchase-information\">\n"
