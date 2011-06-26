@@ -30,7 +30,7 @@
   }
 
   function addedCategory(data, textStatus, xhr) {
-    var name, id;
+    var name, id, categoryRow, added;
     if (data.added) {
       name = data.categoryname;
       id = data.categoryid;
@@ -39,11 +39,20 @@
       $("input#new-cat").replaceWith(
         '<a href="#" id="new-cat">new category&hellip;</a>');
 
-      // iterate over each category in order to place it in alphabetical order
-      // TODO alphabetical list insert code could be used from
-      // http://stackoverflow.com/questions/2886739/using-jquery-to-dynamically-insert-into-list-alphabetically
-      // TODO this currently doesn't work if there are no rows
-      $("tr.category-row").last().after(generateCategoryRow(name, id));
+      // insert in alphabetical order code adapted from
+      // http://stackoverflow.com/questions/2886739/using-jquery-to-dynamically-insert-into-list-alphabetically/2890810#2890810
+      categoryRow = generateCategoryRow(name, id);
+      added = false;
+      $("tr.category-row").each(function() {
+        if ($(this).children(".cat-name").text() > name) {
+          $(this).before(categoryRow);
+          added = true;
+          return false;
+        }
+      });
+      if (!added) {
+        $("tr#new-cat-row").before(categoryRow);
+      }
     } else {
       // TODO do something
       alert("could not add category with name " + data.categoryname);
@@ -81,7 +90,7 @@
     $(".delete-dialog").hide();
     $("#settings-shadow").hide();
 
-    $("a#new-cat").click(function(event) {
+    $("a#new-cat").live("click", function(event) {
       event.preventDefault();
       $(this).replaceWith('<input type="text" id="new-cat" '
                           + 'placeholder="new category&hellip;">');
