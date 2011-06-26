@@ -187,7 +187,6 @@
           });
         });
       } else {
-        // TODO add :visible to selectors
         _removeClassFromMany(["#bio-link", "#contact-link", "#purchase-link"],
                              "selected");
         $(this).addClass("selected");
@@ -319,7 +318,7 @@
     _setupScrollShadow();
 
     // handle a click on the purchase info link
-    // TODO what until cart works before deploying this
+    // TODO wait until cart works before deploying this
     //_purchaseClick();
 
     // handle a click on the close link (the X in the top right corner)
