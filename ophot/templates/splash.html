@@ -59,18 +59,25 @@
   </script>
   {% endblock %}
 {% block photos %}
-  <div id="photos-container">
-    <table><tbody><tr id="the-row"><td></td></tr></tbody></table>
+  <div id="photos-container" class="photos-container">
+    <table>
+      <tbody>
+        <tr id="the-row" class="photo-row">
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 {% endblock %}
 {% block content %}
-    <div id="splash" style="background-image: url({{ filename }});">
+    <div id="splash" style="background-image: url({{ filename }});"
+         class="splash">
       {% if session.logged_in %}
       <a href="{{ url_for('change_splash_photo') }}" id="change-splash-photo" class="hover-link upper-right bottom-left-rounded">
         change splash photo
       </a>
       {% endif %}
-      <div id="splash-shadow"></div>
+      <div id="splash-shadow" class="splash-shadow"></div>
       <div id="contact-info" class="info-box">
         <div class="info-box-inner">
           {{ contact|safe }}
@@ -87,7 +94,7 @@
           <a href="mailto:{{ purchase_email }}">{{ purchase_email }}</a>.
         </div>
       </div>
-        <div id="banner">
+        <div id="banner" class="banner">
           <ul class="menu">
             <li>
               <a href="#" class="nav-link" id="photos-link">photos</a>

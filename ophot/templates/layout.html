@@ -57,7 +57,7 @@
   {% endfor %}
   {# this block will only be implemented by the splash.html template #}
   {% block photos %}{% endblock %}
-  <div id="container">
+  <div id="container" class="container">
     {% if session.logged_in %}
     <ul id="admin-links" class="upper-right inline-list">
       <li class="admin-li"><a href="{{ url_for('settings') }}" id="settings" class="admin-link">settings</a></li>
