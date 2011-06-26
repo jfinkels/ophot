@@ -59,7 +59,7 @@
   </script>
   {% endblock %}
 {% block photos %}
-  <div id="photos-container" class="photos-container">
+  <div id="photos-container" class="photos-container black-background">
     <table>
       <tbody>
         <tr id="the-row" class="photo-row">
@@ -78,23 +78,23 @@
       </a>
       {% endif %}
       <div id="splash-shadow" class="splash-shadow"></div>
-      <div id="contact-info" class="info-box">
+      <div id="contact-info" class="info-box black-background">
         <div class="info-box-inner">
           {{ contact|safe }}
         </div>
       </div>
-      <div id="bio" class="info-box">
+      <div id="bio" class="info-box black-background">
         <div class="scroll-pane info-box-inner">
           {{ bio|safe }}
         </div>
       </div>
-      <div id="purchase-info" class="info-box">
+      <div id="purchase-info" class="info-box black-background">
         <div class="info-box-inner">
           for pricing or to order prints, email
           <a href="mailto:{{ purchase_email }}">{{ purchase_email }}</a>.
         </div>
       </div>
-        <div id="banner" class="banner">
+        <div id="banner" class="banner black-background">
           <ul class="menu">
             <li>
               <a href="#" class="nav-link" id="photos-link">photos</a>

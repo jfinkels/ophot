@@ -47,9 +47,9 @@
   <script type="text/javascript" src="{{ url_for('static', filename='scripts/layout.js') }}"></script>
   {% endblock %}
 </head>
-<body>
+<body class="black-background">
   {% for message in get_flashed_messages() %}
-  <div class="flash">
+  <div class="flash black-background">
     <div class="flash-inner">
       {{ message }} <a href="#" class="close">Close me.</a>
     </div>

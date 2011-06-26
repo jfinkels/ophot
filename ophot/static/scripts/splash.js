@@ -31,7 +31,7 @@
       + "  <div class=\"photo-container\">\n"
       + "    <div class=\"photo-shadow\"></div>\n"
     /*
-      + "    <a class=\"purchase\" href=\"#\">purchase</a>\n"
+      + "    <a class=\"purchase black-background\" href=\"#\">purchase</a>\n"
       + "    <div class=\"purchase-information\">\n"
       + "      <a class=\"close\">X</a>\n"
       + "      <p>\n"
