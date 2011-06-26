@@ -30,7 +30,6 @@
   */
   function createPhotoCellString(photoid, filename) {
     return "<td class=\"photo-cell\">\n"
-      + "  <div class=\"photo-container\">\n"
     /*
       + "    <div class=\"photo-shadow absolute-position\"></div>\n"
       + "    <a class=\"purchase black-background\" href=\"#\">purchase</a>\n"
@@ -44,7 +43,6 @@
     */
       + EDIT_ELEMENTS
       + "    <img src=" + filename + " id=\"" + photoid + "\"/>\n"
-      + "  </div>\n"
       + "</td>\n";
   }
 
@@ -167,7 +165,7 @@
   * information link.
   */
   function _photoHover() {
-    $(".photo-container").live("hover", function() {
+    $(".photo-cell").live("hover", function() {
       $(this).children(".purchase").toggle();
     });
   }

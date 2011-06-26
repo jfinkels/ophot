@@ -99,7 +99,7 @@
   }
 
   $(document).ready(function() {
-    $(".photo-container").live("hover", function() {
+    $(".photo-cell").live("hover", function() {
       $(this).children(".edit-menu").toggle();
       // don't show the left arrow on the first photo and the right arrow on the
       // last photo
@@ -135,15 +135,15 @@
     $(".delete").live("click", function(event) {
       event.preventDefault();
       
-      $(this).parents(".photo-container").children(".photo-shadow").fadeIn();
-      $(this).parents(".photo-container").children(".delete-dialog").fadeIn();
+      $(this).parents(".photo-cell").children(".photo-shadow").fadeIn();
+      $(this).parents(".photo-cell").children(".delete-dialog").fadeIn();
     });
 
     $(".cancel").live("click", function(event) {
       event.preventDefault();
-      $(this).parents(".photo-container").children(".photo-shadow").fadeOut();
-      $(this).parents(".photo-container").children(".delete-dialog").fadeOut();
-      $(this).parents(".photo-container").children(".cat-chooser").fadeOut();
+      $(this).parents(".photo-cell").children(".photo-shadow").fadeOut();
+      $(this).parents(".photo-cell").children(".delete-dialog").fadeOut();
+      $(this).parents(".photo-cell").children(".cat-chooser").fadeOut();
     });
 
     $(".confirm-delete").live("click", function(event) {
@@ -168,9 +168,9 @@
       var list;
       event.preventDefault();
       
-      $(this).parents(".photo-container").children(".photo-shadow").fadeIn();
-      $(this).parents(".photo-container").children(".cat-chooser").fadeIn();
-      list = $(this).parents(".photo-container").find(".category-list");
+      $(this).parents(".photo-cell").children(".photo-shadow").fadeIn();
+      $(this).parents(".photo-cell").children(".cat-chooser").fadeIn();
+      list = $(this).parents(".photo-cell").find(".category-list");
       list.empty();
 
       $.getJSON(
@@ -222,7 +222,7 @@
       selectedCat = 'a[class~="category-option"][class~="selected-cat"]';
       categoryid = parseInt($(this).parents(".cat-chooser").find(selectedCat)
                             .attr("id"), 10);
-      photoContainer = $(this).parents(".photo-container");
+      photoContainer = $(this).parents(".photo-cell");
 
       // Note: this jquery selector
       //  $('a[class~="photo-link"][class~="selected"]')

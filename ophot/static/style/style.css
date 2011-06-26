@@ -152,10 +152,6 @@ body {
 }
 */
 
-.photo-container {
-  position: relative;
-}
-
 .photo-shadow {
   background-color: white;
   height: 100%;
@@ -244,16 +240,9 @@ table {
   border-collapse: collapse;
 }
 
-/** This is set in the template, from the site settings. */
-/*
 .photo-cell {
-  padding-left: 10px;
+  position: relative;
 }
-
-.photo-cell:first-child {
-  padding-left: 0;
-}
-*/
 
 .photo-row td img {
   vertical-align: middle;
