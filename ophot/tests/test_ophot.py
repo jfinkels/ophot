@@ -48,16 +48,16 @@ from ophot.tests import temp_photos
 class OphotTestCase(TestSupport):
     """Test class for the __init__ module in the ophot package."""
 
-    def test_add_new_category(self):
-        """Test for adding a new category to the database."""
-        with app.test_request_context('/'):
-            before_request()
-            categories = get_categories()
-            new_id = add_new_category('foobar')
-            new_categories = get_categories()
-            self.assertNotIn(new_id, categories)
-            self.assertEqual(max(categories) + 1, new_id)
-            self.assertIn('foobar', new_categories.values())
+    # def test_add_new_category(self):
+    #     """Test for adding a new category to the database."""
+    #     with app.test_request_context('/'):
+    #         before_request()
+    #         categories = get_categories()
+    #         new_id = add_new_category('foobar')
+    #         new_categories = get_categories()
+    #         self.assertNotIn(new_id, categories)
+    #         self.assertEqual(max(categories) + 1, new_id)
+    #         self.assertIn('foobar', new_categories.values())
 
     @unittest.expectedFailure
     def test_after_request(self):
@@ -92,14 +92,14 @@ class OphotTestCase(TestSupport):
         finally:
             conn.close()
 
-    def test_get_categories(self):
-        """Test for getting categories with their ID numbers."""
-        with app.test_request_context('/'):
-            before_request()
-            categories = get_categories()
-            self.assertIn((1, 'landscape'), categories.items())
-            self.assertIn((2, 'personal'), categories.items())
-            self.assertIn((3, 'portrait'), categories.items())
+    # def test_get_categories(self):
+    #     """Test for getting categories with their ID numbers."""
+    #     with app.test_request_context('/'):
+    #         before_request()
+    #         categories = get_categories()
+    #         self.assertIn((1, 'landscape'), categories.items())
+    #         self.assertIn((2, 'personal'), categories.items())
+    #         self.assertIn((3, 'portrait'), categories.items())
 
     def test_get_last_display_position(self):
         """Test for getting the display position of the photo which is to be
