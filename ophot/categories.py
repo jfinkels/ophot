@@ -26,10 +26,9 @@ from flask import request
 from flask import make_response
 
 # imports from this application
-from _rest import to_category_dict
 from ophot import app
 from ophot import require_logged_in
-from ophot.queries import Q_ADD_CATEGORIES
+from ophot._rest import to_category_dict
 from ophot.queries import Q_GET_CATEGORIES
 from ophot.queries import Q_GET_CATEGORY_BY_ID
 from ophot.queries import Q_GET_CATEGORY_BY_NAME

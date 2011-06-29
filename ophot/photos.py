@@ -26,10 +26,11 @@ from flask import request
 from flask import make_response
 
 # imports from this application
-from _rest import to_photo_dict
 from ophot import app
 from ophot import get_last_display_position
 from ophot import require_logged_in
+from ophot import select_single
+from ophot._rest import to_photo_dict
 from ophot.queries import Q_DELETE_PHOTO
 from ophot.queries import Q_GET_PHOTO
 from ophot.queries import Q_GET_PHOTO_BY_DISPLAYPOS
@@ -59,8 +60,8 @@ def _update_photo_displaypos(photoid, displayposition):
     # position (if there is one)
     existing = select_single(Q_GET_PHOTO_BY_DISPLAYPOS.format(displayposition))
     if existing:
-        # move the that was already in that position to the old position of the
-        # requested photo
+        # move the photo that was already in that position to the old position
+        # of the requested photo
         current_pos = select_single(Q_GET_PHOTO_DISPLAYPOS.format(photoid))
         g.db.execute(Q_UPDATE_PHOTO_DISPLAYPOS.format(current_pos, existing))
     # move the requested photo to the requested displayposition

@@ -6,3 +6,4 @@
 * check out Flask-Login
 * use a better RESTful API for getting photos and categories
 * in tests, use self.app.get('whatever', data={}) instead of using query_url()
+* http://valums.com/ajax-upload/, http://code.google.com/p/jquery-html5-upload/, http://www.w3.org/TR/XMLHttpRequest2/, http://blog.mozilla.com/webdev/2010/09/17/django-and-ajax-image-uploads/, http://comments.gmane.org/gmane.comp.python.django.user/117582

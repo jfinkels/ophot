@@ -38,9 +38,7 @@ from flaskext.wtf.file import file_required
 import Image
 
 # imports from this application
-from ophot import add_new_category
 from ophot import app
-from ophot import get_categories
 from ophot import get_last_display_position
 from ophot import require_logged_in
 from ophot import site_config
@@ -79,6 +77,15 @@ def _generate_filename(directory, filename):
     return filename
 
 
+def _get_category_names():
+    """Returns a list containing the names of each of the categories in the
+    database.
+
+    """
+    categories = json.loads(get_categories().data)
+    return map(lambda category: category['name'], categories)
+
+
 def _get_categories_plus_new():
     """Helper method for the PhotoUploadForm which returns a list of pairs,
     each containing the category ID on the left and the category name on the
@@ -88,7 +95,9 @@ def _get_categories_plus_new():
 
     Pre-condition: none of the existing categories have an ID of -1.
     """
-    return get_categories().items() + [(-1, 'new category...')]
+    categories = json.loads(get_categories().data)
+    categories.append(dict(name='new category...', id=-1))
+    return categories
 
 
 def _to_html_paragraphs(string):
@@ -108,7 +117,6 @@ def add_photos():
     database.
 
     """
-
     # HACK we need to create this class anew each time we need it because the
     # category class variable depends on the categories read from the database,
     # which may change over time
@@ -116,7 +124,6 @@ def add_photos():
     # in HTML
     class PhotoUploadForm(Form):
         """Class which represents the photo upload form."""
-
         # TODO add this validator when it works with multiple files:
         # FileTypeValidator(app.config['ALLOWED_EXTENSIONS'])
         photos = FileField('Select photos to upload',
@@ -145,12 +152,13 @@ def add_photos():
                 categoryid = int(request.form['category'])
                 if categoryid == -1:
                     new_category_name = request.form['new-cat-name']
-                    if new_category_name in get_categories().values():
+                    if new_category_name in _get_category_names():
                         # TODO this should be an error message
                         flash('Cannot add new category "{0}" because it'
                               ' already exists.')
                         return redirect(url_for('add_photos'))
-                    categoryid = add_new_category(new_category_name)
+                    response = create_category(new_category_name)
+                    categoryid = json.loads(response.data)['id']
                 position = (get_last_display_position(categoryid) or 0) + 1
                 filename = _generate_filename(app.config['PHOTO_DIR'],
                                               photo.filename)

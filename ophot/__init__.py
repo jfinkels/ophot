@@ -36,7 +36,6 @@ from flask import g
 from flask import session
 
 # imports from this application
-from ophot.queries import Q_ADD_CATEGORY
 from ophot.queries import Q_GET_CATEGORY
 from ophot.queries import Q_GET_CATEGORIES
 from ophot.queries import Q_GET_LAST_DISP_POS
@@ -89,17 +88,6 @@ Message:
     app.logger.addHandler(file_handler)
 
 
-def add_new_category(categoryname):
-    """Creates a new category in the database with the specified *categoryname*
-    and returns its ID number.
-
-    """
-    g.db.execute(Q_ADD_CATEGORY, [categoryname])
-    g.db.commit()
-    # get the ID of the category that we just inserted
-    return select_single(Q_GET_CATEGORY.format(categoryname))
-
-
 @app.after_request
 def after_request(response):
     """Closes the database connection stored in the db attribute of the g
@@ -121,15 +109,6 @@ def before_request():
 def connect_db():
     """Gets a connection to the SQLite database."""
     return sqlite3.connect(app.config['DATABASE'])
-
-
-def get_categories():
-    """Helper method which returns a map from category ID to category name,
-    sorted in alphabetical (lexicographical) order by category name.
-
-    """
-    cursor = g.db.execute(Q_GET_CATEGORIES)
-    return OrderedDict([(row[0], row[1]) for row in cursor.fetchall()])
 
 
 def get_last_display_position(categoryid):
@@ -175,5 +154,7 @@ def select_single(query):
     return result[0]
 
 
-import ophot.requests
+import ophot.user
+import ophot.photos
+import ophot.categories
 import ophot.views
