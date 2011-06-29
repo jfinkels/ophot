@@ -14,33 +14,23 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Ophot.  If not, see <http://www.gnu.org/licenses/>.
-"""Provides all the tests as a suite.
-
-This test suite can be specified in the setup.py script as the test suite for
-the "python setup.py test" command.
-
-"""
+"""Unit tests for the categories module."""
 # imports for compatibility with future python versions
 from __future__ import absolute_import
 from __future__ import division
 
-from unittest import defaultTestLoader as loader
-from unittest import TestSuite as Suite
+# imports from this application
+from ophot.tests import TestSupport
 
 
-def tests_from_modules(*modules):
-    """Returns a unittest.TestSuite containing tests loaded from all the
-    modules listed in *modules*.
-
-    """
-    return Suite([loader.loadTestsFromModule(module) for module in modules])
-
-
-from ..tests import test_categories
-from ..tests import test_ophot
-from ..tests import test_photos
-from ..tests import test_users
-from ..tests import test_views
-
-alltests = tests_from_modules(test_categories, test_ophot, test_photos,
-                              test_users, test_views)
+class CategoriesTestCase(TestSupport):
+    def test_get_categories(self):
+        self.fail('not yet implemented')
+    def test_create_category(self):
+        self.fail('not yet implemented')
+    def test_get_category(self):
+        self.fail('not yet implemented')
+    def test_update_category_name(self):
+        self.fail('not yet implemented')
+    def test_delete_category(self):
+        self.fail('not yet implemented')

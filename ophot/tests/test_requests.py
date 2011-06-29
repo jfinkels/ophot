@@ -31,16 +31,6 @@ from ophot import app
 from ophot import before_request
 from ophot import init_db
 from ophot import site_config
-from ophot.requests import add_category
-from ophot.requests import change_category
-from ophot.requests import change_category_name
-from ophot.requests import change_spacing
-from ophot.requests import delete_category
-from ophot.requests import delete_photo
-from ophot.requests import get_categories
-from ophot.requests import get_photos
-from ophot.requests import swap_display_positions
-from ophot.requests import update_personal
 from ophot.tests import TestSupport
 from ophot.tests import temp_photos
 
@@ -148,18 +138,6 @@ class RequestsTestCase(TestSupport):
             self.assertEqual('portrait', categories['3'])
         # TODO test trying to change name of a category which doesn't exist
 
-    def test_change_spacing(self):
-        """Tests changing the spacing (in pixels) between photos on the splash
-        page.
-
-        """
-        self._login()
-        with preserve_site_config():
-            url = query_url('/_change_spacing', spacing=123)
-            result = json.loads(self.app.get(url).data)
-            self.assertTrue(result['changed'])
-            self.assertEqual(123, site_config['SPACING'])
-        # TODO test change spacing if no spacing exists yet
 
     def test_delete_category(self):
         """Tests deleting a category from the database."""
@@ -221,16 +199,3 @@ class RequestsTestCase(TestSupport):
         # TODO test swapping display positions for photos in different
         # categories, or photos which don't exist
 
-    def test_update_personal(self):
-        """Test for updating bio and contact information."""
-        self._login()
-        with preserve_site_config():
-            url = query_url('_update_personal', name='bio', value='foo bar')
-            result = json.loads(self.app.get(url).data)
-            self.assertTrue(result['changed'])
-            self.assertEqual('foo bar', site_config['BIO'])
-            url = query_url('_update_personal', name='contact', value='baz')
-            result = json.loads(self.app.get(url).data)
-            self.assertTrue(result['changed'])
-            self.assertEqual('baz', site_config['CONTACT'])
-        # TODO test bogus parameters

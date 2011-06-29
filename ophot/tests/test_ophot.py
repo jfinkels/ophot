@@ -33,13 +33,11 @@ from flask import g
 from werkzeug.exceptions import Unauthorized
 
 # imports from this application
-from ophot import add_new_category
 from ophot import app
 from ophot import after_request
 from ophot import before_request
 from ophot import connect_db
 from ophot import init_db
-from ophot import get_categories
 from ophot import get_last_display_position
 from ophot import require_logged_in
 from ophot import select_single

@@ -26,7 +26,6 @@ import uuid
 
 from ophot import app
 from ophot import before_request
-from ophot import get_categories
 from ophot.tests import TestSupport
 from ophot.views import _allowed_file
 from ophot.views import _generate_filename
