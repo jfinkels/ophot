@@ -39,8 +39,13 @@ def tests_from_modules(*modules):
 from ..tests import test_categories
 from ..tests import test_ophot
 from ..tests import test_photos
-from ..tests import test_users
+from ..tests import test_user
 from ..tests import test_views
 
-alltests = tests_from_modules(test_categories, test_ophot, test_photos,
-                              test_users, test_views)
+alltests = tests_from_modules(
+    #test_categories,
+    #test_ophot,
+    #test_photos,
+    test_user,
+    #test_views
+    )

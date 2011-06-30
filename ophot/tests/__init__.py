@@ -67,6 +67,19 @@ class temp_photos(object):
         self.conn.close()
 
 
+# HACK this wrapper is required because the Flask test client (which is itself
+# a wrapper around the Werkzeug test client) has no "patch()" function. This
+# acts as a transparent wrapper which adds that function to the test client.
+# class PatchableTestClientWrapper(object):
+#     def __init__(self, test_client):
+#         self.client = test_client
+#     def __getattr__(self, name):
+#         return getattr(self.client, name)
+#     def patch(self, *args, **kw):
+#         kw['method'] = 'PATCH'
+#         return self.client.open(*args, **kw)
+#    
+#
 class TestSupport(TestCase):
     """Base class for test cases in other modules in this package which
     provides login and logout functions, and set up and tear down functions.
@@ -93,8 +106,8 @@ class TestSupport(TestCase):
         client for testing.
 
         """
-        s = tempfile.mkstemp()
         self.db_fd, app.config['DATABASE'] = tempfile.mkstemp()
+        #self.app = PatchableTestClientWrapper(app.test_client())
         self.app = app.test_client()
         # HACK when run from "python setup.py test", the path to the database
         # schema used to initialize the database has one too many "ophot/"
