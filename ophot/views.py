@@ -20,6 +20,7 @@ from __future__ import absolute_import
 from __future__ import division
 
 # imports from built-in modules
+import json
 import os.path
 from uuid import uuid4 as random_uuid
 
@@ -42,6 +43,7 @@ from ophot import app
 from ophot import get_last_display_position
 from ophot import require_logged_in
 from ophot import site_config
+from ophot.categories import get_categories
 from ophot.forms import ChangeSplashPhotoForm
 from ophot.queries import Q_ADD_PHOTO
 
@@ -280,7 +282,7 @@ def settings():
 @app.route('/')
 def show_splash():
     """Shows the splash page as the root."""
-    categories = get_categories().iteritems()
+    categories = json.loads(get_categories().data).iteritems()
     bio = _to_html_paragraphs(site_config['BIO'])
     contact = _to_html_paragraphs(site_config['CONTACT'])
     return render_template('splash.html', realname=realname,
