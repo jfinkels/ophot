@@ -35,10 +35,6 @@ class temp_photos(object):
     then on exit removes the files.
 
     """
-    def __init__(self):
-        """This function does nothing."""
-        pass
-
     def __enter__(self):
         """Creates temporary photos and adds them to the database.
 
