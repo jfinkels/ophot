@@ -21,6 +21,8 @@ from __future__ import division
 
 # imports from built-in modules
 import json
+import os
+import tempfile
 import unittest
 
 # imports from third-party modules
@@ -32,43 +34,50 @@ from ophot import site_config
 from ophot.tests import TestSupport
 
 
-class preserve_site_config:
-    """Context manager (for use in a "with" statement) which stores the
-    original configuration settings from a file on enter, and rewrites those
-    settings on exit.
+class preserve_site_config(object):
+    """Context manager (for use in a "with" statement) which makes the
+    ophot.site_config object write changes to a temporary file while in the
+    context, then reloads the original configuration on exit.
 
     """
-    def __init__(self):
-        """Does nothing."""
-        pass
 
     def __enter__(self):
-        """Reads the configuration settings file and stashes it so that it can
-        be restored later.
-
-        Returns a copy of the original config (in case calling code makes
-        changes to this context manager).
+        """Makes the ophot.site_config object use a temporary file for changes
+        made within this context.
 
         """
-        self.original_config = ConfigObj(app.config['SETTINGS_FILE'])
-        return ConfigObj(self.original_config)
+        # create a temp file for the site_config where changes will be written
+        self.fd, self.filename = tempfile.mkstemp()
+        # write the contents of the current site_config to the temp file
+        site_config.filename = self.filename
+        site_config.write()
 
     def __exit__(self, exception_type, exception_value, traceback):
-        """Writes the original configuration settings back to the settings
-        file.
+        """Reloads the original configuration back into ophot.site_config."""
+        # delete the temporary file
+        os.close(self.fd)
+        os.unlink(self.filename)
+        # reload the original site_config information
+        site_config.filename = app.config['SETTINGS_FILE']
+        site_config.reload()
 
-        """
-        self.original_config.write()
 
-@unittest.skip('Skip until figure out how to get POST to work')
 class UserTestCase(TestSupport):
     """Test class for the user module."""
+
+    def _assert_config_matches(self, result):
+        """Asserts that all configuration key/value pairs in the specified JSON
+        response match the expected values in the corresponding site_config
+        key/value pairs.
+
+        """
+        for name in result:
+            self.assertEqual(site_config[name.upper()], result[name])
 
     def test_get_user_settings(self):
         """Tests getting the user settings."""
         result = json.loads(self.app.get('/user').data)
-        for name in result:
-            self.assertEqual(site_config[name.upper()], result[name])
+        self._assert_config_matches(result)
 
     def test_update_spacing(self):
         """Tests changing the spacing (in pixels) between photos on the splash
@@ -76,51 +85,41 @@ class UserTestCase(TestSupport):
 
         """
         self._login()
-        with preserve_site_config() as conf:
-            response = self.app.post('/user', data='spacing=123', content_type='application/x-www-form-urlencoded')
+        with preserve_site_config():
+            response = self.app.post('/user', data=dict(spacing=123))
             result = json.loads(response.data)
-            self.assertEqual(conf['BIO'], result['bio'])
-            self.assertEqual(conf['CONTACT'], result['contact'])
+            self._assert_config_matches(result)
             self.assertEqual(123, result['spacing'])
-            for name in result:
-                self.assertEqual(site_config[name.upper()], result[name])
         # TODO test change spacing if no spacing exists yet
 
     def test_update_bio(self):
         """Test for updating bio information."""
         self._login()
         with preserve_site_config() as conf:
-            result = json.loads(self.app.patch('/user', data=dict(bio='foo bar\nbaz')).data)
-            
+            response = self.app.post('/user', data=dict(bio='foo bar\nbaz'))
+            result = json.loads(response.data)
+            self._assert_config_matches(result)
             self.assertEqual('foo bar\nbaz', result['bio'])
-            self.assertEqual(conf['CONTACT'], result['contact'])
-            self.assertEqual(conf['SPACING'], result['spacing'])
-            for name in result:
-                self.assertEqual(site_config[name.upper()], result[name])
         # TODO test bogus parameters
 
     def test_update_contact(self):
-        """Test for updating bio information."""
+        """Test for updating contact information."""
         self._login()
         with preserve_site_config() as conf:
-            result = json.loads(self.app.patch('/user', data=dict(bio='foo bar\nbaz')).data)
-            
-            self.assertEqual('foo bar\nbaz', result['bio'])
-            self.assertEqual(conf['CONTACT'], result['contact'])
-            self.assertEqual(conf['SPACING'], result['spacing'])
-            for name in result:
-                self.assertEqual(site_config[name.upper()], result[name])
+            response = self.app.post('/user', data=dict(contact='foobar'))
+            result = json.loads(response.data)
+            self._assert_config_matches(result)
+            self.assertEqual('foobar', result['contact'])
         # TODO test bogus parameters
 
     def test_update_multiple(self):
         """Test for updating multiple user settings."""
         self._login()
-        with preserve_site_config() as conf:
-            result = json.loads(self.app.patch('/user', data=dict(bio='foo bar\nbaz', contact='hello')).data)
-            
+        with preserve_site_config():
+            response = self.app.post('/user', data=dict(bio='foo bar\nbaz',
+                                                        contact='hello'))
+            result = json.loads(response.data)
+            self._assert_config_matches(result)
             self.assertEqual('foo bar\nbaz', result['bio'])
             self.assertEqual('hello', result['contact'])
-            self.assertEqual(conf['SPACING'], result['spacing'])
-            for name in result:
-                self.assertEqual(site_config[name.upper()], result[name])
         # TODO test bogus parameters
