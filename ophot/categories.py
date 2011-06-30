@@ -77,7 +77,7 @@ def create_category():
 
     """
     require_logged_in()
-    categoryname = request.args.get('name')
+    categoryname = request.form.get('name')
     g.db.execute(Q_ADD_CATEGORY, [categoryname])
     g.db.commit()
     result = g.db.execute(Q_GET_CATEGORY_BY_NAME.format(categoryname))
@@ -120,8 +120,8 @@ def update_category(categoryid):
             "name": "foo"
         }
     """
-    if 'name' in request.args:
-        _update_category_name(categoryid, request.args.get('name'))
+    if 'name' in request.form:
+        _update_category_name(categoryid, request.form.get('name'))
     # TODO is it correct to make another read from the database to get the
     # updated data, or should we just assume that the updated data is there?
     return get_category(categoryid)

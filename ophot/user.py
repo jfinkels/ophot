@@ -68,12 +68,12 @@ def update_user_settings():
         }
     """
     require_logged_in()
-    if 'bio' in request.args:
-        site_config['BIO'] = request.args.get('bio')
-    if 'contact' in request.args:
-        site_config['CONTACT'] = request.args.get('contact')
-    if 'spacing' in request.args:
+    if 'bio' in request.form:
+        site_config['BIO'] = request.form.get('bio')
+    if 'contact' in request.form:
+        site_config['CONTACT'] = request.form.get('contact')
+    if 'spacing' in request.form:
         # TODO use a validator for configobj
-        site_config['SPACING'] = int(request.args.get('spacing'))
+        site_config['SPACING'] = int(request.form.get('spacing'))
     site_config.write()
     return get_user_settings()

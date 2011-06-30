@@ -172,10 +172,10 @@ def update_photo(photoid):
         }
     """
     require_logged_in()
-    if 'categoryid' in request.args:
-        _update_photo_category(photoid, request.args.get('categoryid'))
+    if 'categoryid' in request.form:
+        _update_photo_category(photoid, request.form.get('categoryid'))
     if 'displayposition' in request.args:
-        _update_photo_displaypos(photoid, request.args.get('displayposition'))
+        _update_photo_displaypos(photoid, request.form.get('displayposition'))
     # TODO is it correct to make another read from the database to get the
     # updated data, or should we just assume that the updated data is there?
     return get_photo(photoid)
