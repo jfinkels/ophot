@@ -137,7 +137,8 @@ def get_photos_by_category(categoryid):
                                     'categoryid'), row) for row in result])
 
 
-@app.route('/photos/<int:photoid>', methods=['PATCH'])
+#@app.route('/photos/<int:photoid>', methods=['PATCH'])
+@app.route('/photos/<int:photoid>', methods=['POST'])
 def update_photo(photoid):
     """Updates the properties of the photo with the specified ID.
 

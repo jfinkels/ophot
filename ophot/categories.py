@@ -102,7 +102,8 @@ def get_category(categoryid):
     return jsonify(to_category_dict(result.fetchone()))
 
 
-@app.route('/categories/<int:categoryid>', methods=['PATCH'])
+#@app.route('/categories/<int:categoryid>', methods=['PATCH'])
+@app.route('/categories/<int:categoryid>', methods=['POST'])
 def update_category(categoryid):
     """Updates the properties of the category with the specified ID.
 

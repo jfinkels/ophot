@@ -21,6 +21,7 @@ from __future__ import division
 
 # imports from third-party modules
 from flask import jsonify
+from flask import request
 
 # imports from this application
 from ophot import app
@@ -43,7 +44,8 @@ def get_user_settings():
                    spacing=site_config['SPACING'])
 
 
-@app.route('/user', methods=['PATCH'])
+#@app.route('/user', methods=['PATCH'])
+@app.route('/user', methods=['POST'])
 def update_user_settings():
     """Updates the user settings.
 
