@@ -58,8 +58,21 @@
   <div id="container" class="container absolute-position">
     {% if session.logged_in %}
     <ul id="admin-links" class="upper-right inline-list">
-      <li class="admin-li"><a href="{{ url_for('settings') }}" id="settings" class="admin-link">settings</a></li>
-      <li class="admin-li"><a href="{{ url_for('logout') }}" id="logout" class="admin-link">logout</a></li>
+      <li class="admin-li">
+        <a href="{{ url_for('settings') }}" id="settings" class="admin-link">
+          settings
+      </a>
+      </li>
+      <li class="admin-li">
+        <a href="{{ url_for('add_photos') }}" id="add-photos" class="admin-link">
+          add&nbsp;photos
+        </a>
+      </li>
+      <li class="admin-li">
+        <a href="{{ url_for('logout') }}" id="logout" class="admin-link">
+          logout
+        </a>
+      </li>
     </ul>
     {% endif %}
     <h1><a href="{{ url_for('show_splash') }}">{{ realname }} <span class="gray-text">photography</span></a></h1>

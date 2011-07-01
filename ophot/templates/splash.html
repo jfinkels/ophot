@@ -160,13 +160,6 @@
             </li>
             <li><a href="#" class="nav-link" id="bio-link">bio</a></li>
             <li><a href="#" class="nav-link" id="contact-link">contact</a></li>
-            {% if session.logged_in %}
-            <li>
-              <a href="{{ url_for('add_photos') }}" class="nav-link">
-                add&nbsp;photos
-              </a>
-            </li>
-            {% endif %}
           </ul>
         </div>
     </div>
