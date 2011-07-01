@@ -70,7 +70,11 @@
     // TODO show a little "saved" message
   }
 
-  function updatedPersonalInfo(data, textStatus, xhr) {
+  function updatedContact(data, textStatus, xhr) {
+    // TODO show a little "saved" message
+  }
+
+  function updatedBio(data, textStatus, xhr) {
     // TODO show a little "saved" message
   }
 
@@ -102,13 +106,22 @@
       nameCell = $(this).parent().siblings(".cat-name");
       name = nameCell.html();
       categoryId = nameCell.attr('id');
-      nameCell.html('<input type="text" value="' + name + '"/>');
+      nameCell.html('<input class="rename" type="text" value="' + name
+                    + '"/>');
       nameCell.children("input").focus();
       //var deleteLink = $(this).parent().siblings(".delete-cat");
       //deleteLink.replaceWith('<a href="#" id="cancel">cancel</a>');
       $(this).replaceWith('<a href="#" id="' + categoryId
                           + '" class="confirm-name-change">save</a>');
     });
+
+    $(".rename").live("keypress", function(event) {
+      // if someone presses enter, trigger a click on the "save" link
+      if (event.keyCode === 13) {
+        var catOptions = $(this).parent().siblings(".cat-options");
+        catOptions.children(".confirm-name-change").click();
+      }
+    })
 
     $(".confirm-name-change").live("click", function(event) {
       var nameCell, categoryId, input, categoryName;
