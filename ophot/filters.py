@@ -14,43 +14,33 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Ophot.  If not, see <http://www.gnu.org/licenses/>.
-"""Provides all the tests as a suite.
-
-This test suite can be specified in the setup.py script as the test suite for
-the "python setup.py test" command.
-
-"""
+"""Provides custom filters for Jinja templates."""
 # imports for compatibility with future python versions
 from __future__ import absolute_import
 from __future__ import division
 
 # imports from built-in modules
-from unittest import defaultTestLoader as loader
-from unittest import TestSuite as Suite
+import re
 
+# imports from third-party modules
+from jinja2 import evalcontextfilter
+from jinja2 import Markup
 
-def tests_from_modules(*modules):
-    """Returns a unittest.TestSuite containing tests loaded from all the
-    modules listed in *modules*.
+# imports from this application
+from .app import app
+
+# a regular expression which matches email addresses, from
+# http://www.regular-expressions.info/email.html
+EMAILS = re.compile(r'\b([A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4})\b', re.I)
+
+@app.template_filter()
+@evalcontextfilter
+def link_emails(eval_context, data):
+    """Replaces email addresses in the specified *data* string with HTML mailto
+    links.
 
     """
-    return Suite([loader.loadTestsFromModule(module) for module in modules])
-
-
-from . import test_categories
-from . import test_filters
-from . import test_ophot
-from . import test_photos
-from . import test_rest
-from . import test_user
-from . import test_views
-
-alltests = tests_from_modules(
-    test_categories,
-    test_filters,
-    test_ophot,
-    test_photos,
-    test_rest,
-    test_user,
-    test_views
-    )
+    result = EMAILS.sub(r'<a href="mailto:\1">\1</a>', data)
+    if eval_context.autoescape:
+        result = Markup(result)
+    return result
