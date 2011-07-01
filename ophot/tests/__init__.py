@@ -58,6 +58,7 @@ class temp_photos(object):
                           ['photo3', '2', '1'])
         self.conn.commit()
 
+    # TODO why not just put this at the end of enter?
     def __exit__(self, exception_type, exception_value, traceback):
         """Unlinks the temporary files and closes the database connection."""
         self.conn.close()
