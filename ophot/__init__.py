@@ -16,6 +16,7 @@
 # along with Ophot.  If not, see <http://www.gnu.org/licenses/>.
 """Imports the Flask application and all modules which it requires."""
 import ophot.app
+import ophot.filters
 import ophot.user
 import ophot.photos
 import ophot.categories
