@@ -82,8 +82,7 @@ def get_photo(photoid):
         }
     """
     result = g.db.execute(Q_GET_PHOTO.format(photoid)).fetchone()
-    return jsonify(_to_photo_dict(('id', 'displayposition', 'filename',
-                                   'categoryid'), result))
+    return jsonify(to_photo_dict(result))
         
 
 @app.route('/photos', methods=['GET'])
@@ -91,24 +90,26 @@ def get_photos():
     """Returns information for every photo in the database.
 
     The JSON response will look like this::
-        [
-            {
-                "id": 42,
-                "displayposition": 1,
-                "filename": "path/to/file42",
-                "categoryid": 2
-            },
-            {
-                "id": 43,
-                "displayposition": 2,
-                "filename": "path/to/file43",
-                "categoryid": 2
-            }
-        ]
+        {
+            "items":
+              [
+                  {
+                      "id": 42,
+                      "displayposition": 1,
+                      "filename": "path/to/file42",
+                      "categoryid": 2
+                  },
+                  {
+                      "id": 43,
+                      "displayposition": 2,
+                      "filename": "path/to/file43",
+                      "categoryid": 2
+                  }
+              ]
+        }
     """
     result = g.db.execute(Q_GET_PHOTOS).fetchall()
-    return jsonify([_to_photo_dict(('id', 'displayposition', 'filename',
-                                    'categoryid'), row) for row in result])
+    return jsonify(items=[to_photo_dict(row) for row in result])
 
 
 @app.route('/photos/by-category/<int:categoryid>', methods=['GET'])
@@ -117,24 +118,26 @@ def get_photos_by_category(categoryid):
     photo display position in ascending order.
 
     The JSON response will look like this::
-        [
-            {
-                "id": 42,
-                "displayposition": 1,
-                "filename": "path/to/file42",
-                "categoryid": 2
-            },
-            {
-                "id": 43,
-                "displayposition": 2,
-                "filename": "path/to/file43",
-                "categoryid": 2
-            }
-        ]
+        {
+            "items":
+              [
+                  {
+                      "id": 42,
+                      "displayposition": 1,
+                      "filename": "path/to/file42",
+                      "categoryid": 2
+                  },
+                  {
+                      "id": 43,
+                      "displayposition": 2,
+                      "filename": "path/to/file43",
+                      "categoryid": 2
+                  }
+              ]
+        }
     """
     result = g.db.execute(Q_GET_PHOTOS_BY_CAT.format(categoryid)).fetchall()
-    return jsonify([_to_photo_dict(('id', 'displayposition', 'filename',
-                                    'categoryid'), row) for row in result])
+    return jsonify(items=[to_photo_dict(row) for row in result])
 
 
 #@app.route('/photos/<int:photoid>', methods=['PATCH'])

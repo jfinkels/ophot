@@ -49,23 +49,26 @@ def get_categories():
     array sorted by name in ascending order.
 
     The JSON response will look like this::
-        [
-            {
-                "id": 1,
-                "name": "landscape"
-            },
-            {
-                "id": 3,
-                "name": "personal"
-            },
-            {
-                "id": 2,
-                "name": "portrait"
-            }
-        ]
+        {
+            "items":
+              [
+                  {
+                      "id": 1,
+                      "name": "landscape"
+                  },
+                  {
+                      "id": 3,
+                      "name": "personal"
+                  },
+                  {
+                      "id": 2,
+                      "name": "portrait"
+                  }
+              ]
+        }
     """
     result = g.db.execute(Q_GET_CATEGORIES).fetchall()
-    return jsonify([to_category_dict(row) for row in result])
+    return jsonify(items=[to_category_dict(row) for row in result])
 
 
 @app.route('/categories', methods=['POST'])
@@ -74,6 +77,17 @@ def create_category():
 
     Request argument is *name*, a string which is the name of the category to
     add.
+
+    For example, if the input is::
+        {
+            "name": "foo"
+        }
+
+    then the JSON response will look like this::
+        {
+            "id": 4,
+            "name": "foo"
+        }
 
     """
     require_logged_in()
@@ -92,6 +106,11 @@ def create_category():
 def get_category(categoryid):
     """Returns information for the category with the specified ID.
     
+    For example, if the input is::
+        {
+            "id": 1
+        }
+
     The JSON response will look like this::
         {
             "id": 1,
@@ -131,7 +150,8 @@ def update_category(categoryid):
 def delete_category(categoryid):
     """Deletes the category with the specified ID.
 
-    Returns a response of HTTP Status 204 No Content.
+    If the category is deleted, the response will be HTTP Status 204 No
+    Content.
 
     """
     require_logged_in()
