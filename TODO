@@ -7,3 +7,4 @@
 * use PATCH instead of POST, once PATCH is added to Werkzeug
 * tests should check that status_codes are correct
 * check for malformed inputs universally on functions that affect the DB
+* edit bio, contact info, and purchase info directly on the splash page
