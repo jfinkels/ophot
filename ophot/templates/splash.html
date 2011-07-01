@@ -126,18 +126,18 @@
       <div id="contact-info"
            class="info-box black-background absolute-position">
         <div class="info-box-inner">
-          {{ contact|safe }}
+          {{ contact|link_emails|safe }}
         </div>
       </div>
       <div id="bio" class="info-box black-background absolute-position">
         <div class="scroll-pane info-box-inner">
-          {{ bio|safe }}
+          {{ bio|link_emails|safe }}
         </div>
       </div>
       <div id="purchase-info"
            class="info-box black-background absolute-position">
         <div class="info-box-inner">
-          {{ purchase|safe }}
+          {{ purchase|link_emails|safe }}
         </div>
       </div>
         <div id="banner" class="banner black-background">
