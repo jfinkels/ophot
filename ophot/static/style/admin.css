@@ -156,6 +156,10 @@
   margin-right: 10px;
 }
 
+.admin-li:last-child {
+  margin-right: 0;
+}
+
 .top-right-list li:last-child {
   margin-right: 0;
 }
