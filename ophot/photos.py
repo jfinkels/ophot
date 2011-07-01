@@ -31,6 +31,7 @@ from ophot import get_last_display_position
 from ophot import require_logged_in
 from ophot import select_single
 from ophot._rest import to_photo_dict
+from ophot._rest import jsonify_status_code
 from ophot.queries import Q_DELETE_PHOTO
 from ophot.queries import Q_GET_PHOTO
 from ophot.queries import Q_GET_PHOTO_BY_DISPLAYPOS
@@ -82,6 +83,8 @@ def get_photo(photoid):
         }
     """
     result = g.db.execute(Q_GET_PHOTO.format(photoid)).fetchone()
+    if result is None:
+        return jsonify_status_code(404, message='Not found')
     return jsonify(to_photo_dict(result))
         
 
@@ -182,7 +185,7 @@ def update_photo(photoid):
         return jsonify_status_code(400, message=message)
     if 'categoryid' in request.form:
         _update_photo_category(photoid, request.form.get('categoryid'))
-    if 'displayposition' in request.args:
+    if 'displayposition' in request.form:
         _update_photo_displaypos(photoid, request.form.get('displayposition'))
     # TODO is it correct to make another read from the database to get the
     # updated data, or should we just assume that the updated data is there?
