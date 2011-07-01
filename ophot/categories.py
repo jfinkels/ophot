@@ -28,7 +28,10 @@ from flask import make_response
 # imports from this application
 from ophot import app
 from ophot import require_logged_in
+from ophot._rest import jsonify_status_code
 from ophot._rest import to_category_dict
+from ophot.queries import Q_ADD_CATEGORY
+from ophot.queries import Q_DELETE_CATEGORY
 from ophot.queries import Q_GET_CATEGORIES
 from ophot.queries import Q_GET_CATEGORY_BY_ID
 from ophot.queries import Q_GET_CATEGORY_BY_NAME
@@ -39,7 +42,7 @@ def _update_category_name(categoryid, name):
     """Updates the name of the category with the specified ID.
 
     """
-    g.db.execute(Q_UPDATE_CATEGORY_NAME.format(categoryid, name))
+    g.db.execute(Q_UPDATE_CATEGORY_NAME.format(name, categoryid))
     g.db.commit()
 
 
@@ -116,9 +119,15 @@ def get_category(categoryid):
             "id": 1,
             "name": "personal"
         }
+
+    If the category with the specified ID cannot be found, the response will be
+    HTTP Error 404 Not Found and the JSON response will look like this::
+        { "message": "Not found" }
     """
-    result = g.db.execute(Q_GET_CATEGORY_BY_ID.format(categoryname))
-    return jsonify(to_category_dict(result.fetchone()))
+    result = g.db.execute(Q_GET_CATEGORY_BY_ID.format(categoryid)).fetchone()
+    if result is None:
+        return jsonify_status_code(404, message='Not found')
+    return jsonify(to_category_dict(result))
 
 
 #@app.route('/categories/<int:categoryid>', methods=['PATCH'])
