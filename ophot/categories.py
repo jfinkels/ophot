@@ -26,16 +26,16 @@ from flask import request
 from flask import make_response
 
 # imports from this application
-from ophot import app
-from ophot import require_logged_in
-from ophot._rest import jsonify_status_code
-from ophot._rest import to_category_dict
-from ophot.queries import Q_ADD_CATEGORY
-from ophot.queries import Q_DELETE_CATEGORY
-from ophot.queries import Q_GET_CATEGORIES
-from ophot.queries import Q_GET_CATEGORY_BY_ID
-from ophot.queries import Q_GET_CATEGORY_BY_NAME
-from ophot.queries import Q_UPDATE_CATEGORY_NAME
+from . import app
+from ._rest import jsonify_status_code
+from ._rest import to_category_dict
+from .helpers import require_logged_in
+from .queries import Q_ADD_CATEGORY
+from .queries import Q_DELETE_CATEGORY
+from .queries import Q_GET_CATEGORIES
+from .queries import Q_GET_CATEGORY_BY_ID
+from .queries import Q_GET_CATEGORY_BY_NAME
+from .queries import Q_UPDATE_CATEGORY_NAME
 
 
 def _update_category_name(categoryid, name):

@@ -39,13 +39,13 @@ from flaskext.wtf.file import file_required
 import Image
 
 # imports from this application
-from ophot import app
-from ophot import get_last_display_position
-from ophot import require_logged_in
-from ophot import site_config
-from ophot.categories import get_categories
-from ophot.forms import ChangeSplashPhotoForm
-from ophot.queries import Q_ADD_PHOTO
+from . import app
+from . import site_config
+from .categories import get_categories
+from .helpers import get_last_display_position
+from .helpers import require_logged_in
+from .forms import ChangeSplashPhotoForm
+from .queries import Q_ADD_PHOTO
 
 # the first and last name of the photographer
 realname = app.config['NAME']

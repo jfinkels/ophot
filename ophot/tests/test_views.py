@@ -26,24 +26,24 @@ import unittest
 import uuid
 
 # imports from this application
-from ophot import app
-from ophot import before_request
-from ophot.categories import get_categories
-from ophot.tests import TestSupport
-from ophot.views import _allowed_file
-from ophot.views import _generate_filename
-from ophot.views import _get_category_names
-from ophot.views import _get_categories_plus_new
-from ophot.views import _to_html_paragraphs
-from ophot.views import add_photos
-from ophot.views import change_splash_photo
-from ophot.views import forbidden
-from ophot.views import login
-from ophot.views import logout
-from ophot.views import page_not_found
-from ophot.views import settings
-from ophot.views import show_splash
-from ophot.views import unauthorized
+from .. import app
+from .. import before_request
+from ..categories import get_categories
+from ..views import _allowed_file
+from ..views import _generate_filename
+from ..views import _get_category_names
+from ..views import _get_categories_plus_new
+from ..views import _to_html_paragraphs
+from ..views import add_photos
+from ..views import change_splash_photo
+from ..views import forbidden
+from ..views import login
+from ..views import logout
+from ..views import page_not_found
+from ..views import settings
+from ..views import show_splash
+from ..views import unauthorized
+from . import TestSupport
 
 
 class ViewsTestCase(TestSupport):

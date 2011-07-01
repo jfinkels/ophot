@@ -24,9 +24,9 @@ from flask import jsonify
 from flask import request
 
 # imports from this application
-from ophot import app
-from ophot import require_logged_in
-from ophot import site_config
+from . import app
+from . import site_config
+from .helpers import require_logged_in
 
 
 @app.route('/user', methods=['GET'])

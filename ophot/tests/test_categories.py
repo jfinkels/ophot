@@ -24,7 +24,7 @@ import json
 import unittest
 
 # imports from this application
-from ophot.tests import TestSupport
+from . import TestSupport
 
 
 class CategoriesTestCase(TestSupport):

@@ -26,20 +26,20 @@ from flask import request
 from flask import make_response
 
 # imports from this application
-from ophot import app
-from ophot import get_last_display_position
-from ophot import require_logged_in
-from ophot import select_single
-from ophot._rest import to_photo_dict
-from ophot._rest import jsonify_status_code
-from ophot.queries import Q_DELETE_PHOTO
-from ophot.queries import Q_GET_PHOTO
-from ophot.queries import Q_GET_PHOTO_BY_DISPLAYPOS
-from ophot.queries import Q_GET_PHOTO_DISPLAYPOS
-from ophot.queries import Q_GET_PHOTOS
-from ophot.queries import Q_GET_PHOTOS_BY_CAT
-from ophot.queries import Q_UPDATE_PHOTO_CATEGORY
-from ophot.queries import Q_UPDATE_PHOTO_DISPLAYPOS
+from . import app
+from ._rest import to_photo_dict
+from ._rest import jsonify_status_code
+from .helpers import get_last_display_position
+from .helpers import require_logged_in
+from .helpers import select_single
+from .queries import Q_DELETE_PHOTO
+from .queries import Q_GET_PHOTO
+from .queries import Q_GET_PHOTO_BY_DISPLAYPOS
+from .queries import Q_GET_PHOTO_DISPLAYPOS
+from .queries import Q_GET_PHOTOS
+from .queries import Q_GET_PHOTOS_BY_CAT
+from .queries import Q_UPDATE_PHOTO_CATEGORY
+from .queries import Q_UPDATE_PHOTO_DISPLAYPOS
 
 
 def _update_photo_category(photoid, categoryid):

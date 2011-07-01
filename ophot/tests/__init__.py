@@ -19,14 +19,16 @@
 from __future__ import absolute_import
 from __future__ import division
 
+# imports from built-in modules
 import os
 import os.path
 import tempfile
 from unittest import TestCase
 
-from ophot import app
-from ophot import connect_db
-from ophot import init_db
+# imports from this application
+from .. import app
+from .. import connect_db
+from .. import init_db
 
 
 class temp_photos(object):

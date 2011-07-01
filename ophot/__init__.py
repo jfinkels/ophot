@@ -30,15 +30,8 @@ import sqlite3
 
 # imports from third party modules
 from configobj import ConfigObj
-from flask import abort
 from flask import Flask
 from flask import g
-from flask import session
-
-# imports from this application
-from ophot.queries import Q_GET_CATEGORY
-from ophot.queries import Q_GET_CATEGORIES
-from ophot.queries import Q_GET_LAST_DISP_POS
 
 # create the application and get app configuration from config.py, or a file
 app = Flask('ophot')
@@ -111,17 +104,6 @@ def connect_db():
     return sqlite3.connect(app.config['DATABASE'])
 
 
-def get_last_display_position(categoryid):
-    """Helper method which returns the index in the display sequence of the
-    last photo in the specified category.
-
-    Might return None.
-
-    """
-    # sometimes returns None
-    return select_single(Q_GET_LAST_DISP_POS.format(categoryid))
-
-
 def init_db():
     """Initialize the database using the schema specified in the configuration.
 
@@ -130,37 +112,6 @@ def init_db():
         with app.open_resource(app.config['SCHEMA']) as f:
             db.cursor().executescript(f.read())
         db.commit()
-
-
-def require_logged_in():
-    """Aborts with HTTP error 401 Unauthorized if the user is not logged in on
-    this session.
-
-    """
-    if not session.get('logged_in'):
-        abort(401)
-
-
-def select_single_row(query):
-    """Executes the given query and returns the first matching row, or None if
-    the query would not return any rows.
-
-    """
-    result = g.db.execute(query).fetchone()
-    return result
-
-
-def select_single(query):
-    """Executes the given *query* and returns the first field in the first
-    matching row.
-
-    If the specified query would return no rows, then this function returns
-    None.
-    """
-    result = select_single_row(query)
-    if result is None:
-        return None
-    return result[0]
 
 
 import ophot.user

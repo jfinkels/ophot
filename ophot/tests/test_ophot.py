@@ -33,17 +33,17 @@ from flask import g
 from werkzeug.exceptions import Unauthorized
 
 # imports from this application
-from ophot import app
-from ophot import after_request
-from ophot import before_request
-from ophot import connect_db
-from ophot import init_db
-from ophot import get_last_display_position
-from ophot import require_logged_in
-from ophot import select_single
-from ophot import select_single_row
-from ophot.tests import TestSupport
-from ophot.tests import temp_photos
+from .. import app
+from .. import after_request
+from .. import before_request
+from .. import connect_db
+from .. import init_db
+from ..helpers import get_last_display_position
+from ..helpers import require_logged_in
+from ..helpers import select_single
+from ..helpers import select_single_row
+from . import TestSupport
+from . import temp_photos
 
 
 class OphotTestCase(TestSupport):

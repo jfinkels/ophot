@@ -29,9 +29,9 @@ import unittest
 from configobj import ConfigObj
 
 # imports from this application
-from ophot import app
-from ophot import site_config
-from ophot.tests import TestSupport
+from .. import app
+from .. import site_config
+from . import TestSupport
 
 
 class preserve_site_config(object):
