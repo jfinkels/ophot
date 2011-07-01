@@ -44,7 +44,7 @@ from ..tests import test_user
 from ..tests import test_views
 
 alltests = tests_from_modules(
-    #test_categories,
+    test_categories,
     test_ophot,
     #test_photos,
     test_rest,
