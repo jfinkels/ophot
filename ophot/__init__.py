@@ -24,7 +24,6 @@ from __future__ import absolute_import
 from __future__ import division
 
 # imports from built-in modules
-from collections import OrderedDict
 from contextlib import closing
 import sqlite3
 
