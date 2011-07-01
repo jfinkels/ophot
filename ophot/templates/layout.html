@@ -49,10 +49,8 @@
 </head>
 <body class="black-background">
   {% for message in get_flashed_messages() %}
-  <div class="flash black-background">
-    <div class="flash-inner white-text">
+  <div class="flash black-background white-text">
       {{ message }} <a href="#" class="close">Close me.</a>
-    </div>
   </div>
   {% endfor %}
   {# this block will only be implemented by the splash.html template #}
