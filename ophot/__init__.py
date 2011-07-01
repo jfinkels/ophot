@@ -141,6 +141,15 @@ def require_logged_in():
         abort(401)
 
 
+def select_single_row(query):
+    """Executes the given query and returns the first matching row, or None if
+    the query would not return any rows.
+
+    """
+    result = g.db.execute(query).fetchone()
+    return result
+
+
 def select_single(query):
     """Executes the given *query* and returns the first field in the first
     matching row.
@@ -148,7 +157,7 @@ def select_single(query):
     If the specified query would return no rows, then this function returns
     None.
     """
-    result = g.db.execute(query).fetchone()
+    result = select_single_row(query)
     if result is None:
         return None
     return result[0]

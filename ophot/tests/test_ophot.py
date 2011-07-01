@@ -41,6 +41,7 @@ from ophot import init_db
 from ophot import get_last_display_position
 from ophot import require_logged_in
 from ophot import select_single
+from ophot import select_single_row
 from ophot.tests import TestSupport
 from ophot.tests import temp_photos
 
@@ -157,3 +158,28 @@ class OphotTestCase(TestSupport):
                 position = select_single('select photodisplayposition from'
                                          ' photo where photocategory=3')
                 self.assertIsNone(None, position)
+
+    def test_select_single_row(self):
+        """Tests that the select_single function returns the first matched row
+        of a query.
+
+        """
+        with app.test_request_context('/'):
+            before_request()
+            with temp_photos():
+                photo = select_single_row('select * from photo'
+                                          ' where photocategory=1')
+                self.assertEqual(4, len(photo))
+                photoid, pos, filename, category = photo
+                self.assertEqual(1, photoid)
+                self.assertEqual(2, pos)
+                self.assertEqual('photo1', filename)
+                self.assertEqual(1, category)
+                photo = select_single_row('select * from photo'
+                                          ' where photocategory=2')
+                self.assertEqual(4, len(photo))
+                photoid, pos, filename, category = photo
+                self.assertEqual(3, photoid)
+                self.assertEqual(1, pos)
+                self.assertEqual('photo3', filename)
+                self.assertEqual(2, category)
