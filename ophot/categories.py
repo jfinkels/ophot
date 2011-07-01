@@ -26,7 +26,7 @@ from flask import request
 from flask import make_response
 
 # imports from this application
-from . import app
+from .app import app
 from ._rest import jsonify_status_code
 from ._rest import to_category_dict
 from .helpers import require_logged_in

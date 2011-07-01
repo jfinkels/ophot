@@ -26,7 +26,7 @@ from flask import request
 from flask import make_response
 
 # imports from this application
-from . import app
+from .app import app
 from ._rest import to_photo_dict
 from ._rest import jsonify_status_code
 from .helpers import get_last_display_position

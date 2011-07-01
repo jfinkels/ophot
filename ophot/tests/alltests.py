@@ -24,6 +24,7 @@ the "python setup.py test" command.
 from __future__ import absolute_import
 from __future__ import division
 
+# imports from built-in modules
 from unittest import defaultTestLoader as loader
 from unittest import TestSuite as Suite
 
@@ -36,12 +37,12 @@ def tests_from_modules(*modules):
     return Suite([loader.loadTestsFromModule(module) for module in modules])
 
 
-from ..tests import test_categories
-from ..tests import test_ophot
-from ..tests import test_photos
-from ..tests import test_rest
-from ..tests import test_user
-from ..tests import test_views
+from . import test_categories
+from . import test_ophot
+from . import test_photos
+from . import test_rest
+from . import test_user
+from . import test_views
 
 alltests = tests_from_modules(
     test_categories,

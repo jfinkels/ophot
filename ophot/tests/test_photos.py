@@ -23,8 +23,8 @@ from __future__ import division
 import json
 
 # imports from this application
-from . import temp_photos
-from . import TestSupport
+from .helpers import temp_photos
+from .helpers import TestSupport
 
 
 # TODO override setUp() and tearDown() in this class to just do whatever with

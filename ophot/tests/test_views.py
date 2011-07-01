@@ -26,9 +26,9 @@ import unittest
 import uuid
 
 # imports from this application
-from .. import app
-from .. import before_request
+from ..app import app
 from ..categories import get_categories
+from ..helpers import before_request
 from ..views import _allowed_file
 from ..views import _generate_filename
 from ..views import _get_category_names
@@ -43,7 +43,7 @@ from ..views import page_not_found
 from ..views import settings
 from ..views import show_splash
 from ..views import unauthorized
-from . import TestSupport
+from .helpers import TestSupport
 
 
 class ViewsTestCase(TestSupport):

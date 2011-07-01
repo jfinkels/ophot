@@ -25,13 +25,10 @@ import os
 import tempfile
 import unittest
 
-# imports from third-party modules
-from configobj import ConfigObj
-
 # imports from this application
-from .. import app
-from .. import site_config
-from . import TestSupport
+from ..app import app
+from ..app import site_config
+from .helpers import TestSupport
 
 
 class preserve_site_config(object):

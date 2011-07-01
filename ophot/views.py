@@ -39,8 +39,8 @@ from flaskext.wtf.file import file_required
 import Image
 
 # imports from this application
-from . import app
-from . import site_config
+from .app import app
+from .app import site_config
 from .categories import get_categories
 from .helpers import get_last_display_position
 from .helpers import require_logged_in

@@ -24,7 +24,7 @@ import json
 import unittest
 
 # imports from this application
-from . import TestSupport
+from .helpers import TestSupport
 
 
 class CategoriesTestCase(TestSupport):

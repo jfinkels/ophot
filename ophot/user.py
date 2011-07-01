@@ -24,8 +24,8 @@ from flask import jsonify
 from flask import request
 
 # imports from this application
-from . import app
-from . import site_config
+from .app import app
+from .app import site_config
 from .helpers import require_logged_in
 
 

@@ -23,11 +23,11 @@ from __future__ import division
 import json
 
 # imports from this application
-from .. import app
+from ..app import app
 from .._rest import jsonify_status_code
 from .._rest import to_category_dict
 from .._rest import to_photo_dict
-from . import TestSupport
+from .helpers import TestSupport
 
 
 class RestTestCase(TestSupport):

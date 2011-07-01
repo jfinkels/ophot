@@ -19,15 +19,53 @@
 from __future__ import absolute_import
 from __future__ import division
 
+# imports from built-in modules
+from contextlib import closing
+import sqlite3
+
 # imports from third-party modules
 from flask import abort
 from flask import g
 from flask import session
 
 # imports from this application
+from .app import app
 from .queries import Q_GET_CATEGORY
 from .queries import Q_GET_CATEGORIES
 from .queries import Q_GET_LAST_DISP_POS
+
+
+@app.after_request
+def after_request(response):
+    """Closes the database connection stored in the db attribute of the g
+    object.
+
+    The response to the request is returned unchanged.
+
+    """
+    g.db.close()
+    return response
+
+
+@app.before_request
+def before_request():
+    """Stores the database connection in the db attribute of the g object."""
+    g.db = connect_db()
+
+
+def connect_db():
+    """Gets a connection to the SQLite database."""
+    return sqlite3.connect(app.config['DATABASE'])
+
+
+def init_db():
+    """Initialize the database using the schema specified in the configuration.
+
+    """
+    with closing(connect_db()) as db:
+        with app.open_resource(app.config['SCHEMA']) as f:
+            db.cursor().executescript(f.read())
+        db.commit()
 
 
 def get_last_display_position(categoryid):
