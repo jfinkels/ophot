@@ -175,6 +175,11 @@ def update_photo(photoid):
         }
     """
     require_logged_in()
+    change_category = 'categoryid' in request.form
+    change_position = 'displayposition' in request.form
+    if change_category and change_position:
+        message = 'Cannot specify both categoryid and displayposition'
+        return jsonify_status_code(400, message=message)
     if 'categoryid' in request.form:
         _update_photo_category(photoid, request.form.get('categoryid'))
     if 'displayposition' in request.args:
