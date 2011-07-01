@@ -31,9 +31,9 @@
 
   function addedCategory(data, textStatus, xhr) {
     var name, id, categoryRow, added;
-    if (data.added) {
-      name = data.categoryname;
-      id = data.categoryid;
+    //if (data.added) {
+      name = data.name;
+      id = data.id;
 
       // replace the text input box with the "new category..." link again
       $("input#new-cat").replaceWith(
@@ -53,24 +53,13 @@
       if (!added) {
         $("tr#new-cat-row").before(categoryRow);
       }
-    } else {
-      // TODO do something
-      alert("could not add category with name " + data.categoryname);
-    }
+    //} else {
+    // TODO do something
+    //  alert("could not add category with name " + data.name);
+    //}
   }
 
   function deleteCategory(data, textStatus, xhr) {
-    var id, row;
-    if (data.deleted) {
-      id = data.categoryid;
-      row = $("a.delete-cat[id=" + id + "]").parents("tr.category-row");
-      row.fadeOut(400, function() {
-        $(this).remove();
-      });
-    } else {
-      // TODO do something
-      alert("could not delete category with id " + data.categoryid);
-    }
   }
 
   function renamedCategory(data, textStatus, xhr) {
@@ -100,8 +89,10 @@
       // 13 is the keycode for the enter key
       if (event.keyCode === 13 && $(this).val() !== "") {
         var categoryName = $(this).val();
-        $.getJSON(SCRIPT_ROOT + '/_add_category', {categoryname: categoryName},
-                  addedCategory);
+        $.post(SCRIPT_ROOT + '/categories',
+               { name: categoryName },
+               addedCategory,
+               "json");
       }
     });
 
@@ -129,9 +120,10 @@
       nameCell.html(categoryName);
       $(this).replaceWith('<a href="#" class="rename-cat" id="'
                           + categoryId + '">rename</a>');
-      $.getJSON(SCRIPT_ROOT + '/_change_category_name',
-                {categoryid: categoryId, categoryname: categoryName},
-                renamedCategory);
+      $.post(SCRIPT_ROOT + '/categories/' + categoryId,
+             { name: categoryName },
+             renamedCategory,
+             "json");
     });
 
     $(".delete-cat").live("click", function(event) {
@@ -159,26 +151,47 @@
       $(".selected").removeClass("selected");
       $.ajax({
         type: 'DELETE',
-        url: SCRIPT_ROOT + '/delete_category/' + id,
-        success: deleteCategory
-      });
+        url: SCRIPT_ROOT + '/categories/' + id,
+        dataType: "json",
+        success: function(data, textStatus, xhr) {
+          // TODO test that HTTP status is 204
+          var row;
+          row = $("a.delete-cat[id=" + id + "]").parents("tr.category-row");
+          row.fadeOut(400, function() {
+            $(this).remove();
+          });
+        }});
     });
 
+    // the spacing input should save on changes
+    // NOTE the change event is not triggered until focus leaves this!
     $("#spacing").change($.debounce(500, function() {
-      $.getJSON(SCRIPT_ROOT + '/_change_spacing', {spacing: $(this).val()},
-                spacingChanged);
+      $.post(SCRIPT_ROOT + '/user',
+             { spacing: $(this).val() },
+             spacingChanged,
+             "json");
+    }));
+    
+    // the bio and contact info textarea elements should save every half a
+    // second on key presses
+    $('textarea[name~="bio"]').keypress($.debounce(500, function() {
+      $.post(SCRIPT_ROOT + '/user',
+             { bio: $(this).val() },
+             updatedBio,
+             "json");
+    }));
+    $('textarea[name~="contact"]').keypress($.debounce(500, function() {
+      $.post(SCRIPT_ROOT + '/user',
+             { contact: $(this).val() },
+             updatedContact,
+             "json");
     }));
 
-    textareaSelectors = 'textarea[name~="bio"], textarea[name~="contact"]';
-    $(textareaSelectors).keypress($.debounce(500, function() {
-      $.getJSON(SCRIPT_ROOT + '/_update_personal',
-                {name: $(this).attr("name"), value: $(this).val()},
-                updatedPersonalInfo);
-    }));
-
+    // the 'paste' event is undocumented but may work in some browsers
+    textareaSelectors = 'textarea[name~="contact"], textarea[name~="bio"]';
     $(textareaSelectors).bind('paste', function() {
+      // just trigger the keypress event
       $(this).keypress();
     });
   });
 }());
-

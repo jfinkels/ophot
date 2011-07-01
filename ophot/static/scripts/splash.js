@@ -85,12 +85,12 @@
   */
   function displayPhotos(data/*, textStatus, xhr*/) {
     var photos, i, photoid, filename, photoCellString;
-    photos = data.values;
+    photos = data.items;
 
     // assume the data is in the format described in the documentation for the
-    // _get_photos route
+    // /photos route
     for (i = 0; i < photos.length; i += 1) {
-      photoid = photos[i].photoid;
+      photoid = photos[i].id;
       filename = photos[i].filename;
       photoCellString = createPhotoCellString(photoid, filename);
       $("#the-row").append(photoCellString);
@@ -253,8 +253,9 @@
 
         $("#the-row").empty();
         var categoryid = $(this).attr("id");
-        $.getJSON(SCRIPT_ROOT + '/_get_photos', {categoryid : categoryid},
-                  displayPhotos);
+        $.getJSON(SCRIPT_ROOT + '/photos/by-category/' + categoryid,
+                  displayPhotos,
+                  "json");
       }
     });
   }

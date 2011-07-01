@@ -18,84 +18,61 @@
  */
 (function() {
   "use strict";
-  function deletePhoto(data, textStatus, xhr) {
-    if (data.deleted) {
-      var cell = $("img#" + data.photoid).parents(".photo-cell");
-      cell.fadeOut(400, function() {
-        $(this).remove();
-      });
-    } else {
-      // TODO do something
-      alert("could not delete");
-    }
-  }
-
-  function changeCategory(data, textStatus, xhr) {
-    if (data.changed) {
-      var cell = $('img[id~="' + data.photoid + '"]').parents(".photo-cell");
-      cell.fadeOut(400, function() {
-        $(this).remove();
-      });
-    } else {
-      // TODO do something
-      alert("could not delete");
-    }
-  }
 
   function movedRight(data, textStatus, xhr) {
     var img, cell, next, parentRow;
-    if (data.moved) {
-      img = $('img[id~="' + data.photoid1 + '"]');
-      cell = img.parents(".photo-cell");
-      // TODO here we are assuming that cell.next() == data["photoid2"]
-      next = cell.next();
-      parentRow = cell.parent();
+    //if (data.moved) {
+    img = $('img[id~="' + data.id + '"]');
+    cell = img.parents(".photo-cell");
+    // TODO here we are assuming that cell.next() == data["photoid2"]
+    next = cell.next();
+    parentRow = cell.parent();
 
-      // show the left arrow if this was the first photo
-      if (cell.is(":first-child")) {
-        img.siblings(".move-left").show();
-      }
-      
-      // detach the cell and reinsert it after the one on its right
-      cell.detach();
-      next.after(cell);
-
-      // hide the right arrow if this is the last photo
-      if (cell.is(":last-child")) {
-        img.siblings(".move-right").hide();
-      }
-    } else {
-      // TODO do something
-      alert("could not move right");
+    // show the left arrow if this was the first photo
+    if (cell.is(":first-child")) {
+      img.siblings(".move-left").show();
     }
+      
+    // detach the cell and reinsert it after the one on its right
+    cell.detach();
+    next.after(cell);
+
+    // hide the right arrow if this is the last photo
+    if (cell.is(":last-child")) {
+      img.siblings(".move-right").hide();
+    }
+    //} else {
+    // TODO do something
+    //  alert("could not move right");
+    //}
   }
 
   function movedLeft(data, textStatus, xhr) {
     var img, cell, prev, parentRow;
-    if (data.moved) {
-      img = $('img[id~="' + data.photoid1 + '"]');
-      cell = img.parents(".photo-cell");
-      // TODO here we are assuming that cell.prev() == data["photoid2"]
-      prev = cell.prev();
-      parentRow = cell.parent();
+    //if (data.moved) {
+    img = $('img[id~="' + data.id + '"]');
+    cell = img.parents(".photo-cell");
+    // TODO here we are assuming that cell.prev() == data["photoid2"]
+    prev = cell.prev();
+    parentRow = cell.parent();
 
-      // show the right arrow if this was the last photo
-      if (cell.is(":last-child")) {
-        img.siblings(".move-right").show();
-      }
-      
-      // detach the cell and reinsert it before the one on its left
-      cell.detach();
-      prev.before(cell);
-
-      // hide the left arrow if this is the first photo
-      if (cell.is(":first-child")) {
-        img.siblings(".move-left").hide();
-      }
-    } else {
-      // TODO do something
-      alert("could not move left");
+    // show the right arrow if this was the last photo
+    if (cell.is(":last-child")) {
+      img.siblings(".move-right").show();
     }
+      
+    // detach the cell and reinsert it before the one on its left
+    cell.detach();
+    prev.before(cell);
+
+    // hide the left arrow if this is the first photo
+    if (cell.is(":first-child")) {
+      img.siblings(".move-left").hide();
+    }
+    //} else {
+    // TODO do something
+    //  alert("could not move left");
+    //}
   }
 
   $(document).ready(function() {
@@ -137,12 +114,20 @@
     });
 
     $(".confirm-delete").live("click", function(event) {
+      var img, id;
       event.preventDefault();
-      var id = $(this).parents(".delete-dialog").siblings("img").attr("id");
+      img = $(this).parents(".delete-dialog").siblings("img");
+      id = img.attr("id");
       $.ajax({
         type: 'DELETE',
-        url: SCRIPT_ROOT + '/delete/' + id,
-        success: deletePhoto
+        url: SCRIPT_ROOT + '/photos/' + id,
+        success: function(data, textStatus, xhr) {
+          var cell = img.parents(".photo-cell");
+          cell.fadeOut(400, function() {
+            $(this).remove();
+          });
+        },
+        dataType: "json"
       });
     });
 
@@ -164,23 +149,23 @@
       list.empty();
 
       $.getJSON(
-        SCRIPT_ROOT + "/_get_categories",
+        SCRIPT_ROOT + "/categories",
         function(data, textStatus, xhr) {
-          var currentCategory, i, selectedPhotoLink;
+          var currentCategory, i, selectedPhotoLink, categories;
+          // TODO move these two lines outside of this callback function
           selectedPhotoLink = 'a[class~="photo-link"][class~="selected"]';
           currentCategory = parseInt($(selectedPhotoLink).attr("id"), 10);
-          for (i in data) {
-            if (data.hasOwnProperty(i)) {
-              list.append("<li><a href=\"#\" id=\"" + i
-                          + "\" class=\"category-option\">" + data[i]
-                          + "</a></li>");
-              if (parseInt(i, 10) === currentCategory) {
-                list.children().last().children("a").addClass("selected-cat");
-              }
+          categories = data['items'];
+          for (i = 0; i < categories.length) {
+            list.append("<li><a href=\"#\" id=\"" + categories[i].id
+                        + "\" class=\"category-option\">" + categories[i].name
+                        + "</a></li>");
+            if (categories[i].id === currentCategory) {
+              list.children().last().children("a").addClass("selected-cat");
             }
           }
           list.append("<li><a href=\"#\" id=\"new\" class=\"category-option\">"
-                      + "new&nbsp;category</a></li>");
+                      + "new&nbsp;category&hellip;</a></li>");
         });
     });
 
@@ -206,7 +191,7 @@
     });
 
     $(".confirm-cat-change").live("click", function(event) {
-      var selectedCat, categoryid, photoContainer, name, photoid;
+      var selectedCat, categoryid, photoContainer, name, photoid, img;
       event.preventDefault();
 
       selectedCat = 'a[class~="category-option"][class~="selected-cat"]';
@@ -224,7 +209,8 @@
         // we just leave it where it is and fade out the dialog
         photoContainer.children(".photo-shadow, .cat-chooser").fadeOut();
       } else {
-        photoid = photoContainer.children("img").attr("id");
+        img = photoContainer.children("img");
+        photoid = img.attr("id");
 
         // TODO check if input text box still exists. if it does, get that as
         // the name, check that it is non-empty, and set -1 as the category ID
@@ -233,40 +219,56 @@
           name = $("a#-1").html();
         }
 
-        $.getJSON(SCRIPT_ROOT + '/_change_category',
-                  { photoid: photoid,
-                    categoryid: categoryid,
-                    categoryname: name },
-                  changeCategory
-                 );
+        $.post(SCRIPT_ROOT + "/photos/" + photoid,
+               { categoryid: categoryid },
+               function(data, textStatus, xhr) {
+                 photoContainer.fadeOut(400, function() {
+                   $(this).remove();
+                 });
+               }
+               "json");
       }
     });
 
     $(".move-right").live("click", function(event) {
-      var cell, photoid, nextid;
+      var cell, photoid, nextid, nextDisplayPosition;
       event.preventDefault();
       cell = $(this).parents(".photo-cell");
       if (!(cell.is(":last-child"))) {
         photoid = $(this).siblings("img").attr("id");
         nextid = cell.next().find("img").attr("id");
-        $.getJSON(SCRIPT_ROOT + '/_swap_display_positions',
-                  { photoid1: photoid, photoid2: nextid },
-                  movedRight
-                 );
+        // get the display position of the photo on its right
+        $.getJSON(SCRIPT_ROOT + "/photos/" + nextid,
+                  function(data) {
+                    nextDisplayPosition = data["displayposition"];
+                  });
+        // update the display position of this photo to be that display
+        // position (the server swaps their positions for us)
+        $.post(SCRIPT_ROOT + '/photos/' + photoid,
+               { displayposition: nextDisplayPosition },
+               movedRight,
+               "json");
       }
     });
 
     $(".move-left").live("click", function(event) {
-      var cell, photoid, previousid;
+      var cell, photoid, previousid, prevDisplayPosition;
       event.preventDefault();
       cell = $(this).parents(".photo-cell");
       if (!(cell.is(":first-child"))) {
         photoid = $(this).siblings("img").attr("id");
         previousid = cell.prev().find("img").attr("id");
-        $.getJSON(SCRIPT_ROOT + '/_swap_display_positions',
-                  { photoid1: photoid, photoid2: previousid },
-                  movedLeft
-                 );
+        // get the display position of the photo on its left
+        $.getJSON(SCRIPT_ROOT + "/photos/" + previousId,
+                  function(data) {
+                    prevDisplayPosition = data["displayposition"];
+                  });
+        // update the display position of this photo to be that display
+        // position (the server swaps their positions for us)
+        $.post(SCRIPT_ROOT + '/photos/' + photoid,
+               { displayposition: nextDisplayPosition },
+               movedLeft,
+               "json");
       }
     });
   });
