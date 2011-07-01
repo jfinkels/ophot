@@ -19,6 +19,9 @@
 from __future__ import absolute_import
 from __future__ import division
 
+# imports from third-party modules
+from flask import jsonify
+
 
 def _to_document_dict(names, db_row):
     """Returns a dictionary mapping the specified *names* to each of the values
@@ -27,6 +30,18 @@ def _to_document_dict(names, db_row):
     Both *names* and *db_row* must be iterables.
     """
     return dict(zip(names, db_row))
+
+
+def jsonify_status_code(status_code, *args, **kw):
+    """Returns a jsonified response with the specified HTTP status code.
+
+    The positional and keyword arguments are passed directly to the jsonify
+    function which creates the response.
+
+    """
+    response = jsonify(*args, **kw)
+    response.status_code = status_code
+    return response
 
 
 def to_category_dict(db_row):
