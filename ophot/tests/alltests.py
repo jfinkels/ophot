@@ -49,5 +49,5 @@ alltests = tests_from_modules(
     test_photos,
     test_rest,
     test_user,
-    #test_views
+    test_views
     )

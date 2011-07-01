@@ -19,16 +19,20 @@
 from __future__ import absolute_import
 from __future__ import division
 
+# imports from built-in modules
 import os.path
 import tempfile
 import unittest
 import uuid
 
+# imports from this application
 from ophot import app
 from ophot import before_request
+from ophot.categories import get_categories
 from ophot.tests import TestSupport
 from ophot.views import _allowed_file
 from ophot.views import _generate_filename
+from ophot.views import _get_category_names
 from ophot.views import _get_categories_plus_new
 from ophot.views import _to_html_paragraphs
 from ophot.views import add_photos
@@ -71,10 +75,10 @@ class ViewsTestCase(TestSupport):
         with app.test_request_context('/'):
             before_request()
             categories = _get_categories_plus_new()
-            self.assertIn((1, 'landscape'), categories)
-            self.assertIn((2, 'personal'), categories)
-            self.assertIn((3, 'portrait'), categories)
-            self.assertIn((-1, 'new category...'), categories)
+            self.assertEqual((1, 'landscape'), categories[0])
+            self.assertEqual((2, 'personal'), categories[1])
+            self.assertEqual((3, 'portrait'), categories[2])
+            self.assertEqual((-1, 'new category...'), categories[3])
 
     def test_to_html_paragraphs(self):
         """Test for converting a multi-line string to sequence of HTML <p>
@@ -135,10 +139,9 @@ Paragraph 4
         # TODO figure out how to send files through data
         self.fail('not yet implemented')
 
-    @unittest.expectedFailure
+    @unittest.skip("We don't respond with 403 anywhere yet.")
     def test_forbidden(self):
         """Test for the HTTP error 403 page."""
-        # TODO figure out how to trigger an HTTP error 403
         self.fail('not yet implemented')
 
     def test_login_display(self):
@@ -146,7 +149,6 @@ Paragraph 4
         result = self.app.get('login')
         self.assertIn('username', result.data)
         self.assertIn('password', result.data)
-        self.assertIn('id="login-form"', result.data)
 
     def test_login_credentials(self):
         """Test that logging in by providing a username and password works as
@@ -182,7 +184,7 @@ Paragraph 4
         self.assertIn('id="settings-table"', result.data)
         with app.test_request_context():
             before_request()
-            for categoryname in get_categories().values():
+            for categoryname in _get_category_names():
                 self.assertIn(categoryname, result.data)
 
     def test_show_splash(self):
@@ -193,6 +195,6 @@ Paragraph 4
 
     def test_unauthorized(self):
         """Test for the HTTP error 401 page."""
-        result = self.app.delete('/delete/1')
+        result = self.app.delete('/photos/1')
         self.assertEqual(401, result.status_code)
         self.assertIn('not authorized', result.data)

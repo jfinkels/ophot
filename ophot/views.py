@@ -84,8 +84,8 @@ def _get_category_names():
     database.
 
     """
-    categories = json.loads(get_categories().data)
-    return map(lambda category: category['name'], categories)
+    categories = json.loads(get_categories().data)['items']
+    return (category['name'] for category in categories)
 
 
 def _get_categories_plus_new():
@@ -97,8 +97,9 @@ def _get_categories_plus_new():
 
     Pre-condition: none of the existing categories have an ID of -1.
     """
-    categories = json.loads(get_categories().data)
-    categories.append(dict(name='new category...', id=-1))
+    categories = json.loads(get_categories().data)['items']
+    categories = [(cat['id'], cat['name']) for cat in categories]
+    categories.append((-1, 'new category...'))
     return categories
 
 
@@ -130,6 +131,7 @@ def add_photos():
         # FileTypeValidator(app.config['ALLOWED_EXTENSIONS'])
         photos = FileField('Select photos to upload',
                            validators=[file_required('Must select a file.')])
+
         # TODO coerce isn't working
         category = SelectField('Category', coerce=int,
                                choices=_get_categories_plus_new())
@@ -272,8 +274,9 @@ def page_not_found(error):
 @app.route('/settings', methods=['GET'])
 def settings():
     """Renders the edit settings template."""
+    categories = json.loads(get_categories().data)['items']
     return render_template('settings.html', realname=realname,
-                           categories=get_categories().iteritems(),
+                           categories=categories,
                            bio=site_config['BIO'],
                            contact=site_config['CONTACT'],
                            spacing=site_config['SPACING'])
@@ -282,7 +285,7 @@ def settings():
 @app.route('/')
 def show_splash():
     """Shows the splash page as the root."""
-    categories = json.loads(get_categories().data).iteritems()
+    categories = json.loads(get_categories().data)['items']
     bio = _to_html_paragraphs(site_config['BIO'])
     contact = _to_html_paragraphs(site_config['CONTACT'])
     return render_template('splash.html', realname=realname,

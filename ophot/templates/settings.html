@@ -57,12 +57,12 @@
             <td>
               <table id="categories" class="category-table">
                 <tbody>
-                {% for (id, cname) in categories %}
+                {% for category in categories %}
                 <tr class="category-row">
-                  <td class="cat-name" id="{{ id }}">{{ cname|safe }}</td>
+                  <td class="cat-name" id="{{ category['id'] }}">{{ category['name']|safe }}</td>
                   <td class="cat-options">
-                    <a href="#" class="rename-cat" id="{{ id }}">rename</a>
-                    <a href="#" class="delete-cat" id="{{ id }}">delete</a>
+                    <a href="#" class="rename-cat" id="{{ category['id'] }}">rename</a>
+                    <a href="#" class="delete-cat" id="{{ category['id'] }}">delete</a>
                   </td>
                 </tr>
                 {% endfor %}
