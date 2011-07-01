@@ -1,11 +1,8 @@
 * fix validation messages so that they don't display as generic unstyled lists
 * allow PNG files
 * add a view and a stylesheet for "mobile" web browsers (the stylesheet should imitate, for example, the iPhone's UI effects)
-* change to data["changed"] == "True"?
 * http://blog.greenfelt.net/2009/09/01/caching-javascript-safely/
 * check out Flask-Login
-* use a better RESTful API for getting photos and categories
-* in tests, use self.app.get('whatever', data={}) instead of using query_url()
 * http://valums.com/ajax-upload/, http://code.google.com/p/jquery-html5-upload/, http://www.w3.org/TR/XMLHttpRequest2/, http://blog.mozilla.com/webdev/2010/09/17/django-and-ajax-image-uploads/, http://comments.gmane.org/gmane.comp.python.django.user/117582
 * use PATCH instead of POST, once PATCH is added to Werkzeug
 * tests should check that status_codes are correct
