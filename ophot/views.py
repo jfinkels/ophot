@@ -32,9 +32,12 @@ from flask import render_template
 from flask import request
 from flask import session
 from flask import url_for
+#from flaskext.uploads import UploadSet
+#from flaskext.uploads import IMAGES
 from flaskext.wtf import Form
 from flaskext.wtf import FileField
 from flaskext.wtf import SelectField
+#from flaskext.wtf.file import file_allowed
 from flaskext.wtf.file import file_required
 import Image
 
@@ -44,13 +47,22 @@ from .app import site_config
 from .categories import get_categories
 from .helpers import get_last_display_position
 from .helpers import require_logged_in
-from .forms import ChangeSplashPhotoForm
 from .queries import Q_ADD_PHOTO
 
 # the first and last name of the photographer
 realname = app.config['NAME']
 # the email to display to users for purchasing a photo
 purchase_email = app.config['PURCHASE_EMAIL']
+
+
+#splash_photos = UploadSet('images', IMAGES)
+class ChangeSplashPhotoForm(Form):
+    """Class which represents the form with which the user can change the
+    splash photo.
+
+    """
+    # also want to add "file_allowed(splash_photos, 'Images only.')" here
+    photo = FileField('Select new splash photo', validators=[file_required()])
 
 
 # TODO use mime types or magic numbers to identify files
