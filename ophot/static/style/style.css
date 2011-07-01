@@ -276,13 +276,11 @@ table {
 
 .flash, .error {
   border-bottom: thin solid gray;
+  text-align: center;
   top: 0;
   width: 100%;
-}
-
-.flash-inner {
-  width: 400px;
-  margin: 10px auto;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .error {
