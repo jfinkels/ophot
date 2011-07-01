@@ -156,7 +156,7 @@
           selectedPhotoLink = 'a[class~="photo-link"][class~="selected"]';
           currentCategory = parseInt($(selectedPhotoLink).attr("id"), 10);
           categories = data['items'];
-          for (i = 0; i < categories.length) {
+          for (i = 0; i < categories.length; i += 1) {
             list.append("<li><a href=\"#\" id=\"" + categories[i].id
                         + "\" class=\"category-option\">" + categories[i].name
                         + "</a></li>");
@@ -225,7 +225,7 @@
                  photoContainer.fadeOut(400, function() {
                    $(this).remove();
                  });
-               }
+               },
                "json");
       }
     });
@@ -240,14 +240,15 @@
         // get the display position of the photo on its right
         $.getJSON(SCRIPT_ROOT + "/photos/" + nextid,
                   function(data) {
-                    nextDisplayPosition = data["displayposition"];
+                    var nextDisplayPosition = data.displayposition;
+                    // update the display position of this photo to be that
+                    // display position (the server swaps their positions for
+                    // us)
+                    $.post(SCRIPT_ROOT + '/photos/' + photoid,
+                           { displayposition: nextDisplayPosition },
+                           movedRight,
+                           "json");
                   });
-        // update the display position of this photo to be that display
-        // position (the server swaps their positions for us)
-        $.post(SCRIPT_ROOT + '/photos/' + photoid,
-               { displayposition: nextDisplayPosition },
-               movedRight,
-               "json");
       }
     });
 
@@ -259,14 +260,14 @@
         photoid = $(this).siblings("img").attr("id");
         previousid = cell.prev().find("img").attr("id");
         // get the display position of the photo on its left
-        $.getJSON(SCRIPT_ROOT + "/photos/" + previousId,
+        $.getJSON(SCRIPT_ROOT + "/photos/" + previousid,
                   function(data) {
                     prevDisplayPosition = data["displayposition"];
                   });
         // update the display position of this photo to be that display
         // position (the server swaps their positions for us)
         $.post(SCRIPT_ROOT + '/photos/' + photoid,
-               { displayposition: nextDisplayPosition },
+               { displayposition: prevDisplayPosition },
                movedLeft,
                "json");
       }

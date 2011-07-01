@@ -50,7 +50,7 @@ DEFAULT_PHOTO_SPACING = 10
 # This is the location of the database schema (relative to the directory from
 # which the "reset-db.sh" script is run, which is the top level directory of
 # this application).
-SCHEMA = 'ophot/schema.sql'
+SCHEMA = 'schema.sql'
 
 # The base directory for the application. When debugging this application by
 # running, for example the "runserver.py" script, this should be 'ophot', since

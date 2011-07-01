@@ -33,8 +33,7 @@ Q_GET_PHOTO_BY_DISPLAYPOS = ('select photoid from photo'
 Q_GET_PHOTO_DISPLAYPOS = ('select photodisplayposition from photo'
                           ' where photoid == {0}')
 Q_GET_PHOTOS = 'select * from photo'
-Q_GET_PHOTOS_BY_CAT = ('select photoid, photofilename from photo'
-                       ' where photocategory == "{0}"'
+Q_GET_PHOTOS_BY_CAT = ('select * from photo where photocategory == "{0}"'
                        ' order by photodisplayposition asc')
 Q_UPDATE_CATEGORY_NAME = ('update category set categoryname="{0}"'
                           ' where categoryid={1}')

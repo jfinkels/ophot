@@ -10,3 +10,4 @@
 * use PATCH instead of POST, once PATCH is added to Werkzeug
 * tests should check that status_codes are correct
 * change to relative imports (i.e. ophot._rest -> .._rest)
+* check for malformed inputs universally on functions that affect the DB

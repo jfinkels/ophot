@@ -86,7 +86,6 @@
   function displayPhotos(data/*, textStatus, xhr*/) {
     var photos, i, photoid, filename, photoCellString;
     photos = data.items;
-
     // assume the data is in the format described in the documentation for the
     // /photos route
     for (i = 0; i < photos.length; i += 1) {

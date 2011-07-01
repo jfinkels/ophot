@@ -146,16 +146,26 @@
             <li>
               <a href="#" class="nav-link" id="photos-link">photos</a>
               <ul class="submenu">
-                {% for (id, cname) in categories %}
-                <li><a href="#" class="photo-link" id="{{ id }}">{{ cname }}</a></li>
+                {% for category in categories %}
+                <li>
+                  <a href="#" class="photo-link" id="{{ category['id'] }}">
+                    {{ category['name'] }}
+                  </a>
+                </li>
                 {% endfor %}
               </ul>
             </li>
-            <li><a href="#" class="nav-link" id="purchase-link">purchase</a></li>
+            <li>
+              <a href="#" class="nav-link" id="purchase-link">purchase</a>
+            </li>
             <li><a href="#" class="nav-link" id="bio-link">bio</a></li>
             <li><a href="#" class="nav-link" id="contact-link">contact</a></li>
             {% if session.logged_in %}
-            <li><a href="{{ url_for('add_photos') }}" class="nav-link">add&nbsp;photos</a></li>
+            <li>
+              <a href="{{ url_for('add_photos') }}" class="nav-link">
+                add&nbsp;photos
+              </a>
+            </li>
             {% endif %}
           </ul>
         </div>
