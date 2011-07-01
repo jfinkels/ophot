@@ -19,20 +19,139 @@
 from __future__ import absolute_import
 from __future__ import division
 
+# imports from built-in modules
+import json
+
 # imports from this application
+from ophot.tests import temp_photos
 from ophot.tests import TestSupport
 
 
+# TODO override setUp() and tearDown() in this class to just do whatever with
+# temp_photos() does
 class PhotosTestCase(TestSupport):
+    """Test case for the ophot.photos module."""
+
     def test_get_photo(self):
-        self.fail("not yet implemented")
+        """Test for getting a single photo."""
+        with temp_photos():
+            response = self.app.get('/photos/1')
+            result = json.loads(response.data)
+            self.assertEqual(1, result['id'])
+            self.assertEqual(2, result['displayposition'])
+            self.assertEqual('photo1', result['filename'])
+            self.assertEqual(1, result['categoryid'])
+            response = self.app.get('/photos/2')
+            result = json.loads(response.data)
+            self.assertEqual(2, result['id'])
+            self.assertEqual(1, result['displayposition'])
+            self.assertEqual('photo2', result['filename'])
+            self.assertEqual(1, result['categoryid'])
+            response = self.app.get('/photos/3')
+            result = json.loads(response.data)
+            self.assertEqual(3, result['id'])
+            self.assertEqual(1, result['displayposition'])
+            self.assertEqual('photo3', result['filename'])
+            self.assertEqual(2, result['categoryid'])
+            response = self.app.get('/photos/4')
+            self.assertEqual(404, response.status_code)
+
     def test_get_photos(self):
-        self.fail("not yet implemented")
+        """Test for getting all photos."""
+        with temp_photos():
+            response = self.app.get('/photos')
+            result = json.loads(response.data)
+            self.assertIn('items', result)
+            self.assertEqual(3, len(result['items']))
+
     def test_get_photos_by_category(self):
-        self.fail("not yet implemented")
+        """Tests for getting photos by category."""
+        with temp_photos():
+            # test for a category with two photos
+            response = self.app.get('/photos/by-category/1')
+            result = json.loads(response.data)
+            self.assertIn('items', result)
+            self.assertEqual(2, len(result['items']))
+            # test for a category with one photo
+            response = self.app.get('/photos/by-category/2')
+            result = json.loads(response.data)
+            self.assertIn('items', result)
+            self.assertEqual(1, len(result['items']))
+            # test for a category with no photos
+            response = self.app.get('/photos/by-category/3')
+            result = json.loads(response.data)
+            self.assertIn('items', result)
+            self.assertEqual(0, len(result['items']))
+            # TODO test for a category which doesn't exist
+            #response = self.app.get('/photos/by-category/4')
+            #self.assertEqual(404, response.status_code)
+
     def test_update_photo_displayposition(self):
-        self.fail("not yet implemented")
+        """Test for changing the category of a photo."""
+        self._login()
+        with temp_photos():
+            response = self.app.post('/photos/1', data=dict(displayposition=3))
+            result = json.loads(response.data)
+            # check that the response has the correct information
+            self.assertEqual(1, result['id'])
+            self.assertEqual('photo1', result['filename'])
+            self.assertEqual(3, result['displayposition'])
+            self.assertEqual(1, result['categoryid'])
+            # check that the correct information is in the database
+            response = self.app.get('/photos/1')
+            result = json.loads(response.data)
+            self.assertEqual(1, result['id'])
+            self.assertEqual('photo1', result['filename'])
+            self.assertEqual(3, result['displayposition'])
+            self.assertEqual(1, result['categoryid'])
+
     def test_update_photo_category(self):
-        self.fail("not yet implemented")
+        """Test for changing the category of a photo."""
+        self._login()
+        with temp_photos():
+            response = self.app.post('/photos/1', data=dict(categoryid=3))
+            result = json.loads(response.data)
+            # check that the response has the correct information
+            self.assertEqual(1, result['id'])
+            self.assertEqual('photo1', result['filename'])
+            # updated to 1 + last photo position
+            self.assertEqual(1, result['displayposition'])
+            self.assertEqual(3, result['categoryid'])
+            # check that the correct information is in the database
+            response = self.app.get('/photos/1')
+            result = json.loads(response.data)
+            self.assertEqual(1, result['id'])
+            self.assertEqual('photo1', result['filename'])
+            self.assertEqual(1, result['displayposition'])
+            self.assertEqual(3, result['categoryid'])
+            # each category should have just one photo now
+            for categoryid in (1, 2, 3):
+                route = '/photos/by-category/{0}'.format(categoryid)
+                response = self.app.get(route)
+                result = json.loads(response.data)
+                self.assertEqual(1, len(result['items']))
+        # TODO test changing category of a photo which doesn't exist
+        # TODO test changing to a category which doesn't exist
+
+    def test_update_photo_bad_request(self):
+        """Tests for requests which attempt to update both the category and the
+        displayposition of a photo.
+
+        """
+        self._login()
+        with temp_photos():
+            response = self.app.post('/photos/1', data=dict(categoryid=3,
+                                                            displayposition=5))
+            self.assertEqual(400, response.status_code)
+
     def test_delete_photo(self):
-        self.fail("not yet implemented")
+        """Test for deleting a photo from the database."""
+        self._login()
+        with temp_photos():
+            response = self.app.delete('/photos/1')
+            self.assertEqual(204, response.status_code)
+            self.assertEqual('', response.data)
+            # check that the changes were made in the database
+            response = self.app.get('/photos/1')
+            self.assertEqual(404, response.status_code)
+        # TODO test deleting a photo which does not exist
