@@ -52,7 +52,7 @@ from .queries import Q_ADD_PHOTO
 # the first and last name of the photographer
 realname = app.config['NAME']
 # the email to display to users for purchasing a photo
-purchase_email = app.config['PURCHASE_EMAIL']
+#purchase_email = app.config['PURCHASE_EMAIL']
 
 
 #splash_photos = UploadSet('images', IMAGES)
@@ -290,6 +290,7 @@ def settings():
     return render_template('settings.html', realname=realname,
                            categories=categories,
                            bio=site_config['BIO'],
+                           purchase=site_config['PURCHASE'],
                            contact=site_config['CONTACT'],
                            spacing=site_config['SPACING'])
 
@@ -304,7 +305,9 @@ def show_splash():
                            categories=categories,
                            filename=app.config['SPLASH_PHOTO_FILENAME'],
                            photo_padding=site_config['SPACING'],
-                           bio=bio, purchase_email=purchase_email,
+                           bio=bio,
+                           purchase=site_config['PURCHASE'],
+                           #purchase_email=purchase_email,
                            contact=contact)
 
 

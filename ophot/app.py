@@ -40,6 +40,8 @@ if 'CONTACT' not in site_config:
     site_config['CONTACT'] = ''
 if 'SPACING' not in site_config:
     site_config['SPACING'] = app.config['DEFAULT_PHOTO_SPACING']
+if 'PURCHASE' not in site_config:
+    site_config['PURCHASE'] = ''
 
 # add some loggers for errors and warnings
 if not app.debug:

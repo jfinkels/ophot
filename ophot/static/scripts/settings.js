@@ -78,8 +78,12 @@
     // TODO show a little "saved" message
   }
 
+  function updatedPurchase(data, textStatus, xhr) {
+    // TODO show a little "saved" message
+  }
+
   $(document).ready(function() {
-    var textareaSelectors;
+    var textareaSelectors, textareaNames, i;
     $(".delete-dialog").hide();
     $("#settings-shadow").hide();
 
@@ -199,10 +203,23 @@
              updatedContact,
              "json");
     }));
+    $('textarea[name~="purchase"]').keypress($.debounce(500, function() {
+      $.post(SCRIPT_ROOT + '/user',
+             { purchase: $(this).val() },
+             updatedPurchase,
+             "json");
+    }));
+
+    // create an array of textarea selectors for which we want to bind the
+    // paste action
+    textareaNames = ["contact", "bio", "purchase"];
+    textareaSelectors = [];
+    for (i = 0; i < textareaNames.length; i += 1) {
+      textareaSelectors.push('textarea[name~="' + textareaNames[i] + '"]');
+    }
 
     // the 'paste' event is undocumented but may work in some browsers
-    textareaSelectors = 'textarea[name~="contact"], textarea[name~="bio"]';
-    $(textareaSelectors).bind('paste', function() {
+    $(textareaSelectors.join(', ')).bind('paste', function() {
       // just trigger the keypress event
       $(this).keypress();
     });

@@ -51,7 +51,8 @@ def update_user_settings():
 
     The request arguments are all optional. The arguments are *bio*, a string
     containing the bio information of the user, *contact*, a string containing
-    the contact information of the user, and *spacing*, an integer which is the
+    the contact information of the user, *purchase*, a string containing the
+    purchase information for the user, and *spacing*, an integer which is the
     spacing in pixels between photos displayed on the splash page.
 
     For example, if the request is::
@@ -72,6 +73,8 @@ def update_user_settings():
         site_config['BIO'] = request.form.get('bio')
     if 'contact' in request.form:
         site_config['CONTACT'] = request.form.get('contact')
+    if 'purchase' in request.form:
+        site_config['PURCHASE'] = request.form.get('purchase')
     if 'spacing' in request.form:
         # TODO use a validator for configobj
         site_config['SPACING'] = int(request.form.get('spacing'))

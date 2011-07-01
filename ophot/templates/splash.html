@@ -137,8 +137,7 @@
       <div id="purchase-info"
            class="info-box black-background absolute-position">
         <div class="info-box-inner">
-          for pricing or to order prints, email
-          <a href="mailto:{{ purchase_email }}">{{ purchase_email }}</a>.
+          {{ purchase|safe }}
         </div>
       </div>
         <div id="banner" class="banner black-background">

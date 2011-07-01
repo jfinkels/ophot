@@ -105,4 +105,4 @@ NAME = 'Example Exampleson'
 
 # Add the email address which the user should contact when he or she wishes to
 # purchase a print.
-PURCHASE_EMAIL = 'example@example.com'
+#PURCHASE_EMAIL = 'example@example.com'
