@@ -40,7 +40,7 @@ This package contains:
 
 The ophot/ directory is a Python package and contains the following files:
 
-* __init__.py - the file which makes this directory a Python package
+* \_\_init\_\_.py - the file which makes this directory a Python package
 * _rest.py - common functionality for the photos, categories, and user REST
     modules
 * app.py - module containing the Flask application object
