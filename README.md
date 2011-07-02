@@ -1,7 +1,5 @@
-
-                Ophot - a photography portfolio web application
-                ===============================================
-
+Ophot - a photography portfolio web application
+===============================================
 
 Introduction
 ------------
